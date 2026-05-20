@@ -1,36 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!162 &1
-EditorUserSettings:
-  m_ObjectHideFlags: 0
-  serializedVersion: 4
-  m_ConfigSettings:
-    QuickInstaller_com.unity.purchasing_installRecorded:
-      value: 2550581500
-      flags: 0
-    QuickInstaller_com.unity.services.levelplay_installRecorded:
-      value: 2550581500
-      flags: 0
-    lightmappingBakingProfile:
-      value: 51
-      flags: 0
-    vcSharedLogLevel:
-      value: 0d5e400f0650
-      flags: 0
-  m_VCAutomaticAdd: 1
-  m_VCDebugCom: 0
-  m_VCDebugCmd: 0
-  m_VCDebugOut: 0
-  m_SemanticMergeMode: 2
-  m_DesiredImportWorkerCount: 3
-  m_StandbyImportWorkerCount: 2
-  m_IdleImportWorkerShutdownDelay: 60000
-  m_VCShowFailedCheckout: 1
-  m_VCOverwriteFailedCheckoutAssets: 1
-  m_VCProjectOverlayIcons: 1
-  m_VCHierarchyOverlayIcons: 1
-  m_VCOtherOverlayIcons: 1
-  m_VCAllowAsyncUpdate: 1
-  m_VCScanLocalPackagesOnConnect: 1
-  m_ArtifactGarbageCollection: 1
-  m_CompressAssetsOnImport: 1
+version https://git-lfs.github.com/spec/v1
+oid sha256:23c7488b920dcc99d190f95f84d51ed7e92f6a793fb1ae7032b183c93393c25c
+size 951

@@ -1,17 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dea69d41f90c6ea4fa55c27c1d60c145, type: 3}
-  m_Name: AddressableAssetGroupSortSettings
-  m_EditorClassIdentifier: 
-  sortOrder:
-  - 7a2fc8c1710ae7444b1270e2066ddca9
-  - bf50285af3b3e024cbffd619371af813
+version https://git-lfs.github.com/spec/v1
+oid sha256:f47e7357425a0085e69efcdbc1be63d3b68944cd8538dccae75c0fc83bbce6a0
+size 509

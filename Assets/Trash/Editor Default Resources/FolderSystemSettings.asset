@@ -1,18 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 241033feccdeaed47935ff023d3344ae, type: 3}
-  m_Name: FolderSystemSettings
-  m_EditorClassIdentifier: 
-  defaultFolderIcons: 0
-  projectFolderState: 1
-  userGeneratedLinks:
-    serializedDictionary: []
+version https://git-lfs.github.com/spec/v1
+oid sha256:bd17fcebccc8d8858bb808177c03c2fac06a4a3d13330fe4f14799305e78a061
+size 508

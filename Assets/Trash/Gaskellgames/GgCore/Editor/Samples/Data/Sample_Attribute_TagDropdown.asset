@@ -1,16 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 592528a6e386ed347bbddc6addc89ca4, type: 3}
-  m_Name: Sample_Attribute_TagDropdown
-  m_EditorClassIdentifier: 
-  tagDropdown: 
-  <TagDropdown>k__BackingField: 
+version https://git-lfs.github.com/spec/v1
+oid sha256:835509d47ffb6fa4603c477cd63245fe7b0c9d27a01dc76cea9d77fa69ae0e2d
+size 466
