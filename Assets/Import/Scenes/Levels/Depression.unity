@@ -129162,7 +129162,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2359111276709748182, guid: 691d201409042b143af4574240386e30, type: 3}
       propertyPath: m_TagString
-      value: Player
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 2822550248998729607, guid: 691d201409042b143af4574240386e30, type: 3}
       propertyPath: m_ClearFlags
@@ -129183,6 +129183,10 @@ PrefabInstance:
     - target: {fileID: 2822550248998729607, guid: 691d201409042b143af4574240386e30, type: 3}
       propertyPath: m_BackGroundColor.r
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2937952180854084144, guid: 691d201409042b143af4574240386e30, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 3250380411402128677, guid: 691d201409042b143af4574240386e30, type: 3}
       propertyPath: m_Enabled

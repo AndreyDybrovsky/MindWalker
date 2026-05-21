@@ -118298,6 +118298,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4678861801356256514, guid: 691d201409042b143af4574240386e30, type: 3}
+      propertyPath: totalTime
+      value: 190
+      objectReference: {fileID: 0}
     - target: {fileID: 4767027705391975929, guid: 691d201409042b143af4574240386e30, type: 3}
       propertyPath: m_Enabled
       value: 0
