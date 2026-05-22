@@ -13,9 +13,9 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _MAIN_LIGHT_ENABLED
-  - _MAIN_LIGHT_SHADOWS_CASCADE
   m_InvalidKeywords:
   - PROBE_VOLUMES_OFF
+  - _MAIN_LIGHT_SHADOWS_CASCADE
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -132,7 +132,7 @@ Material:
     - _Cloud_Noise_Voronoi_Power: 1.4
     - _Cloud_Noise_Voronoi_Scale: 0.6666667
     - _Cloud_Noise_Voronoi_Simplex_Blend: 0.5
-    - _ColourMultiplier: 1.15
+    - _ColourMultiplier: 1.05
     - _Cull: 2
     - _Curl_Epsilon_1: 0.2
     - _Curl_Epsilon_2: 2
@@ -150,7 +150,7 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _Fog_Density: 1.05
+    - _Fog_Density: 0.82
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -168,14 +168,14 @@ Material:
     - _MAIN_LIGHT_ENABLED: 1
     - _MAIN_LIGHT_HIGH_QUALITY_ANISOTROPY: 1
     - _MAIN_LIGHT_LERP_BLEND: 0
-    - _MAIN_LIGHT_SELF_SHADOWS_ENABLED: 1
+    - _MAIN_LIGHT_SELF_SHADOWS_ENABLED: 0
     - _MAIN_LIGHT_SHADOWS: 0
     - _MAIN_LIGHT_SHADOWS_1: 0
     - _MAIN_LIGHT_SHADOWS_2: 0
     - _MAIN_LIGHT_SHADOWS_3: 0
     - _MAIN_LIGHT_SHADOWS_4: 0
     - _MAIN_LIGHT_SHADOWS_5: 0
-    - _MAIN_LIGHT_SHADOWS_ENABLED: 1
+    - _MAIN_LIGHT_SHADOWS_ENABLED: 0
     - _Main_Light_Anisotropic_Blend: 0.85
     - _Main_Light_Anisotropy: 0.55
     - _Main_Light_Anisotropy_Blend: 0.85
@@ -186,7 +186,7 @@ Material:
     - _Main_Light_Self_Shadow_Sample_Offset: 0.2
     - _Main_Light_Self_Shadow_Steps: 1
     - _Main_Light_Self_Shadow_Strength: 1
-    - _Main_Light_Shadow_Strength: 0.92
+    - _Main_Light_Shadow_Strength: 0.75
     - _Metallic: 0
     - _Noise_Blend: 0.5
     - _OcclusionStrength: 1

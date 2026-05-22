@@ -129148,6 +129148,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1937980415409433163, guid: 691d201409042b143af4574240386e30, type: 3}
+      propertyPath: m_Antialiasing
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2067995035113527336, guid: 691d201409042b143af4574240386e30, type: 3}
       propertyPath: victorySound
       value: 
