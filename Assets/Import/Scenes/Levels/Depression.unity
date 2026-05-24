@@ -3648,7 +3648,7 @@ Transform:
   m_GameObject: {fileID: 639198179}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -160.6, y: 16.604874, z: 118.8}
+  m_LocalPosition: {x: -160.6, y: -17.7, z: 118.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -73872,7 +73872,7 @@ ParticleSystemRenderer:
   m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
-  m_MaxParticleSize: 0.01
+  m_MaxParticleSize: 0.5
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 6
@@ -74460,7 +74460,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 6
+      scalar: 0.12
       minScalar: 6
       maxCurve:
         serializedVersion: 2
@@ -81588,7 +81588,7 @@ Transform:
   m_GameObject: {fileID: 379918391}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 36.958138, y: 16.604874, z: 120.3}
+  m_LocalPosition: {x: 36.958138, y: -17.7, z: 120.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -81643,7 +81643,7 @@ ParticleSystemRenderer:
   m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
-  m_MaxParticleSize: 0.01
+  m_MaxParticleSize: 0.5
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 6
@@ -82231,7 +82231,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 6
+      scalar: 0.12
       minScalar: 6
       maxCurve:
         serializedVersion: 2
@@ -90153,7 +90153,7 @@ Transform:
   m_GameObject: {fileID: 540189357}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -61.8, y: 16.604874, z: 219.5}
+  m_LocalPosition: {x: -61.8, y: -17.7, z: 219.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -90208,7 +90208,7 @@ ParticleSystemRenderer:
   m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
-  m_MaxParticleSize: 0.01
+  m_MaxParticleSize: 0.5
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 6
@@ -90796,7 +90796,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 6
+      scalar: 0.12
       minScalar: 6
       maxCurve:
         serializedVersion: 2
@@ -100507,7 +100507,7 @@ Transform:
   m_GameObject: {fileID: 473956997}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 36.958138, y: 16.604874, z: 19.9}
+  m_LocalPosition: {x: 36.958138, y: -17.7, z: 19.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -100562,7 +100562,7 @@ ParticleSystemRenderer:
   m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
-  m_MaxParticleSize: 0.01
+  m_MaxParticleSize: 0.5
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 6
@@ -101150,7 +101150,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 6
+      scalar: 0.12
       minScalar: 6
       maxCurve:
         serializedVersion: 2
@@ -107482,7 +107482,7 @@ Transform:
   m_GameObject: {fileID: 823619329}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -157.6, y: 16.604874, z: 219.5}
+  m_LocalPosition: {x: -157.6, y: -17.7, z: 219.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -107537,7 +107537,7 @@ ParticleSystemRenderer:
   m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
-  m_MaxParticleSize: 0.01
+  m_MaxParticleSize: 0.5
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 6
@@ -108125,7 +108125,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 6
+      scalar: 0.12
       minScalar: 6
       maxCurve:
         serializedVersion: 2
@@ -122544,7 +122544,7 @@ Transform:
   m_GameObject: {fileID: 2068736710}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -61.8, y: 16.604874, z: 120.3}
+  m_LocalPosition: {x: -61.8, y: -17.7, z: 120.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -123799,7 +123799,7 @@ ParticleSystemRenderer:
   m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
-  m_MaxParticleSize: 0.01
+  m_MaxParticleSize: 0.5
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 6
@@ -124387,7 +124387,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 6
+      scalar: 0.12
       minScalar: 6
       maxCurve:
         serializedVersion: 2

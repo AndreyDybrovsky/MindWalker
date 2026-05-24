@@ -9,20 +9,24 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 94556400727399352, guid: 99642d3edc63685448907020a45e5eb3, type: 3}
-      propertyPath: linkedLevelSceneName
-      value: Autism
+      propertyPath: locKeyNotes
+      value: patient.autism.notes
+      objectReference: {fileID: 0}
+    - target: {fileID: 94556400727399352, guid: 99642d3edc63685448907020a45e5eb3, type: 3}
+      propertyPath: portraitSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 0bcdd91b26ae6924994c440fe5a46fea, type: 3}
+    - target: {fileID: 94556400727399352, guid: 99642d3edc63685448907020a45e5eb3, type: 3}
+      propertyPath: locKeyDiagnosis
+      value: patient.autism.diagnosis
       objectReference: {fileID: 0}
     - target: {fileID: 94556400727399352, guid: 99642d3edc63685448907020a45e5eb3, type: 3}
       propertyPath: locKeyPatientName
       value: patient.autism.name
       objectReference: {fileID: 0}
     - target: {fileID: 94556400727399352, guid: 99642d3edc63685448907020a45e5eb3, type: 3}
-      propertyPath: locKeyDiagnosis
-      value: patient.autism.diagnosis
-      objectReference: {fileID: 0}
-    - target: {fileID: 94556400727399352, guid: 99642d3edc63685448907020a45e5eb3, type: 3}
-      propertyPath: locKeyNotes
-      value: patient.autism.notes
+      propertyPath: linkedLevelSceneName
+      value: Autism
       objectReference: {fileID: 0}
     - target: {fileID: 94556400727399352, guid: 99642d3edc63685448907020a45e5eb3, type: 3}
       propertyPath: locKeyPatientAgeNumber

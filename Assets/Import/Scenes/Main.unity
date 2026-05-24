@@ -1792,6 +1792,187 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 260789277}
   m_Mesh: {fileID: -4907620452017844030, guid: 8e24f6f8087037a4f91ca2506572d36e, type: 3}
+--- !u!1 &278202135
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 278202136}
+  - component: {fileID: 278202139}
+  - component: {fileID: 278202138}
+  - component: {fileID: 278202137}
+  m_Layer: 0
+  m_Name: SceneTriggerGrishanin (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &278202136
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 278202135}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.445, y: -1.2610476, z: 3.353}
+  m_LocalScale: {x: 1.3407326, y: 7.744058, z: 2.2836697}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 947795720}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &278202137
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 278202135}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: -3304977579264166704, guid: e62dcfab77a67cb42935b323fcbcd308, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &278202138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 278202135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba0ac7a61be19d64d8effa105cc9e479, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetSceneName: ludomania
+  promptUI: {fileID: 1416727290}
+  promptText: {fileID: 1416727292}
+  promptText3D: {fileID: 0}
+  promptLocalizationKey: scene.hint_press_e
+  promptFallbackText: Press E
+  promptCanvasGroup: {fileID: 0}
+  patientBoardPrefab: {fileID: 172373299455938769, guid: da407465d81b6b044bd4919090f2ade3, type: 3}
+  boardLocalPosition: {x: -0.3, y: 0, z: 0.4}
+  boardLocalEulerAngles: {x: 90, y: 180, z: 0}
+  revealSpeed: 4
+  fadeDuration: 1.5
+  audioSource: {fileID: 278202137}
+  enterZonePaperSound: {fileID: 8300000, guid: 1ccc59cf3d8848a4ea63301a1d16d3fb, type: 3}
+  exitZonePaperSound: {fileID: 8300000, guid: 45622563dd0d55345b2f3646e7326e82, type: 3}
+  transitionStartSound: {fileID: 8300000, guid: 4abe99ea7cdb61f47b8627279f22eee1, type: 3}
+  fadeCanvasGroup: {fileID: 217552006}
+--- !u!65 &278202139
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 278202135}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.53821427, z: 0.99999976}
+  m_Center: {x: 0, y: 0.23089296, z: 0}
 --- !u!1 &283493817
 GameObject:
   m_ObjectHideFlags: 0
@@ -4566,6 +4747,7 @@ Transform:
   - {fileID: 229961412}
   - {fileID: 582232406122414238}
   - {fileID: 975251585}
+  - {fileID: 278202136}
   m_Father: {fileID: 689240230}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &950077213
@@ -6820,7 +7002,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 187023215154923844, guid: 691d201409042b143af4574240386e30, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 345952663427717114, guid: 691d201409042b143af4574240386e30, type: 3}
       propertyPath: m_AnchorMax.y
@@ -7654,7 +7836,6 @@ Transform:
   m_Children:
   - {fileID: 11499332}
   - {fileID: 4520541629034109879}
-  - {fileID: 1664489546}
   m_Father: {fileID: 689240230}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1572263142
@@ -8188,89 +8369,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1660394733}
   m_Mesh: {fileID: -1187428446135635816, guid: 8e24f6f8087037a4f91ca2506572d36e, type: 3}
---- !u!1 &1664489545
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1664489546}
-  - component: {fileID: 1664489549}
-  - component: {fileID: 1664489548}
-  m_Layer: 0
-  m_Name: SceneTriggerLiukshin
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1664489546
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1664489545}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.5621239, y: -1.2856581, z: 2.9812088}
-  m_LocalScale: {x: 1.3407325, y: 3.4625764, z: 2.2836697}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1542709293}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1664489548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1664489545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba0ac7a61be19d64d8effa105cc9e479, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetSceneName: Twice
-  promptUI: {fileID: 1416727290}
-  promptText: {fileID: 1416727292}
-  promptText3D: {fileID: 0}
-  promptLocalizationKey: scene.hint_press_e
-  promptFallbackText: Press E
-  promptCanvasGroup: {fileID: 0}
-  patientBoardPrefab: {fileID: 1198043593543207144, guid: 99642d3edc63685448907020a45e5eb3, type: 3}
-  boardLocalPosition: {x: 0.42, y: -0.22, z: 0.72}
-  boardLocalEulerAngles: {x: 0, y: -18, z: 0}
-  revealSpeed: 4
-  fadeDuration: 1.5
-  audioSource: {fileID: 0}
-  enterZonePaperSound: {fileID: 0}
-  exitZonePaperSound: {fileID: 0}
-  transitionStartSound: {fileID: 8300000, guid: 4abe99ea7cdb61f47b8627279f22eee1, type: 3}
-  fadeCanvasGroup: {fileID: 217552006}
---- !u!65 &1664489549
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1664489545}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 0.53821427, z: 0.99999976}
-  m_Center: {x: 0, y: 0.23089296, z: 0}
 --- !u!1 &1673877972
 GameObject:
   m_ObjectHideFlags: 0
@@ -9160,6 +9258,7 @@ Transform:
   m_Children:
   - {fileID: 988611178}
   - {fileID: 2114554187}
+  - {fileID: 8183093234139018560}
   m_Father: {fileID: 381191371}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1812651129
@@ -12888,8 +12987,8 @@ Transform:
   m_GameObject: {fileID: 8852950264512147450}
   serializedVersion: 2
   m_LocalRotation: {x: 0.23296306, y: -0.73296237, z: 0.30360225, w: 0.56242347}
-  m_LocalPosition: {x: 3.936302, y: 0.396, z: 21.823442}
-  m_LocalScale: {x: 0.07776603, y: 0.07776603, z: 0.07776603}
+  m_LocalPosition: {x: 3.418208, y: 0.3959998, z: 1.0241795}
+  m_LocalScale: {x: 0.07776604, y: 0.07776603, z: 0.07776603}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6353359143953333986}
@@ -12901,7 +13000,7 @@ Transform:
   - {fileID: 3863728682574062404}
   - {fileID: 5611154875304837082}
   - {fileID: 1507573599594914154}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1796373500}
   m_LocalEulerAnglesHint: {x: 45, y: -105, z: 0}
 --- !u!23 &8212371116844289678
 MeshRenderer:
@@ -13246,7 +13345,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8183093234139018560}
   m_Layer: 0
-  m_Name: light266266
+  m_Name: LightWindow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13361,4 +13460,3 @@ SceneRoots:
   - {fileID: 1446974517}
   - {fileID: 895071224}
   - {fileID: 1681717198}
-  - {fileID: 8183093234139018560}

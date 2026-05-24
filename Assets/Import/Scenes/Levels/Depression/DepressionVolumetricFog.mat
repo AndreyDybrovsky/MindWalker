@@ -132,7 +132,7 @@ Material:
     - _Cloud_Noise_Voronoi_Power: 1.4
     - _Cloud_Noise_Voronoi_Scale: 0.6666667
     - _Cloud_Noise_Voronoi_Simplex_Blend: 0.5
-    - _ColourMultiplier: 1.05
+    - _ColourMultiplier: 0.5
     - _Cull: 2
     - _Curl_Epsilon_1: 0.2
     - _Curl_Epsilon_2: 2
@@ -144,13 +144,13 @@ Material:
     - _Curl_Strength_Raymarch_Offset: 2
     - _Curl_Strength_Raymarch_Sample: 0.2
     - _Cutoff: 0.5
-    - _Density: 1
+    - _Density: 0.45
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _Fog_Density: 0.82
+    - _Fog_Density: 0.32
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -162,7 +162,7 @@ Material:
     - _INDIRECT_LIGHTING_ENABLED: 1
     - _Indirect_Light_Flip_Normals: 0
     - _Indirect_Light_Intensity: 0.12
-    - _Indirect_Light_Strength: 0.42
+    - _Indirect_Light_Strength: 0.2
     - _Invert_Noise: 0
     - _MAIN_LIGHT: 1
     - _MAIN_LIGHT_ENABLED: 1
@@ -179,7 +179,7 @@ Material:
     - _Main_Light_Anisotropic_Blend: 0.85
     - _Main_Light_Anisotropy: 0.55
     - _Main_Light_Anisotropy_Blend: 0.85
-    - _Main_Light_Intensity: 0.18
+    - _Main_Light_Intensity: 0.1
     - _Main_Light_Self_Shadow_Absorption_Coefficient: 0.65
     - _Main_Light_Self_Shadow_Raymarch_Distance: 6
     - _Main_Light_Self_Shadow_Raymarch_Steps: 8
@@ -200,7 +200,7 @@ Material:
     - _Raymarch_Additional_Light_Self_Shadow_Steps: 8
     - _Raymarch_Depth_Fade: 0
     - _Raymarch_Depth_Fade_Power: 2
-    - _Raymarch_Distance: 36
+    - _Raymarch_Distance: 60
     - _Raymarch_Distance_Bias: 0.85
     - _Raymarch_Height_Falloff: 0.72
     - _Raymarch_Height_Offset: -0.35
@@ -221,7 +221,7 @@ Material:
     - _Shadow_Falloff_Power: 1
     - _Shadow_Falloff_Remap_Max: 1
     - _Shadow_Falloff_Remap_Min: 0
-    - _Shadow_Strength: 0.88
+    - _Shadow_Strength: 0.4
     - _Simplex_Noise_Animation_Scale: 0.35
     - _Simplex_Noise_Invert: 1
     - _Simplex_Noise_Octaves: 2
@@ -249,7 +249,7 @@ Material:
     - _Cloud_Noise_Voronoi_Animation: {r: 0, g: 0, b: 0.5, a: 0.5}
     - _Cloud_Noise_Voronoi_Offset: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 0.2, g: 0.25, b: 0.35, a: 1}
-    - _Colour: {r: 0.035, g: 0.055, b: 0.11, a: 1}
+    - _Colour: {r: 0.035, g: 0.055, b: 0.11, a: 0.55}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Offset: {r: 0, g: 0, b: 0, a: 45}
     - _Raymarch_Vertical_Range: {r: 0, g: 0.15, b: 0, a: 0}
