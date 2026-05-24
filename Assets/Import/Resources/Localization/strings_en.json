@@ -9,6 +9,7 @@
     { "key": "save.unknown", "value": "Unknown" },
     { "key": "save.hp", "value": "HP: {0}/{1}" },
     { "key": "scene.hint_press_e", "value": "Press E" },
+    { "key": "game.autosave", "value": "Autosave" },
     { "key": "patient.status_sick", "value": "Sick" },
     { "key": "patient.status_healthy", "value": "Healthy" },
     { "key": "patient.status_lost", "value": "Lost" },
@@ -60,7 +61,10 @@
     { "key": "Settings.Quality.2", "value": "High" },
     { "key": "Settings.Quality.3", "value": "Very High" },
     { "key": "Settings.Quality.4", "value": "Ultra" },
-    { "key": "Settings.Quality.5", "value": "Custom" }
+    { "key": "Settings.Quality.5", "value": "Custom" },
+    { "key": "pause.exit_warning.question", "value": "Are you sure?" },
+    { "key": "pause.exit_warning.confirm", "value": "Save them" },
+    { "key": "pause.exit_warning.cancel", "value": "Cancel" }
   ]
 }
 

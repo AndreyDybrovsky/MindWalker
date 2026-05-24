@@ -9,6 +9,7 @@
     { "key": "save.unknown", "value": "Неизвестно" },
     { "key": "save.hp", "value": "HP: {0}/{1}" },
     { "key": "scene.hint_press_e", "value": "Нажмите E" },
+    { "key": "game.autosave", "value": "Автосохранение" },
     { "key": "patient.status_sick", "value": "Болен" },
     { "key": "patient.status_healthy", "value": "Здоров" },
     { "key": "patient.status_lost", "value": "Потерян" },
@@ -60,7 +61,10 @@
     { "key": "Settings.Quality.2", "value": "Высокое" },
     { "key": "Settings.Quality.3", "value": "Очень высокое" },
     { "key": "Settings.Quality.4", "value": "Ультра" },
-    { "key": "Settings.Quality.5", "value": "Пользовательский" }
+    { "key": "Settings.Quality.5", "value": "Пользовательский" },
+    { "key": "pause.exit_warning.question", "value": "Вы уверены?" },
+    { "key": "pause.exit_warning.confirm", "value": "Спаси их" },
+    { "key": "pause.exit_warning.cancel", "value": "Отмена" }
   ]
 }
 
