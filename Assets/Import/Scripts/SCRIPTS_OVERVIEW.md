@@ -53,11 +53,7 @@
 
 ### Игровые уровни (общее для всех)
 
-<<<<<<< HEAD
-**Сцены:** `Autism`, `Depression`, `Level4`, `Level5`, `ludomania`, `PTSD`, `PTSD in Danger`, …
-=======
 **Сцены:** `Autism`, `Depression`, `Level4`, `Level5`, `ludomania`, `Gambling disease`, `PTSD`, `PTSD in Danger`, …
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 
 | Компонент | Скрипт |
 |-----------|--------|
@@ -73,10 +69,7 @@
 | Босс | `BossSpawnManager` |
 | Часы на руке (опционально) | `WatchHandDisplay` на префабе `Watch` |
 | Атмосфера | `LevelAtmosphere` |
-<<<<<<< HEAD
-=======
 | Цепочка моментов ОКР (E → fade → надпись) | `OCDMomentTrigger` |
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 
 **Глобально (не в сцене, но работают):** `AutoSaveSceneNotifier`, `SaveManager`, `GameplayInputBlocker`.
 
@@ -107,8 +100,6 @@
 
 ---
 
-<<<<<<< HEAD
-=======
 ### Gambling disease (`Gambling disease.unity`)
 
 Префаб `Assets/Import/Prefabs/SlotMachine.prefab` — расставить по карте.
@@ -138,7 +129,6 @@
 
 ---
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 ### Victory (`Victory.unity`)
 
 Финальная сцена после прохождения всех уровней — только UI/камера, без боевой логики. Загрузка из `LevelSuccessFlow.ResolveReturnScene`.

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5627198515120552224}
   - component: {fileID: 2116796238130735424}
   m_Layer: 0
-  m_Name: ZoneSpawn
+  m_Name: ZoneSpawn0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -21.194876, y: -11.025639, z: 16.444996}
-  m_LocalScale: {x: 93.658, y: -0.3, z: 93.658}
+  m_LocalScale: {x: 93.658, y: 0.3, z: 93.658}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5523918986537252016}
@@ -68,11 +68,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 5236954518650583282}
   spawnArea: {fileID: 0}
+  spawnAreas: []
+  spawnAreaRoots: []
   spawnHeightOffset: 0
+  spawnGroundLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  spawnGroundRaycastUp: 16
+  spawnGroundRaycastDown: 48
   panicCharacterPrefab: {fileID: 5719706662558038772}
+  pulsePatientGuideLight: 1
   findTimeLimitSeconds: 60
   findFailDamage: 25
+  calmFailDamage: 0
   findProximityDistance: 10
+  findMaxVerticalDifference: 2.2
   findTimerLocalizationKey: scene.depression.find_timer
   findTimerFallbackText: "\u041D\u0430\u0439\u0434\u0438\u0442\u0435 \u043F\u0430\u0446\u0438\u0435\u043D\u0442\u0430:
     {0}"
@@ -84,11 +94,14 @@ MonoBehaviour:
   timerStyleReference: {fileID: 0}
   calmPromptLocalizationKey: scene.depression.calm_interact
   calmPromptFallback: "\u0423\u0441\u043F\u043E\u043A\u043E\u0439\u0442\u0435"
-  audioSource: {fileID: 0}
-  panicAppearSound: {fileID: 8300000, guid: 1ccc59cf3d8848a4ea63301a1d16d3fb, type: 3}
-  calmSuccessSound: {fileID: 8300000, guid: 95e174753cffdfd4b9d6c04d89993eed, type: 3}
-  calmFailSound: {fileID: 8300000, guid: 49a77dadaff52c84391ce6452d7f3d9c, type: 3}
+  audioSource: {fileID: 2426382964455643632}
+  panicAppearSound: {fileID: 8300000, guid: c61c832806b931f4992202b5fbd5837b, type: 3}
+  calmSuccessSound: {fileID: 8300000, guid: ac156bc6879462246a9f2b9cde2491e8, type: 3}
+  calmFailSound: {fileID: 8300000, guid: 56c57eb2b61e725478773f351a20f6b4, type: 3}
   soundVolume: 1
+  panicAppearFadeOutDuration: 1.6
+  patientSoundMinDistance: 2
+  patientSoundMaxDistance: 24
   cleanupDelay: 0.5
 --- !u!1 &9036584958610683726
 GameObject:
@@ -135,6 +148,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PanicGirl
       objectReference: {fileID: 0}
+    - target: {fileID: 1445273916996467126, guid: 07760e2bb7c12964895098b5b9e147da, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.01088
+      objectReference: {fileID: 0}
     - target: {fileID: 1603057749632438255, guid: 07760e2bb7c12964895098b5b9e147da, type: 3}
       propertyPath: m_LocalPosition.x
       value: 16.25115
@@ -179,11 +196,44 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -28.3
       objectReference: {fileID: 0}
+    - target: {fileID: 5846929469905899506, guid: 07760e2bb7c12964895098b5b9e147da, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5846929469905899506, guid: 07760e2bb7c12964895098b5b9e147da, type: 3}
+      propertyPath: m_Color.g
+      value: 0.9857145
+      objectReference: {fileID: 0}
+    - target: {fileID: 5846929469905899506, guid: 07760e2bb7c12964895098b5b9e147da, type: 3}
+      propertyPath: m_Color.r
+      value: 0.24056602
+      objectReference: {fileID: 0}
+    - target: {fileID: 5846929469905899506, guid: 07760e2bb7c12964895098b5b9e147da, type: 3}
+      propertyPath: m_Intensity
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5846929469905899506, guid: 07760e2bb7c12964895098b5b9e147da, type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5846929469905899506, guid: 07760e2bb7c12964895098b5b9e147da, type: 3}
+      propertyPath: m_BounceIntensity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8746102341082716227, guid: 07760e2bb7c12964895098b5b9e147da, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -3304977579264166704, guid: e62dcfab77a67cb42935b323fcbcd308, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07760e2bb7c12964895098b5b9e147da, type: 3}
+--- !u!82 &2426382964455643632 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 8746102341082716227, guid: 07760e2bb7c12964895098b5b9e147da, type: 3}
+  m_PrefabInstance: {fileID: 6398590114464956851}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5719706662558038772 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1705774819199843143, guid: 07760e2bb7c12964895098b5b9e147da, type: 3}

@@ -79,6 +79,37 @@ public class DepressionCountdownUI : MonoBehaviour
         s_shared.End();
     }
 
+    public static bool TryCaptureActive(out float remainingSeconds, out string localizationKey, out string fallback)
+    {
+        remainingSeconds = 0f;
+        localizationKey = null;
+        fallback = null;
+
+        if (s_shared == null || !s_shared._active)
+            return false;
+
+        remainingSeconds = s_shared._remainingSeconds;
+        localizationKey = s_shared._labelKey;
+        fallback = s_shared._labelFallback;
+        return true;
+    }
+
+    public static void ResumeCountdown(
+        float remainingSeconds,
+        string localizationKey,
+        string labelFallback,
+        TMP_Text styleReference,
+        Action onExpired)
+    {
+        DepressionCountdownUI ui = GetShared();
+        ui.Begin(
+            Mathf.Max(0.01f, remainingSeconds),
+            localizationKey,
+            labelFallback,
+            styleReference,
+            onExpired);
+    }
+
     public void ApplyStyleFrom(TMP_Text reference)
     {
         if (reference == null || timerText == null)

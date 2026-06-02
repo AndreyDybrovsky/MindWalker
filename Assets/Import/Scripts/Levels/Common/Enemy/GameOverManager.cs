@@ -75,35 +75,18 @@ public class GameOverManager : MonoBehaviour
 
         string failedScene = SceneManager.GetActiveScene().name;
         LobbyPatientProgress.MarkLost(failedScene);
-        if (SaveManager.Instance != null && SaveManager.Instance.GetCurrentSaveSlot() >= 0)
-            SaveManager.Instance.SaveCurrentGame();
 
         Time.timeScale = 1f;
         Time.fixedDeltaTime = 0.02f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        if (SaveManager.Instance != null)
+        if (SaveManager.Instance != null && SaveManager.Instance.GetCurrentSaveSlot() >= 0)
         {
-            int currentSlot = SaveManager.Instance.GetCurrentSaveSlot();
-            if (currentSlot >= 0)
+            if (SaveManager.Instance.ReloadCurrentCheckpoint(persistLostPatientForActiveScene: true))
             {
-                GameSaveData currentSave = SaveManager.Instance.GetSaveData(currentSlot);
-
-                if (currentSave != null && !currentSave.IsEmpty() && currentSave.playerHealth <= 0f)
-                {
-                    SaveManager.Instance.DeleteSave(currentSlot, keepCurrentSlot: false);
-                    SaveManager.Instance.LoadAllSaves();
-
-                    GameSaveData remainingSave = SaveManager.Instance.GetSaveData(currentSlot);
-
-                    if (remainingSave != null && !remainingSave.IsEmpty() && remainingSave.playerHealth > 0f)
-                    {
-                        SaveManager.Instance.SetCurrentSaveSlot(currentSlot);
-                        SaveManager.Instance.ApplySaveData(remainingSave);
-                        yield break;
-                    }
-                }
+                IsFading = false;
+                yield break;
             }
         }
 

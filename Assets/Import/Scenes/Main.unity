@@ -1128,12 +1128,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-<<<<<<< HEAD
-  m_text: "\u0417\u0430\u0445\u0430\u0440\u043E\u0432\u0430 \u041F\u043E\u043B\u0438\u043D\u0430\n\u0410\u0443\u0442\u0438\u0441\u0442\u043A\u0430\n\u041F\u0440\u043E\u0448\u043B\u0430
-    \u0442\u0435\u0441\u0442\u044B \u0432 \u0438\u043D\u0442\u0435\u0440\u043D\u0435\u0442\u0435"
-=======
   m_text: "\u0417\u0430\u0445\u0430\u0440\u043E\u0432\u0430 \u041F\u043E\u043B\u0438\u043D\u0430\n\u0410\u0443\u0442\u0438\u0441\u0442\u043A\u0430"
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f38d96934650b84f94421c43ff198f5, type: 2}
   m_sharedMaterial: {fileID: 3681849082363314137, guid: 8f38d96934650b84f94421c43ff198f5, type: 2}
@@ -1796,190 +1791,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 260789277}
   m_Mesh: {fileID: -4907620452017844030, guid: 8e24f6f8087037a4f91ca2506572d36e, type: 3}
-<<<<<<< HEAD
---- !u!1 &278202135
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 278202136}
-  - component: {fileID: 278202139}
-  - component: {fileID: 278202138}
-  - component: {fileID: 278202137}
-  m_Layer: 0
-  m_Name: SceneTriggerGrishanin (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &278202136
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 278202135}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.445, y: -1.2610476, z: 3.353}
-  m_LocalScale: {x: 1.3407326, y: 7.744058, z: 2.2836697}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 947795720}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &278202137
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 278202135}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: -3304977579264166704, guid: e62dcfab77a67cb42935b323fcbcd308, type: 2}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
---- !u!114 &278202138
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 278202135}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba0ac7a61be19d64d8effa105cc9e479, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetSceneName: ludomania
-  promptUI: {fileID: 1416727290}
-  promptText: {fileID: 1416727292}
-  promptText3D: {fileID: 0}
-  promptLocalizationKey: scene.hint_press_e
-  promptFallbackText: Press E
-  promptCanvasGroup: {fileID: 0}
-  patientBoardPrefab: {fileID: 172373299455938769, guid: da407465d81b6b044bd4919090f2ade3, type: 3}
-  boardLocalPosition: {x: -0.3, y: 0, z: 0.4}
-  boardLocalEulerAngles: {x: 90, y: 180, z: 0}
-  revealSpeed: 4
-  fadeDuration: 1.5
-  audioSource: {fileID: 278202137}
-  enterZonePaperSound: {fileID: 8300000, guid: 1ccc59cf3d8848a4ea63301a1d16d3fb, type: 3}
-  exitZonePaperSound: {fileID: 8300000, guid: 45622563dd0d55345b2f3646e7326e82, type: 3}
-  transitionStartSound: {fileID: 8300000, guid: 4abe99ea7cdb61f47b8627279f22eee1, type: 3}
-  fadeCanvasGroup: {fileID: 217552006}
---- !u!65 &278202139
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 278202135}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 0.53821427, z: 0.99999976}
-  m_Center: {x: 0, y: 0.23089296, z: 0}
-=======
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 --- !u!1 &283493817
 GameObject:
   m_ObjectHideFlags: 0
@@ -2503,11 +2314,7 @@ GameObject:
   m_Component:
   - component: {fileID: 368548017}
   m_Layer: 0
-<<<<<<< HEAD
-  m_Name: NoName2
-=======
   m_Name: Vasiltsova
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2528,11 +2335,7 @@ Transform:
   m_Children:
   - {fileID: 1812651130}
   - {fileID: 8466565215672679100}
-<<<<<<< HEAD
-  - {fileID: 1921639308}
-=======
   - {fileID: 1581458049}
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_Father: {fileID: 689240230}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &376692885
@@ -2892,11 +2695,7 @@ GameObject:
   - component: {fileID: 504508863}
   - component: {fileID: 504508862}
   m_Layer: 0
-<<<<<<< HEAD
-  m_Name: NONAME2Desk
-=======
   m_Name: VasiltsovaDesk
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3636,11 +3435,8 @@ MonoBehaviour:
   sharedPromptUi: {fileID: 1416727290}
   sharedPromptText: {fileID: 1416727292}
   sharedFadeCanvasGroup: {fileID: 217552006}
-<<<<<<< HEAD
-=======
   sharedProgressText: {fileID: 0}
   progressTextObjectName: GlobalProgressText
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 --- !u!1 &779670421
 GameObject:
   m_ObjectHideFlags: 0
@@ -3651,11 +3447,7 @@ GameObject:
   m_Component:
   - component: {fileID: 779670422}
   m_Layer: 0
-<<<<<<< HEAD
-  m_Name: NoName1
-=======
   m_Name: Krivets
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3676,11 +3468,7 @@ Transform:
   m_Children:
   - {fileID: 925548583}
   - {fileID: 6506194366145349823}
-<<<<<<< HEAD
-  - {fileID: 1888223568}
-=======
   - {fileID: 1493677522}
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_Father: {fileID: 689240230}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &808661354
@@ -4246,10 +4034,7 @@ Transform:
   - {fileID: 314857481}
   - {fileID: 218066565}
   - {fileID: 381191371}
-<<<<<<< HEAD
-=======
   - {fileID: 1362598370}
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &902212535
@@ -4266,11 +4051,7 @@ GameObject:
   - component: {fileID: 902212539}
   - component: {fileID: 902212540}
   m_Layer: 0
-<<<<<<< HEAD
-  m_Name: NONAME2Text
-=======
   m_Name: VasiltsovaText
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4315,13 +4096,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-<<<<<<< HEAD
-  m_text: NO NAME
-=======
   m_text: "\u041F\u0430\u0446\u0438\u0435\u043D\u0442: \u0412\u0430\u0441\u0438\u043B\u044C\u0446\u043E\u0432\u0430
     \u0410. \u0421.\n\u041E\u0442\u043A\u043B\u043E\u043D\u0435\u043D\u0438\u0435:
     \u0411\u0438\u043F\u043E\u043B\u044F\u0440\u043D\u043E\u0435 \u0440\u0430\u0441\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u043E"
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f38d96934650b84f94421c43ff198f5, type: 2}
   m_sharedMaterial: {fileID: 3681849082363314137, guid: 8f38d96934650b84f94421c43ff198f5, type: 2}
@@ -4458,11 +4235,7 @@ MonoBehaviour:
       m_TableCollectionName: GUID:6ef1cff4ec77cdc4a9a6c91170d909b6
     m_TableEntryReference:
       m_KeyId: 1017344031887360
-<<<<<<< HEAD
-      m_Key: 
-=======
       m_Key: Menu.Vasiltsova
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
@@ -4509,11 +4282,7 @@ GameObject:
   m_Component:
   - component: {fileID: 925548583}
   m_Layer: 0
-<<<<<<< HEAD
-  m_Name: NONAME1Sign
-=======
   m_Name: KrivetsSign
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4550,11 +4319,7 @@ GameObject:
   - component: {fileID: 925978216}
   - component: {fileID: 925978217}
   m_Layer: 0
-<<<<<<< HEAD
-  m_Name: NONAME1Text
-=======
   m_Name: KrivetsText
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4599,13 +4364,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-<<<<<<< HEAD
-  m_text: NO NAME
-=======
   m_text: "\u041F\u0430\u0446\u0438\u0435\u043D\u0442: \u041A\u0440\u0438\u0432\u0435\u0446
     \u0421.\u0414.\n\u041E\u0442\u043A\u043B\u043E\u043D\u0435\u043D\u0438\u0435:
     \u041E\u041A\u0420"
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f38d96934650b84f94421c43ff198f5, type: 2}
   m_sharedMaterial: {fileID: 3681849082363314137, guid: 8f38d96934650b84f94421c43ff198f5, type: 2}
@@ -4742,11 +4503,7 @@ MonoBehaviour:
       m_TableCollectionName: GUID:6ef1cff4ec77cdc4a9a6c91170d909b6
     m_TableEntryReference:
       m_KeyId: 1017283478720512
-<<<<<<< HEAD
-      m_Key: 
-=======
       m_Key: Menu.Krivets
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
@@ -4782,11 +4539,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   label: {fileID: 925978214}
-<<<<<<< HEAD
-  localizationKey: 
-=======
   localizationKey: Menu.Krivets
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 --- !u!1 &947795719
 GameObject:
   m_ObjectHideFlags: 0
@@ -4819,10 +4572,6 @@ Transform:
   - {fileID: 229961412}
   - {fileID: 582232406122414238}
   - {fileID: 975251585}
-<<<<<<< HEAD
-  - {fileID: 278202136}
-=======
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_Father: {fileID: 689240230}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &950077213
@@ -4837,11 +4586,7 @@ GameObject:
   - component: {fileID: 950077216}
   - component: {fileID: 950077215}
   m_Layer: 0
-<<<<<<< HEAD
-  m_Name: NONAME1Desk
-=======
   m_Name: KrivetsDesk
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5383,12 +5128,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-<<<<<<< HEAD
-  m_text: "\u041B\u044E\u043A\u0448\u0438\u043D \u041D\u0438\u043A\u0438\u0442\u0430\n\u0420\u0430\u0437\u0434\u0432\u043E\u0435\u043D\u0438\u0435
-    \u043B\u0438\u0447\u043D\u043E\u0441\u0442\u0438\n\u041F\u0440\u0438\u0434\u0443\u043C\u0430\u043B "
-=======
   m_text: "\u041B\u044E\u043A\u0448\u0438\u043D \u041D\u0438\u043A\u0438\u0442\u0430\n\u041B\u0443\u0434\u043E\u043C\u0430\u043D\u0438\u044F"
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f38d96934650b84f94421c43ff198f5, type: 2}
   m_sharedMaterial: {fileID: 3681849082363314137, guid: 8f38d96934650b84f94421c43ff198f5, type: 2}
@@ -6670,14 +6410,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1358413633}
   m_Mesh: {fileID: 3695813155287485814, guid: 8e24f6f8087037a4f91ca2506572d36e, type: 3}
-<<<<<<< HEAD
-=======
 --- !u!4 &1362598370 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2820989303351611168, guid: 84e4b30cf709f4e44adc91086401afaa, type: 3}
   m_PrefabInstance: {fileID: 216107228019336825}
   m_PrefabAsset: {fileID: 0}
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 --- !u!1 &1370019532
 GameObject:
   m_ObjectHideFlags: 0
@@ -7119,8 +6856,6 @@ PrefabInstance:
       propertyPath: enableRunFov
       value: 1
       objectReference: {fileID: 0}
-<<<<<<< HEAD
-=======
     - target: {fileID: 1320104299140822575, guid: 691d201409042b143af4574240386e30, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 150.06982
@@ -7129,7 +6864,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -100.04639
       objectReference: {fileID: 0}
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     - target: {fileID: 1918031069589258008, guid: 691d201409042b143af4574240386e30, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -7310,8 +7044,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
-<<<<<<< HEAD
-=======
     - target: {fileID: 7653832842012508948, guid: 691d201409042b143af4574240386e30, type: 3}
       propertyPath: m_fontColor.b
       value: 1
@@ -7352,7 +7084,6 @@ PrefabInstance:
       propertyPath: m_fontColorGradient.bottomRight.r
       value: 0.21960786
       objectReference: {fileID: 0}
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     - target: {fileID: 7691352634683427504, guid: 691d201409042b143af4574240386e30, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -7778,8 +7509,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-<<<<<<< HEAD
-=======
 --- !u!1 &1493677518
 GameObject:
   m_ObjectHideFlags: 0
@@ -7961,7 +7690,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 779670422}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 --- !u!1 &1506447131
 GameObject:
   m_ObjectHideFlags: 0
@@ -8165,10 +7893,7 @@ Transform:
   m_Children:
   - {fileID: 11499332}
   - {fileID: 4520541629034109879}
-<<<<<<< HEAD
-=======
   - {fileID: 1903661041}
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_Father: {fileID: 689240230}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1572263142
@@ -8279,8 +8004,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.00384535, y: 0.0013412976, z: 0.00024204307}
   m_Center: {x: -0.00000028893672, y: -0.000104165745, z: 0.0000009105925}
-<<<<<<< HEAD
-=======
 --- !u!1 &1581458045
 GameObject:
   m_ObjectHideFlags: 0
@@ -8462,7 +8185,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 368548017}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 --- !u!1 &1586673842
 GameObject:
   m_ObjectHideFlags: 0
@@ -9461,12 +9183,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-<<<<<<< HEAD
-  m_text: "\u0413\u0440\u0438\u0448\u0430\u043D\u0438\u043D \u0418\u0433\u043E\u0440\u044C\n\u041F\u0422\u0421\u0420\n\u041F\u0440\u043E\u0438\u0433\u0440\u0430\u043B
-    \u0432 \"\u0414\u043E\u0433\u043E\u043D\u0438 \u043C\u0435\u043D\u044F \u043A\u0438\u0440\u043F\u0438\u0447\""
-=======
   m_text: "\u0413\u0440\u0438\u0448\u0430\u043D\u0438\u043D \u0418\u0433\u043E\u0440\u044C\n\u041F\u0422\u0421\u0420"
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f38d96934650b84f94421c43ff198f5, type: 2}
   m_sharedMaterial: {fileID: 3681849082363314137, guid: 8f38d96934650b84f94421c43ff198f5, type: 2}
@@ -9792,11 +9509,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1812651130}
   m_Layer: 0
-<<<<<<< HEAD
-  m_Name: NONAME2Sign
-=======
   m_Name: VasiltsovaSign
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9992,11 +9705,7 @@ ReflectionProbe:
   m_UseOcclusionCulling: 1
   m_Importance: 1
   m_CustomBakedTexture: {fileID: 0}
-<<<<<<< HEAD
---- !u!1 &1888223567
-=======
 --- !u!1 &1903661037
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10004,48 +9713,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-<<<<<<< HEAD
-  - component: {fileID: 1888223568}
-  - component: {fileID: 1888223571}
-  - component: {fileID: 1888223570}
-  m_Layer: 0
-  m_Name: SceneTriggerNoName1
-=======
   - component: {fileID: 1903661041}
   - component: {fileID: 1903661040}
   - component: {fileID: 1903661039}
   - component: {fileID: 1903661038}
   m_Layer: 0
   m_Name: SceneTriggerLiukshin
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
-<<<<<<< HEAD
---- !u!4 &1888223568
-Transform:
-=======
 --- !u!82 &1903661038
 AudioSource:
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-<<<<<<< HEAD
-  m_GameObject: {fileID: 1888223567}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.5559114, y: -1.2856581, z: 7.97793}
-  m_LocalScale: {x: 1.3407325, y: 3.4625764, z: 2.2836697}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 779670422}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1888223570
-=======
   m_GameObject: {fileID: 1903661037}
   m_Enabled: 1
   serializedVersion: 4
@@ -10138,46 +9822,24 @@ AudioSource:
     m_PostInfinity: 2
     m_RotationOrder: 4
 --- !u!114 &1903661039
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-<<<<<<< HEAD
-  m_GameObject: {fileID: 1888223567}
-=======
   m_GameObject: {fileID: 1903661037}
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ba0ac7a61be19d64d8effa105cc9e479, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-<<<<<<< HEAD
-  targetSceneName: Level5
-=======
   targetSceneName: Gambling disease
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   promptUI: {fileID: 1416727290}
   promptText: {fileID: 1416727292}
   promptText3D: {fileID: 0}
   promptLocalizationKey: scene.hint_press_e
   promptFallbackText: Press E
   promptCanvasGroup: {fileID: 0}
-<<<<<<< HEAD
-  patientBoardPrefab: {fileID: 0}
-  boardLocalPosition: {x: 0.42, y: -0.22, z: 0.72}
-  boardLocalEulerAngles: {x: 0, y: -18, z: 0}
-  revealSpeed: 4
-  fadeDuration: 1.5
-  audioSource: {fileID: 0}
-  enterZonePaperSound: {fileID: 0}
-  exitZonePaperSound: {fileID: 0}
-  transitionStartSound: {fileID: 8300000, guid: 4abe99ea7cdb61f47b8627279f22eee1, type: 3}
-  fadeCanvasGroup: {fileID: 217552006}
---- !u!65 &1888223571
-=======
   patientBoardPrefab: {fileID: 2857951269884992085, guid: 9929c2eac0eb58a479d9b362c4f1d2fb, type: 3}
   boardLocalPosition: {x: -0.3, y: 0, z: 0.4}
   boardLocalEulerAngles: {x: 90, y: 180, z: 0}
@@ -10189,17 +9851,12 @@ MonoBehaviour:
   transitionStartSound: {fileID: 8300000, guid: 4abe99ea7cdb61f47b8627279f22eee1, type: 3}
   fadeCanvasGroup: {fileID: 217552006}
 --- !u!65 &1903661040
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-<<<<<<< HEAD
-  m_GameObject: {fileID: 1888223567}
-=======
   m_GameObject: {fileID: 1903661037}
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -10214,8 +9871,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 0.53821427, z: 0.99999976}
   m_Center: {x: 0, y: 0.23089296, z: 0}
-<<<<<<< HEAD
-=======
 --- !u!4 &1903661041
 Transform:
   m_ObjectHideFlags: 0
@@ -10231,7 +9886,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1542709293}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 --- !u!1 &1916101634
 GameObject:
   m_ObjectHideFlags: 0
@@ -10291,12 +9945,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-<<<<<<< HEAD
-  m_text: "\u041F\u0435\u0442\u0440\u043E\u0432\u0430 \u0415\u043A\u0430\u0442\u0435\u0440\u0438\u043D\u0430\n\u0414\u0435\u043F\u0440\u0435\u0441\u0441\u0438\u044F\n\u0420\u0430\u0431\u043E\u0442\u0430\u0435\u0442
-    \u0432 \u043E\u0431\u0449\u0435\u043F\u0438\u0442\u0435"
-=======
   m_text: "\u041F\u0435\u0442\u0440\u043E\u0432\u0430 \u0415\u043A\u0430\u0442\u0435\u0440\u0438\u043D\u0430\n\u0414\u0435\u043F\u0440\u0435\u0441\u0441\u0438\u044F"
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f38d96934650b84f94421c43ff198f5, type: 2}
   m_sharedMaterial: {fileID: 3681849082363314137, guid: 8f38d96934650b84f94421c43ff198f5, type: 2}
@@ -10470,92 +10119,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   label: {fileID: 1916101636}
   localizationKey: 
-<<<<<<< HEAD
---- !u!1 &1921639307
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1921639308}
-  - component: {fileID: 1921639311}
-  - component: {fileID: 1921639310}
-  m_Layer: 0
-  m_Name: SceneTriggerNoName2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1921639308
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1921639307}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.4976088, y: -1.2856584, z: 12.966771}
-  m_LocalScale: {x: 1.3407325, y: 3.4625764, z: 2.2836697}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 368548017}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1921639310
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1921639307}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba0ac7a61be19d64d8effa105cc9e479, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetSceneName: Level4
-  promptUI: {fileID: 1416727290}
-  promptText: {fileID: 1416727292}
-  promptText3D: {fileID: 0}
-  promptLocalizationKey: scene.hint_press_e
-  promptFallbackText: Press E
-  promptCanvasGroup: {fileID: 0}
-  patientBoardPrefab: {fileID: 0}
-  boardLocalPosition: {x: 0.42, y: -0.22, z: 0.72}
-  boardLocalEulerAngles: {x: 0, y: -18, z: 0}
-  revealSpeed: 4
-  fadeDuration: 1.5
-  audioSource: {fileID: 0}
-  enterZonePaperSound: {fileID: 0}
-  exitZonePaperSound: {fileID: 0}
-  transitionStartSound: {fileID: 8300000, guid: 4abe99ea7cdb61f47b8627279f22eee1, type: 3}
-  fadeCanvasGroup: {fileID: 217552006}
---- !u!65 &1921639311
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1921639307}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 0.53821427, z: 0.99999976}
-  m_Center: {x: 0, y: 0.23089296, z: 0}
-=======
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 --- !u!1 &1930846810
 GameObject:
   m_ObjectHideFlags: 0
@@ -11457,8 +11020,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
-<<<<<<< HEAD
-=======
 --- !u!1001 &216107228019336825
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11516,7 +11077,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84e4b30cf709f4e44adc91086401afaa, type: 3}
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 --- !u!1 &243002950049700388
 GameObject:
   m_ObjectHideFlags: 0

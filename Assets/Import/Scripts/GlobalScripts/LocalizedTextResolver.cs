@@ -7,23 +7,59 @@ public static class LocalizedTextResolver
 {
     public static string Resolve(string key, string[] formatArgs, string fallback)
     {
-        if (!string.IsNullOrEmpty(key))
+        if (string.IsNullOrEmpty(key))
+            return FormatFallback(fallback, formatArgs);
+
+        if (!CanUseUnityLocalization())
+            return ResolveFromJsonOrFallback(key, formatArgs, fallback);
+
+        string localized = TryUnityTable(key);
+
+        if (!LocalizationStringUtility.IsValidTranslation(localized, key))
+            localized = ResolveFromJsonOrFallback(key, formatArgs, fallback);
+
+        if (LocalizationStringUtility.IsValidTranslation(localized, key))
+            return ApplyFormatArgs(localized, formatArgs);
+
+        return FormatFallback(fallback, formatArgs);
+    }
+
+    private static string ResolveFromJsonOrFallback(string key, string[] formatArgs, string fallback)
+    {
+        if (LocalizationManager.Instance != null)
         {
-            string localized = TryUnityTable(key);
-
-            if (!LocalizationStringUtility.IsValidTranslation(localized, key))
-            {
-                if (LocalizationManager.Instance != null)
-                    localized = LocalizationManager.Instance.T(key, formatArgs);
-                else
-                    localized = null;
-            }
-
-            if (LocalizationStringUtility.IsValidTranslation(localized, key))
-                return ApplyFormatArgs(localized, formatArgs);
+            string json = LocalizationManager.Instance.T(key, formatArgs);
+            if (LocalizationStringUtility.IsValidTranslation(json, key))
+                return ApplyFormatArgs(json, formatArgs);
         }
 
         return FormatFallback(fallback, formatArgs);
+    }
+
+    private static bool CanUseUnityLocalization()
+    {
+        if (!LocalizationManager.IsUnityLocalizationAvailable)
+            return false;
+
+        try
+        {
+            if (LocalizationSettings.InitializationOperation is { IsDone: false })
+                return false;
+
+            if (LocalizationSettings.AvailableLocales == null ||
+                LocalizationSettings.AvailableLocales.Locales == null ||
+                LocalizationSettings.AvailableLocales.Locales.Count == 0)
+                return false;
+
+            if (LocalizationSettings.SelectedLocale == null)
+                return false;
+
+            return LocalizationSettings.StringDatabase != null;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private static string ApplyFormatArgs(string text, string[] formatArgs)
@@ -43,11 +79,11 @@ public static class LocalizedTextResolver
 
     private static string TryUnityTable(string key)
     {
+        if (!CanUseUnityLocalization())
+            return key;
+
         try
         {
-            if (LocalizationSettings.StringDatabase == null)
-                return key;
-
             string value = LocalizationSettings.StringDatabase.GetLocalizedString(
                 LocalizationManager.StringTableCollectionName,
                 key);

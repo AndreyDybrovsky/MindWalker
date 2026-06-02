@@ -107,10 +107,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7465058847383158607}
-<<<<<<< HEAD
-  - component: {fileID: 1979355105803562362}
-=======
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -134,25 +130,6 @@ Transform:
   - {fileID: 9210968413192028526}
   m_Father: {fileID: 5940163653335853446}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-<<<<<<< HEAD
---- !u!114 &1979355105803562362
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1173159576638421198}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74386a263316bca449407d2b0133e83a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fadeLayer: {fileID: 0}
-  fadeDuration: 1.5
-  holdTime: 0.5
-  disableAfterFade: 1
-=======
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 --- !u!1 &1217415769670259861
 GameObject:
   m_ObjectHideFlags: 0
@@ -472,11 +449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 334c0085b849b2a47b28a74ccb564ec6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-<<<<<<< HEAD
-  totalTime: 10
-=======
   totalTime: 120
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   autoStart: 1
   endTimeSound: {fileID: 8300000, guid: 66b23e4c6565f3b4e820779b8375bb0c, type: 3}
   loadMainMenuOnTimerEnd: 1

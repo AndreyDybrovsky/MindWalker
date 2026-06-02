@@ -7,8 +7,6 @@ using UnityEngine.Audio;
 public static class AudioMixerRoutingUtility
 {
     private static AudioMixerGroup _sfxGroup;
-<<<<<<< HEAD
-=======
     private static AudioMixerGroup _musicGroup;
 
     public static AudioMixerGroup MusicGroup
@@ -39,7 +37,6 @@ public static class AudioMixerRoutingUtility
             return null;
         }
     }
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 
     public static AudioMixerGroup SfxGroup
     {
@@ -51,6 +48,13 @@ public static class AudioMixerRoutingUtility
             AudioMixer mixer = Resources.Load<AudioMixer>("Sounds/MainMixer");
             if (mixer != null)
             {
+                AudioMixerGroup[] byExact = mixer.FindMatchingGroups("SfxVolume");
+                if (byExact != null && byExact.Length > 0)
+                {
+                    _sfxGroup = byExact[0];
+                    return _sfxGroup;
+                }
+
                 AudioMixerGroup[] bySfx = mixer.FindMatchingGroups("Sfx");
                 if (bySfx != null && bySfx.Length > 0)
                 {
@@ -96,8 +100,6 @@ public static class AudioMixerRoutingUtility
         if (sfx != null)
             source.outputAudioMixerGroup = sfx;
     }
-<<<<<<< HEAD
-=======
 
     public static void BindSourceToMusic(AudioSource source)
     {
@@ -107,6 +109,29 @@ public static class AudioMixerRoutingUtility
         AudioMixerGroup music = MusicGroup;
         if (music != null)
             source.outputAudioMixerGroup = music;
+    }
+
+    public static void ApplySfxVolumeFallback(float linearVolume)
+    {
+        bool mute = linearVolume <= 0.001f;
+        AudioMixerGroup sfxGroup = SfxGroup;
+
+        AudioSource[] sources = Object.FindObjectsByType<AudioSource>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None);
+
+        for (int i = 0; i < sources.Length; i++)
+        {
+            AudioSource source = sources[i];
+            if (source == null)
+                continue;
+
+            AudioMixerGroup group = source.outputAudioMixerGroup;
+            if (sfxGroup != null && group == sfxGroup)
+                source.mute = mute;
+            else if (group != null && group.name.IndexOf("Sfx", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                source.mute = mute;
+        }
     }
 
     public static void ApplyMusicVolumeFallback(float linearVolume)
@@ -131,5 +156,4 @@ public static class AudioMixerRoutingUtility
                 source.mute = mute;
         }
     }
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 }

@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 using System;
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -12,10 +9,7 @@ using TMPro;
 /// <summary>
 /// Триггер входа в зону перехода: подсказка с локализацией, 3D-доска пациента у камеры, звуки входа/выхода, E — затемнение и загрузка сцены.
 /// </summary>
-<<<<<<< HEAD
-=======
 [DefaultExecutionOrder(100)]
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
 {
     [Header("Сцена")]
@@ -66,9 +60,6 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
 
     public float PressPromptReveal => _reveal;
     public bool IsPressPromptVisible =>
-<<<<<<< HEAD
-        _playerInZone && !IsLevelEntryBlocked() && !_isTransitioning && promptUI != null;
-=======
         _playerInZone && !IsLevelEntryBlocked() && !_isTransitioning;
 
     public void ApplySharedPressPromptText(PressEPromptView view)
@@ -83,7 +74,6 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
     {
         return PressEPromptUtility.ResolveLocalizedText(promptLocalizationKey, promptFallbackText);
     }
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 
     public void ApplySharedUi(GameObject prompt, TextMeshProUGUI text, CanvasGroup fade)
     {
@@ -93,14 +83,10 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
         if (promptText == null && text != null)
             promptText = text;
 
-<<<<<<< HEAD
-        if (fadeCanvasGroup == null && fade != null)
-=======
         if (IsInvalidFadeCanvasGroup(fadeCanvasGroup))
             fadeCanvasGroup = null;
 
         if (fade != null && !IsInvalidFadeCanvasGroup(fade))
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
             fadeCanvasGroup = fade;
     }
 
@@ -116,8 +102,6 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
             patientBoardPrefab = fallbackPrefab;
     }
 
-<<<<<<< HEAD
-=======
   /// <summary>Вызывается из <see cref="LobbyTransitionBootstrap"/> после привязки общих UI.</summary>
     public void NotifyLobbyBootstrapComplete()
     {
@@ -144,7 +128,6 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
         rb.useGravity = false;
     }
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     private void ResolveSharedReferences()
     {
         PressEPromptView sharedView = PressEPromptUtility.AcquireSharedPrompt();
@@ -180,8 +163,6 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
             if (fadeCanvasGroup != null && fadeCanvasGroup.alpha > 0.99f)
                 fadeCanvasGroup.alpha = 0f;
         }
-<<<<<<< HEAD
-=======
 
         EnsureValidFadeCanvasGroup();
     }
@@ -245,19 +226,10 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
         _usesSharedPressPrompt = sharedView != null
             && promptUI != null
             && promptUI == sharedView.gameObject;
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     }
 
     private void Start()
     {
-<<<<<<< HEAD
-        _triggerCollider = GetComponent<Collider>();
-        ResolveSharedReferences();
-        CheckAndUpdateTeleportState();
-        SanitizeFadeAndPromptCanvasGroups();
-
-        if (promptUI != null)
-=======
         if (_triggerCollider == null)
             _triggerCollider = GetComponent<Collider>();
 
@@ -268,7 +240,6 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
         EnsureValidFadeCanvasGroup();
 
         if (promptUI != null && !_usesSharedPressPrompt)
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         {
             if (promptUI.TryGetComponent(out RectTransform promptRt))
                 _promptUiOriginalLocalScale = promptRt.localScale.sqrMagnitude > 1e-8f
@@ -282,13 +253,10 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
             promptCanvasGroup.interactable = false;
             promptUI.SetActive(false);
         }
-<<<<<<< HEAD
-=======
         else if (_usesSharedPressPrompt)
         {
             EnsurePromptCanvasGroup();
         }
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
@@ -298,24 +266,16 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
             audioSource.playOnAwake = false;
         }
 
-<<<<<<< HEAD
-=======
         AudioMixerRoutingUtility.BindSourceToSfx(audioSource);
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         if (LocalizationManager.Instance != null)
             LocalizationManager.Instance.OnLanguageChanged += OnLanguageChanged;
 
         ApplyLocalizedPrompt(forceFallbackIfNeeded: true);
-<<<<<<< HEAD
-        _usesSharedPressPrompt = promptUI != null && PressEPromptUtility.IsSharedView(promptUI.GetComponent<PressEPromptView>());
-        PressEPromptCoordinator.Register(this);
-=======
         RefreshSharedPromptBinding();
         PressEPromptCoordinator.Register(this);
         PressEPromptUtility.HideNonSharedPressEPrompts();
         RefreshSharedPromptBinding();
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         PressEPromptCoordinator.Refresh();
         StartCoroutine(CheckPlayerSpawnedInsideTriggerNextFrame());
     }
@@ -323,12 +283,9 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
     private IEnumerator CheckPlayerSpawnedInsideTriggerNextFrame()
     {
         yield return null;
-<<<<<<< HEAD
-=======
         PressEPromptUtility.HideNonSharedPressEPrompts();
         RefreshSharedPromptBinding();
         PressEPromptCoordinator.Refresh();
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         TryRegisterPlayerIfAlreadyInsideTrigger(playEnterSound: false);
     }
 
@@ -427,11 +384,8 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
 
     private void Update()
     {
-<<<<<<< HEAD
-=======
         SyncPlayerZoneState();
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         bool wantShow = _playerInZone && !IsLevelEntryBlocked() && !_isTransitioning;
         float targetReveal = wantShow ? 1f : 0f;
         _reveal = Mathf.MoveTowards(_reveal, targetReveal, revealSpeed * Time.deltaTime);
@@ -450,18 +404,6 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
         if (!_usesSharedPressPrompt)
             ApplyPromptTextAlpha();
 
-<<<<<<< HEAD
-        if (wantShow && promptUI != null && !promptUI.activeSelf)
-            EnsurePromptUiActive();
-
-        if (wantShow && patientBoardPrefab != null && Camera.main != null)
-        {
-            if (_spawnedBoard == null)
-                SpawnBoardUnderCamera();
-
-            if (_boardView != null)
-                _boardView.SetVisualReveal(_reveal);
-=======
         if (wantShow && promptUI != null && !promptUI.activeSelf && !_usesSharedPressPrompt)
             EnsurePromptUiActive();
 
@@ -482,18 +424,13 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
                 if (_boardView != null)
                     _boardView.SetVisualReveal(_reveal);
             }
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         }
         else
         {
             if (_boardView != null)
                 _boardView.SetVisualReveal(_reveal);
 
-<<<<<<< HEAD
-            if (!wantShow && _reveal <= 0.001f && _spawnedBoard != null)
-=======
             if (!_playerInZone && _reveal <= 0.001f && _spawnedBoard != null)
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
             {
                 Destroy(_spawnedBoard);
                 _spawnedBoard = null;
@@ -501,22 +438,13 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
             }
         }
 
-<<<<<<< HEAD
-        if (promptUI != null && !wantShow && _reveal <= 0.001f && promptUI.activeSelf)
-=======
         if (!_usesSharedPressPrompt && promptUI != null && !wantShow && _reveal <= 0.001f && promptUI.activeSelf)
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
             promptUI.SetActive(false);
 
         if (_playerInZone && !_isTransitioning && Input.GetKeyDown(KeyCode.E))
             StartTransition();
     }
 
-<<<<<<< HEAD
-    private void SpawnBoardUnderCamera()
-    {
-        Camera cam = Camera.main;
-=======
     private void SyncPlayerZoneState()
     {
         if (_isTransitioning || IsLevelEntryBlocked() || _triggerCollider == null)
@@ -575,7 +503,6 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
 
     private void SpawnBoardUnderCamera(Camera cam)
     {
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         if (cam == null || patientBoardPrefab == null)
             return;
 
@@ -589,13 +516,6 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
 
         if (_boardView != null)
         {
-<<<<<<< HEAD
-            if (!string.IsNullOrEmpty(targetSceneName))
-                _boardView.SetLevelSceneKey(targetSceneName);
-            _boardView.SetVisualReveal(0f);
-            _boardView.RefreshLocalizedTexts();
-        }
-=======
             _boardView.BindViewCamera(cam);
 
             if (!string.IsNullOrEmpty(targetSceneName))
@@ -610,7 +530,6 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
                 $"{nameof(SceneTransitionTrigger)} «{gameObject.name}»: на префабе доски нет {nameof(PatientInfoBoardView)} — карточка пациента не появится.",
                 patientBoardPrefab);
         }
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     }
 
     private void CachePromptColorsOnce()
@@ -655,21 +574,6 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
 
     private void ApplyLocalizedPrompt(bool forceFallbackIfNeeded = false)
     {
-<<<<<<< HEAD
-        string resolved = promptFallbackText;
-
-        if (!string.IsNullOrEmpty(promptLocalizationKey) && LocalizationManager.Instance != null)
-        {
-            string t = LocalizationManager.Instance.T(promptLocalizationKey);
-            if (!string.IsNullOrEmpty(t) && t != promptLocalizationKey)
-                resolved = t;
-        }
-
-        if (promptText != null)
-            promptText.text = resolved;
-        if (promptText3D != null)
-            promptText3D.text = resolved;
-=======
         string resolved = ResolvePromptText();
 
         if (_usesSharedPressPrompt)
@@ -685,7 +589,6 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
             if (promptText3D != null)
                 promptText3D.text = resolved;
         }
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 
         if (forceFallbackIfNeeded)
             _promptColorCached = false;

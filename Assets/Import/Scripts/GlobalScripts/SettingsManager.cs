@@ -46,21 +46,15 @@ public interface ISettingsMenuUi
 public class SettingsManager : MonoBehaviour
 {
     private static SettingsManager _dataHost;
-<<<<<<< HEAD
-=======
     private static bool _applicationIsQuitting;
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 
     public static SettingsManager Instance
     {
         get
         {
-<<<<<<< HEAD
-=======
             if (_applicationIsQuitting || !Application.isPlaying)
                 return _dataHost;
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
             if (_dataHost != null)
                 return _dataHost;
 
@@ -77,12 +71,6 @@ public class SettingsManager : MonoBehaviour
                 }
             }
 
-<<<<<<< HEAD
-            if (!Application.isPlaying)
-                return null;
-
-=======
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
             GameObject go = new GameObject("SettingsManager");
             _dataHost = go.AddComponent<SettingsManager>();
             _dataHost._isDataHost = true;
@@ -92,8 +80,6 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
-<<<<<<< HEAD
-=======
 #if UNITY_EDITOR
     [UnityEditor.InitializeOnLoadMethod]
     private static void RegisterPlayModeExit()
@@ -115,7 +101,6 @@ public class SettingsManager : MonoBehaviour
         _dataHost = null;
     }
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     public bool IsDataHost => _isDataHost;
 
     public event Action OnSettingsApplied;
@@ -199,11 +184,8 @@ public class SettingsManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-<<<<<<< HEAD
-=======
         _applicationIsQuitting = true;
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         if (_isDataHost)
             SaveSettings();
     }
@@ -403,14 +385,21 @@ public class SettingsManager : MonoBehaviour
 
     private void ApplyAudioSettings()
     {
+        EnsureAudioMixerAssigned();
         AudioListener.volume = _currentSettings.masterVolume;
         ApplyMixerVolume(masterVolumeParam, _currentSettings.masterVolume);
         ApplyMixerVolume(musicVolumeParam, _currentSettings.musicVolume);
         ApplyMixerVolume(sfxVolumeParam, _currentSettings.sfxVolume);
-<<<<<<< HEAD
-=======
         AudioMixerRoutingUtility.ApplyMusicVolumeFallback(_currentSettings.musicVolume);
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
+        AudioMixerRoutingUtility.ApplySfxVolumeFallback(_currentSettings.sfxVolume);
+    }
+
+    private void EnsureAudioMixerAssigned()
+    {
+        if (audioMixer != null)
+            return;
+
+        audioMixer = Resources.Load<AudioMixer>("Sounds/MainMixer");
     }
 
     private void ApplyGameplay()
@@ -435,14 +424,10 @@ public class SettingsManager : MonoBehaviour
         if (audioMixer == null || string.IsNullOrEmpty(parameterName))
             return;
 
-<<<<<<< HEAD
-        float db = Mathf.Log10(Mathf.Clamp(linearVolume, 0.0001f, 1f)) * 20f;
-=======
         float db = linearVolume <= 0.001f
             ? -80f
             : Mathf.Log10(Mathf.Clamp(linearVolume, 0.0001f, 1f)) * 20f;
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         audioMixer.SetFloat(parameterName, db);
     }
 }

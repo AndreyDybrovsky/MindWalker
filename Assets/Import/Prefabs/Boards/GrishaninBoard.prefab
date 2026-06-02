@@ -15,11 +15,7 @@ PrefabInstance:
     - target: {fileID: 94556400727399352, guid: 99642d3edc63685448907020a45e5eb3, type: 3}
       propertyPath: portraitSprite
       value: 
-<<<<<<< HEAD
-      objectReference: {fileID: 21300000, guid: ead5dfea46cae0741b9d13548c3dcd4f, type: 3}
-=======
       objectReference: {fileID: 21300000, guid: 500cce3a4c8bc4f41bd677c479b47fcb, type: 3}
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     - target: {fileID: 94556400727399352, guid: 99642d3edc63685448907020a45e5eb3, type: 3}
       propertyPath: locKeyDiagnosis
       value: patient.ptsd.diagnosis

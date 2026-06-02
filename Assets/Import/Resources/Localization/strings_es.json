@@ -8,9 +8,6 @@
     { "key": "save.unknown", "value": "Desconocido" },
     { "key": "save.hp", "value": "HP: {0}/{1}" },
     { "key": "scene.hint_press_e", "value": "Pulsa E" },
-<<<<<<< HEAD
-    { "key": "game.autosave", "value": "Autoguardado" },
-=======
     { "key": "scene.gambling.boss_intro_1", "value": "Así que te atreviste a volver. ¿Para qué?" },
     { "key": "scene.gambling.boss_intro_2", "value": "¿De verdad quieres probar tu suerte una última vez?" },
     { "key": "scene.gambling.boss_refuse_1", "value": "¿Acaso aprendiste algo?" },
@@ -19,13 +16,15 @@
     { "key": "scene.depression.find_timer", "value": "Encuentra al paciente: {0}" },
     { "key": "scene.depression.calm_timer", "value": "Cálmalo: {0}" },
     { "key": "scene.depression.calm_interact", "value": "Calmar" },
+    { "key": "scene.depression.message_cannot_leave", "value": "No puedo irme ahora" },
+    { "key": "scene.depression.message_must_heal", "value": "Tengo que curar al paciente" },
+    { "key": "scene.depression.message_no_time", "value": "No tengo tiempo para esto" },
     { "key": "game.autosave", "value": "Autoguardado" },
     { "key": "lobby.quest_progress", "value": "Sálvalos: {0}/{1}" },
     { "key": "scene.ocd.objective_0", "value": "Haz la cama" },
     { "key": "scene.ocd.objective_1", "value": "Gira los objetos a 45°" },
     { "key": "slotmachine.hint", "value": "Pulsa la letra mostrada en el teclado" },
     { "key": "slotmachine.progress", "value": "{0}/{1}" },
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     { "key": "patient.status_sick", "value": "Enfermo" },
     { "key": "patient.status_healthy", "value": "Sano" },
     { "key": "patient.status_lost", "value": "Perdido" },
@@ -43,10 +42,6 @@
     { "key": "patient.autism.diagnosis", "value": "Trastorno del espectro autista" },
     { "key": "patient.autism.notes", "value": "Según el resultado de un test en internet" },
     { "key": "patient.autism.age", "value": "17" },
-<<<<<<< HEAD
-    { "key": "Menu.Grishanin", "value": "Paciente: Grishanin Igor\nDesviación: TEPT" },
-    { "key": "Menu.Lyukshin", "value": "Paciente: Lyukshin Nikita\nDesviación: Trastorno de identidad disociativo" },
-=======
     { "key": "patient.ludomania.name", "value": "Liukshin N.Yu." },
     { "key": "patient.ludomania.diagnosis", "value": "Ludopatía" },
     { "key": "patient.ludomania.notes", "value": "Perdió en el póquer un riñón, el almuerzo y los planos secretos de un reactor atómico" },
@@ -63,7 +58,6 @@
     { "key": "Menu.Lyukshin", "value": "Paciente: Liukshin N.Yu.\nDesviación: Ludopatía" },
     { "key": "Menu.Krivets", "value": "Paciente: Krivets S.D.\nDesviación: TOC" },
     { "key": "Menu.Vasiltsova", "value": "Paciente: Vasiltsova A. S.\nDesviación: Trastorno bipolar" },
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     { "key": "Menu.Zakharova", "value": "Paciente: Zakharova Polina\nDesviación: Autismo" },
     { "key": "Menu.Petrova", "value": "Paciente: Petrova Ekaterina\nDesviación: Depresión" },
     { "key": "Menu.NoName1", "value": "Paciente: —\nDesviación: —" },
@@ -98,11 +92,7 @@
     { "key": "Settings.Quality.4", "value": "Ultra" },
     { "key": "Settings.Quality.5", "value": "Personalizado" },
     { "key": "pause.exit_warning.question", "value": "¿Estás seguro?" },
-<<<<<<< HEAD
-    { "key": "pause.exit_warning.confirm", "value": "Sálvalos" },
-=======
     { "key": "pause.exit_warning.confirm", "value": "Aceptar" },
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     { "key": "pause.exit_warning.cancel", "value": "Cancelar" }
   ]
 }

@@ -56,6 +56,9 @@ public class SettingsLocalizedText : MonoBehaviour
 
     public static void MigrateAllLocalizeStringEvents()
     {
+        if (!LocalizationManager.IsUnityLocalizationAvailable)
+            return;
+
         LocalizeStringEvent[] events = UnityEngine.Object.FindObjectsByType<LocalizeStringEvent>(
             FindObjectsInactive.Include,
             FindObjectsSortMode.None);

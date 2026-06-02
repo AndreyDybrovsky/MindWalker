@@ -40,6 +40,9 @@ public class LocalizationManager : MonoBehaviour
     // Имя String Table Collection из Assets/Localization/Tables
     public const string StringTableCollectionName = "LocalizationBase";
 
+    /// <summary>Unity Localization (Addressables/.asset) успешно инициализирована.</summary>
+    public static bool IsUnityLocalizationAvailable { get; private set; }
+
     private GameLanguage currentLanguage;
     private readonly Dictionary<GameLanguage, Dictionary<string, string>> tables =
         new Dictionary<GameLanguage, Dictionary<string, string>>();
@@ -53,6 +56,8 @@ public class LocalizationManager : MonoBehaviour
         }
 
         instance = this;
+        if (transform.parent != null)
+            transform.SetParent(null, true);
         if (Application.isPlaying)
             DontDestroyOnLoad(gameObject);
 
@@ -73,12 +78,14 @@ public class LocalizationManager : MonoBehaviour
 
         if (initOperation.Status != UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
         {
+            IsUnityLocalizationAvailable = false;
             Debug.LogWarning(
-                "LocalizationManager: Unity Localization не инициализировалась (часто из‑за Addressables). " +
+                "LocalizationManager: Unity Localization не инициализировалась (часто Git LFS: таблицы .asset не скачаны). " +
                 "Используем только strings_*.json из Resources.");
             yield break;
         }
 
+        IsUnityLocalizationAvailable = true;
         ApplyLocale(currentLanguage);
         SettingsLocalizedText.MigrateAllLocalizeStringEvents();
     }
@@ -103,6 +110,9 @@ public class LocalizationManager : MonoBehaviour
 
     private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (!IsUnityLocalizationAvailable)
+            return;
+
         SettingsLocalizedText.MigrateAllLocalizeStringEvents();
     }
 
@@ -159,8 +169,22 @@ public class LocalizationManager : MonoBehaviour
     {
         // Важно: LocalizationSettings может быть еще в процессе инициализации
         // (например, при старте сцены). Мы применяем локаль синхронно, если доступно.
-        if (LocalizationSettings.AvailableLocales == null)
+        if (!IsUnityLocalizationAvailable &&
+            LocalizationSettings.InitializationOperation is { IsDone: true } &&
+            LocalizationSettings.InitializationOperation.Status !=
+            UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
+        {
+            EnsureTableLoaded(language);
             return;
+        }
+
+        if (LocalizationSettings.AvailableLocales == null ||
+            LocalizationSettings.AvailableLocales.Locales == null ||
+            LocalizationSettings.AvailableLocales.Locales.Count == 0)
+        {
+            EnsureTableLoaded(language);
+            return;
+        }
 
         string code = LanguageToLocaleCode(language);
         Locale locale = LocalizationSettings.AvailableLocales.GetLocale(code);
@@ -201,18 +225,17 @@ public class LocalizationManager : MonoBehaviour
             return value;
         }
 
-        // Фолбэк — пробуем Unity Localization (если настроена коллекция)
-        try
+        // Фолбэк — Unity Localization только если локали доступны
+        if (IsUnityLocalizationAvailable && LocalizationSettings.SelectedLocale != null)
         {
-            string locValue = LocalizationSettings.StringDatabase.GetLocalizedString(StringTableCollectionName, key);
-<<<<<<< HEAD
-            if (!string.IsNullOrEmpty(locValue) && locValue != key)
-=======
-            if (LocalizationStringUtility.IsValidTranslation(locValue, key))
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
-                return locValue;
+            try
+            {
+                string locValue = LocalizationSettings.StringDatabase.GetLocalizedString(StringTableCollectionName, key);
+                if (LocalizationStringUtility.IsValidTranslation(locValue, key))
+                    return locValue;
+            }
+            catch { }
         }
-        catch { }
 
         return key;
     }

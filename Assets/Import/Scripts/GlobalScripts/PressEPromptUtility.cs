@@ -1,17 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
-<<<<<<< HEAD
-using TMPro;
-
-/// <summary>
-/// Общая подсказка «Нажмите E» — сначала PressEText из PauseMenu / лобби, иначе Resources.
-=======
 using UnityEngine.SceneManagement;
 using TMPro;
 
 /// <summary>
 /// Общая подсказка «Нажмите E» — лобби / PauseMenu, иначе Resources.
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 /// </summary>
 public static class PressEPromptUtility
 {
@@ -21,8 +14,6 @@ public static class PressEPromptUtility
     private static GameObject _cachedPrefab;
     private static PressEPromptView _sharedPrompt;
 
-<<<<<<< HEAD
-=======
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStaticState()
     {
@@ -40,7 +31,6 @@ public static class PressEPromptUtility
         _sharedPrompt = null;
     }
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     public static bool IsSharedView(PressEPromptView view) => view != null && view == _sharedPrompt;
 
     public static PressEPromptView AcquireSharedPrompt()
@@ -66,11 +56,6 @@ public static class PressEPromptUtility
         pressE.SetActive(false);
 
         _sharedPrompt = view;
-<<<<<<< HEAD
-        return _sharedPrompt;
-    }
-
-=======
         SuppressDuplicatePressEPrompts(_sharedPrompt);
         return _sharedPrompt;
     }
@@ -84,7 +69,6 @@ public static class PressEPromptUtility
             SuppressDuplicatePressEPrompts(_sharedPrompt);
     }
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     public static PressEPromptView CreatePrompt()
     {
         PressEPromptView shared = AcquireSharedPrompt();
@@ -142,8 +126,6 @@ public static class PressEPromptUtility
 
     private static TextMeshProUGUI FindPressETextLabel()
     {
-<<<<<<< HEAD
-=======
         TextMeshProUGUI[] all = Object.FindObjectsByType<TextMeshProUGUI>(
             FindObjectsInactive.Include,
             FindObjectsSortMode.None);
@@ -169,13 +151,10 @@ public static class PressEPromptUtility
         if (fallbackUnderPlayer != null)
             return fallbackUnderPlayer;
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         GameObject pressE = GameObject.Find(SharedObjectName);
         if (pressE != null && pressE.TryGetComponent(out TextMeshProUGUI onRoot))
             return onRoot;
 
-<<<<<<< HEAD
-=======
         return null;
     }
 
@@ -202,20 +181,12 @@ public static class PressEPromptUtility
         if (keep == null)
             return;
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         TextMeshProUGUI[] all = Object.FindObjectsByType<TextMeshProUGUI>(
             FindObjectsInactive.Include,
             FindObjectsSortMode.None);
 
         for (int i = 0; i < all.Length; i++)
         {
-<<<<<<< HEAD
-            if (all[i] != null && all[i].gameObject.name == SharedObjectName)
-                return all[i];
-        }
-
-        return null;
-=======
             TextMeshProUGUI label = all[i];
             if (label == null || label.gameObject.name != SharedObjectName)
                 continue;
@@ -228,7 +199,6 @@ public static class PressEPromptUtility
             if (label.TryGetComponent(out CanvasGroup group))
                 group.alpha = 0f;
         }
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     }
 
     private static GameObject LoadPrefab()

@@ -2,13 +2,6 @@ using TMPro;
 using UnityEngine;
 
 /// <summary>
-<<<<<<< HEAD
-/// Подключает общие UI подсказки и затемнение ко всем <see cref="SceneTransitionTrigger"/> в лобби.
-/// </summary>
-[DisallowMultipleComponent]
-public class LobbyTransitionBootstrap : MonoBehaviour
-{
-=======
 /// Подключает общие UI подсказки, затемнение и счётчик прогресса ко всем <see cref="SceneTransitionTrigger"/> в лобби.
 /// </summary>
 [DisallowMultipleComponent]
@@ -25,19 +18,15 @@ public class LobbyTransitionBootstrap : MonoBehaviour
         "Gambling disease",
     };
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     [SerializeField] private GameObject sharedPromptUi;
     [SerializeField] private TextMeshProUGUI sharedPromptText;
     [SerializeField] private CanvasGroup sharedFadeCanvasGroup;
 
-<<<<<<< HEAD
-=======
     [Header("Счётчик «Спаси их: X/6»")]
     [SerializeField] private TextMeshProUGUI sharedProgressText;
     [Tooltip("Имя объекта в иерархии (например QuestText или Quest на LobbyCanvas).")]
     [SerializeField] private string progressTextObjectName = "QuestText";
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     private void Awake()
     {
         if (sharedPromptUi == null)
@@ -59,11 +48,7 @@ public class LobbyTransitionBootstrap : MonoBehaviour
             }
         }
 
-<<<<<<< HEAD
-        if (sharedFadeCanvasGroup == null)
-=======
         if (sharedFadeCanvasGroup == null || IsInvalidFadeReference(sharedFadeCanvasGroup))
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         {
             sharedFadeCanvasGroup = ScreenFadeUtility.EnsureFadeCanvasGroup();
             if (sharedFadeCanvasGroup != null)
@@ -78,16 +63,6 @@ public class LobbyTransitionBootstrap : MonoBehaviour
 
         for (int i = 0; i < triggers.Length; i++)
         {
-<<<<<<< HEAD
-            triggers[i].ApplySharedUi(sharedPromptUi, sharedPromptText, sharedFadeCanvasGroup);
-            if (sharedBoard != null)
-                triggers[i].ApplyDefaultPatientBoardIfMissing(sharedBoard);
-        }
-
-        PressEPromptCoordinator.Refresh();
-    }
-
-=======
             if (triggers[i] == null)
                 continue;
 
@@ -229,7 +204,6 @@ public class LobbyTransitionBootstrap : MonoBehaviour
         return root != null && root.name.IndexOf("Player", System.StringComparison.OrdinalIgnoreCase) >= 0;
     }
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     private static GameObject ResolveSharedPatientBoard(SceneTransitionTrigger[] triggers)
     {
         for (int i = 0; i < triggers.Length; i++)

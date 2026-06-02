@@ -44,14 +44,11 @@ namespace ElmanGameDevTools.PlayerSystem
         private float _currentPitch;
         private float _smoothInputX;
 
-<<<<<<< HEAD
-=======
         [Header("EXTERNAL LOOK")]
         [SerializeField] private float externalLookSmooth = 14f;
         private bool _externalLookActive;
         private Vector3 _externalLookWorldPoint;
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         [Header("CAMERA EFFECTS")]
         public bool enableCameraTilt = true;
         public float tiltAmount = 2f;
@@ -100,8 +97,6 @@ namespace ElmanGameDevTools.PlayerSystem
         public bool IsCrouching => _isCrouching;
         public MovementState CurrentState => _currentMovementState;
 
-<<<<<<< HEAD
-=======
         /// <summary>
         /// Подброс вверх на заданную высоту (метры от точки отталкивания до вершины дуги).
         /// </summary>
@@ -134,7 +129,6 @@ namespace ElmanGameDevTools.PlayerSystem
 
         public bool IsExternalLookActive => _externalLookActive;
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         private void Start()
         {
             if (controller == null) controller = GetComponent<CharacterController>();
@@ -154,11 +148,6 @@ namespace ElmanGameDevTools.PlayerSystem
 
         private void Update()
         {
-<<<<<<< HEAD
-            // Если CharacterController отключён/неактивен (часто так делают на паузе/в меню/при смерти),
-            // любые вызовы Move() будут спамить ошибками.
-            if (controller == null || !controller.enabled || !controller.gameObject.activeInHierarchy)
-=======
             if (controller == null || !controller.gameObject.activeInHierarchy)
                 return;
 
@@ -171,7 +160,6 @@ namespace ElmanGameDevTools.PlayerSystem
             // Если CharacterController отключён/неактивен (часто так делают на паузе/в меню/при смерти),
             // любые вызовы Move() будут спамить ошибками.
             if (!controller.enabled)
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
                 return;
 
             if (GameplayInputBlocker.IsBlocked)
@@ -290,15 +278,12 @@ namespace ElmanGameDevTools.PlayerSystem
 
         private void HandleCameraControl()
         {
-<<<<<<< HEAD
-=======
             if (_externalLookActive)
             {
                 ApplyExternalLookTowards(_externalLookWorldPoint, Mathf.Clamp01(Time.deltaTime * externalLookSmooth));
                 return;
             }
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
             if (GameplayInputBlocker.ShouldSuppressMouseLook)
                 return;
 
@@ -342,10 +327,6 @@ namespace ElmanGameDevTools.PlayerSystem
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, isActuallyRunning ? runFov : normalFov, Time.deltaTime * fovChangeSpeed);
         }
 
-<<<<<<< HEAD
-        private void HandleHeadBob()
-        {
-=======
         private void ApplyExternalLookTowards(Vector3 worldPoint, float smooth)
         {
             if (playerCamera == null)
@@ -390,7 +371,6 @@ namespace ElmanGameDevTools.PlayerSystem
             if (_externalLookActive)
                 return;
 
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
             float moveMag = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).magnitude;
             float currentCamH = _cameraBaseHeight * (controller.height / _originalHeight);
 

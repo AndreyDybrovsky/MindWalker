@@ -32,11 +32,7 @@ Material:
     - _Smoothness: 0.5
     m_Colors:
     - _BaseColor: {r: 1, g: 0.6299188, b: 0.34558818, a: 1}
-<<<<<<< HEAD
-    - _Color: {r: 1, g: 0.6299188, b: 0.34558812, a: 1}
-=======
     - _Color: {r: 1, g: 0.6299188, b: 0.34558818, a: 1}
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     - _EmissionColor: {r: 1, g: 0.62028396, b: 0.1397059, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

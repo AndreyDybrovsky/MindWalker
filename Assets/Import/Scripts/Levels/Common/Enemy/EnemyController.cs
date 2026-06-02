@@ -38,6 +38,11 @@ public class EnemyController : MonoBehaviour
         if (agent == null)
             agent = GetComponent<NavMeshAgent>();
 
+        if (agent == null)
+            agent = GetComponentInParent<NavMeshAgent>();
+
+        DisableConflictingRigidbodies();
+
         if (patrolCenter == null)
             patrolCenter = transform;
 
@@ -350,6 +355,22 @@ public class EnemyController : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    private void DisableConflictingRigidbodies()
+    {
+        Rigidbody[] bodies = GetComponentsInChildren<Rigidbody>(true);
+        for (int i = 0; i < bodies.Length; i++)
+        {
+            Rigidbody rb = bodies[i];
+            if (rb == null)
+                continue;
+
+            rb.isKinematic = true;
+            rb.useGravity = false;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
     }
 

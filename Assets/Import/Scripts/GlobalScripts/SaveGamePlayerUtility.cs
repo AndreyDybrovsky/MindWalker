@@ -6,11 +6,6 @@ using UnityEngine;
 /// </summary>
 public static class SaveGamePlayerUtility
 {
-<<<<<<< HEAD
-    private const int MaxApplyAttempts = 120;
-
-    public static bool TryCollectPlayerState(GameSaveData saveData)
-=======
     public const string PtsdInDangerSceneName = "PTSD in Danger";
 
     private const int MaxApplyAttempts = 120;
@@ -21,7 +16,6 @@ public static class SaveGamePlayerUtility
     }
 
     public static bool TryCollectPlayerState(GameSaveData saveData, bool collectTransform = true)
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     {
         if (saveData == null)
             return false;
@@ -29,16 +23,11 @@ public static class SaveGamePlayerUtility
         if (!PlayerTeleportUtility.TryGetPlayerBody(out Transform body))
             return false;
 
-<<<<<<< HEAD
-        saveData.playerPosition = body.position;
-        saveData.playerRotation = body.rotation;
-=======
         if (collectTransform)
         {
             saveData.playerPosition = body.position;
             saveData.playerRotation = body.rotation;
         }
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 
         if (TryGetPlayerHealth(body, out PlayerHealth health))
         {
@@ -53,11 +42,7 @@ public static class SaveGamePlayerUtility
         return true;
     }
 
-<<<<<<< HEAD
-    public static bool TryApplyPlayerState(GameSaveData saveData)
-=======
     public static bool TryApplyPlayerState(GameSaveData saveData, bool applyTransform = true)
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     {
         if (saveData == null)
             return false;
@@ -65,12 +50,8 @@ public static class SaveGamePlayerUtility
         if (!PlayerTeleportUtility.TryGetPlayerBody(out Transform body))
             return false;
 
-<<<<<<< HEAD
-        ApplyBodyTransform(body, saveData.playerPosition, saveData.playerRotation);
-=======
         if (applyTransform)
             ApplyBodyTransform(body, saveData.playerPosition, saveData.playerRotation);
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 
         if (TryGetPlayerHealth(body, out PlayerHealth health))
         {
@@ -86,22 +67,14 @@ public static class SaveGamePlayerUtility
         return true;
     }
 
-<<<<<<< HEAD
-    public static IEnumerator ApplyPlayerStateWhenReady(GameSaveData saveData)
-=======
     public static IEnumerator ApplyPlayerStateWhenReady(GameSaveData saveData, bool applyTransform = true)
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     {
         if (saveData == null)
             yield break;
 
         for (int i = 0; i < MaxApplyAttempts; i++)
         {
-<<<<<<< HEAD
-            if (TryApplyPlayerState(saveData))
-=======
             if (TryApplyPlayerState(saveData, applyTransform))
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
                 yield break;
 
             yield return null;

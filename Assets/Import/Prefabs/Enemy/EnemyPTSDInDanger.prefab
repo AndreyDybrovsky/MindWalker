@@ -114,12 +114,9 @@ MonoBehaviour:
   ignoreFloorHits: 1
   rebuildEveryFrame: 1
   clipByObstacles: 1
-<<<<<<< HEAD
-=======
   proximityRadius: 2.75
   proximityRingColor: {r: 1, g: 0.55, b: 0.1, a: 0.22}
   proximitySegments: 32
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 --- !u!1 &437599806793786607
 GameObject:
   m_ObjectHideFlags: 0
@@ -527,10 +524,7 @@ MonoBehaviour:
   turnSpeed: 4
   viewDistance: 13.61
   viewAngle: 70
-<<<<<<< HEAD
-=======
   proximityRadius: 2.75
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   detectHoldSeconds: 0.5
   obstacleLayer:
     serializedVersion: 2

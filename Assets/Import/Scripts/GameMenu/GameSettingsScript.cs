@@ -157,11 +157,7 @@ public class GameSettingsScript : MonoBehaviour
 
         if (warningContinueExitText != null)
             warningContinueExitText.text = PressEPromptUtility.ResolveLocalizedText(
-<<<<<<< HEAD
-                "pause.exit_warning.confirm", "Спаси их");
-=======
                 "pause.exit_warning.confirm", "Принять");
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 
         if (warningCancelExitText != null)
             warningCancelExitText.text = PressEPromptUtility.ResolveLocalizedText(

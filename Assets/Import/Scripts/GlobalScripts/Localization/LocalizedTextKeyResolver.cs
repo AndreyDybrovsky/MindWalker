@@ -27,7 +27,14 @@ public static class LocalizedTextKeyResolver
 
         try
         {
+            if (!LocalizationManager.IsUnityLocalizationAvailable)
+                return string.Empty;
+
             if (!LocalizationSettings.InitializationOperation.IsDone)
+                return string.Empty;
+
+            if (LocalizationSettings.InitializationOperation.Status !=
+                UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
                 return string.Empty;
 
             StringTable table = LocalizationSettings.StringDatabase.GetTable(LocalizationManager.StringTableCollectionName);

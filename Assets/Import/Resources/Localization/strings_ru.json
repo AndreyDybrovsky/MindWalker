@@ -9,9 +9,6 @@
     { "key": "save.unknown", "value": "Неизвестно" },
     { "key": "save.hp", "value": "HP: {0}/{1}" },
     { "key": "scene.hint_press_e", "value": "Нажмите E" },
-<<<<<<< HEAD
-    { "key": "game.autosave", "value": "Автосохранение" },
-=======
     { "key": "scene.gambling.boss_intro_1", "value": "Так ты посмел сюда вернуться, и ради чего?" },
     { "key": "scene.gambling.boss_intro_2", "value": "Неужели хочешь проверить свою удачу в последний раз?" },
     { "key": "scene.gambling.boss_refuse_1", "value": "Неужели чему-то научился?" },
@@ -20,13 +17,15 @@
     { "key": "scene.depression.find_timer", "value": "Найдите пациента: {0}" },
     { "key": "scene.depression.calm_timer", "value": "Успокойте: {0}" },
     { "key": "scene.depression.calm_interact", "value": "Успокойте" },
+    { "key": "scene.depression.message_cannot_leave", "value": "Я не могу сейчас уйти" },
+    { "key": "scene.depression.message_must_heal", "value": "Мне надо вылечить пациента" },
+    { "key": "scene.depression.message_no_time", "value": "У меня нет на это времени" },
     { "key": "game.autosave", "value": "Автосохранение" },
     { "key": "lobby.quest_progress", "value": "Спаси их: {0}/{1}" },
     { "key": "scene.ocd.objective_0", "value": "Заправьте кровать" },
     { "key": "scene.ocd.objective_1", "value": "Поверните предметы под углом 45°" },
     { "key": "slotmachine.hint", "value": "Нажмите показанную букву на клавиатуре" },
     { "key": "slotmachine.progress", "value": "{0}/{1}" },
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     { "key": "patient.status_sick", "value": "Болен" },
     { "key": "patient.status_healthy", "value": "Здоров" },
     { "key": "patient.status_lost", "value": "Потерян" },
@@ -44,10 +43,6 @@
     { "key": "patient.autism.diagnosis", "value": "Расстройство аутистического спектра" },
     { "key": "patient.autism.notes", "value": "По результатам теста в интернете" },
     { "key": "patient.autism.age", "value": "17" },
-<<<<<<< HEAD
-    { "key": "Menu.Grishanin", "value": "Пациент: Гришанин Игорь\nОтклонение: ПТСР" },
-    { "key": "Menu.Lyukshin", "value": "Пациент: Люкшин Никита\nОтклонение: Раздвоение личности" },
-=======
     { "key": "patient.ludomania.name", "value": "Люкшин Н.Ю." },
     { "key": "patient.ludomania.diagnosis", "value": "Лудомания" },
     { "key": "patient.ludomania.notes", "value": "Проиграл в покер почку, обед и секретные чертежи атомного реактора" },
@@ -64,7 +59,6 @@
     { "key": "Menu.Lyukshin", "value": "Пациент: Люкшин Н.Ю.\nОтклонение: Лудомания" },
     { "key": "Menu.Krivets", "value": "Пациент: Кривец С.Д.\nОтклонение: ОКР" },
     { "key": "Menu.Vasiltsova", "value": "Пациент: Васильцова А. С.\nОтклонение: Биполярное расстройство" },
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     { "key": "Menu.Zakharova", "value": "Пациент: Захарова Полина\nОтклонение: Аутизм" },
     { "key": "Menu.Petrova", "value": "Пациент: Петрова Екатерина\nОтклонение: Депрессия" },
     { "key": "Menu.NoName1", "value": "Пациент: —\nОтклонение: —" },
@@ -99,11 +93,7 @@
     { "key": "Settings.Quality.4", "value": "Ультра" },
     { "key": "Settings.Quality.5", "value": "Пользовательский" },
     { "key": "pause.exit_warning.question", "value": "Вы уверены?" },
-<<<<<<< HEAD
-    { "key": "pause.exit_warning.confirm", "value": "Спаси их" },
-=======
     { "key": "pause.exit_warning.confirm", "value": "Принять" },
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     { "key": "pause.exit_warning.cancel", "value": "Отмена" }
   ]
 }

@@ -108,14 +108,6 @@ public class BossSpawnManager : MonoBehaviour
 
     private void SpawnBoss()
     {
-<<<<<<< HEAD
-        SpawnBossInternal(
-            bossSpawnPoint != null ? bossSpawnPoint.position : transform.position,
-            bossSpawnPoint != null ? bossSpawnPoint.rotation : transform.rotation,
-            showMessage: true,
-            playSound: true
-        );
-=======
         SpawnBossFromEncounter(showMessage: true, playSound: true);
     }
 
@@ -130,7 +122,6 @@ public class BossSpawnManager : MonoBehaviour
             bossSpawnPoint != null ? bossSpawnPoint.rotation : transform.rotation,
             showMessage,
             playSound);
->>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     }
     
     private void SpawnBossInternal(Vector3 position, Quaternion rotation, bool showMessage = true, bool playSound = true)
