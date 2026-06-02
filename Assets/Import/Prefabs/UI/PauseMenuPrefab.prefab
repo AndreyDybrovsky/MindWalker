@@ -8632,7 +8632,11 @@ GameObject:
   - component: {fileID: 554825918489459935}
   - component: {fileID: 2242790107696909712}
   m_Layer: 5
+<<<<<<< HEAD
   m_Name: Quest
+=======
+  m_Name: QuestText
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

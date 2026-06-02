@@ -229,7 +229,11 @@ public class WelcomeMenuController : MonoBehaviour
             if (db != null)
             {
                 string fromTable = db.GetLocalizedString(LocalizationManager.StringTableCollectionName, key);
+<<<<<<< HEAD
                 if (!string.IsNullOrEmpty(fromTable) && fromTable != key)
+=======
+                if (LocalizationStringUtility.IsValidTranslation(fromTable, key))
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
                     return fromTable;
             }
         }

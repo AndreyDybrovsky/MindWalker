@@ -22,6 +22,17 @@ public abstract class PlayerInteractionZone : MonoBehaviour, IPressEPromptContri
     public float PressPromptReveal => Reveal;
     public bool IsPressPromptVisible => PlayerInZone && !InteractionBusy && PromptView != null;
 
+<<<<<<< HEAD
+=======
+    public void ApplySharedPressPromptText(PressEPromptView view)
+    {
+        if (view == null)
+            return;
+
+        view.SetText(PressEPromptUtility.ResolveLocalizedText(promptLocalizationKey, promptFallbackText));
+    }
+
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     protected virtual void Awake()
     {
         ZoneCollider = GetComponent<Collider>();
@@ -79,7 +90,11 @@ public abstract class PlayerInteractionZone : MonoBehaviour, IPressEPromptContri
         ApplyLocalizedPrompt();
     }
 
+<<<<<<< HEAD
     protected void ApplyLocalizedPrompt()
+=======
+    protected virtual void ApplyLocalizedPrompt()
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     {
         if (PromptView == null)
             return;

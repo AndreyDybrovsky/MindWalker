@@ -53,7 +53,11 @@
 
 ### Игровые уровни (общее для всех)
 
+<<<<<<< HEAD
 **Сцены:** `Autism`, `Depression`, `Level4`, `Level5`, `ludomania`, `PTSD`, `PTSD in Danger`, …
+=======
+**Сцены:** `Autism`, `Depression`, `Level4`, `Level5`, `ludomania`, `Gambling disease`, `PTSD`, `PTSD in Danger`, …
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 
 | Компонент | Скрипт |
 |-----------|--------|
@@ -69,6 +73,10 @@
 | Босс | `BossSpawnManager` |
 | Часы на руке (опционально) | `WatchHandDisplay` на префабе `Watch` |
 | Атмосфера | `LevelAtmosphere` |
+<<<<<<< HEAD
+=======
+| Цепочка моментов ОКР (E → fade → надпись) | `OCDMomentTrigger` |
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 
 **Глобально (не в сцене, но работают):** `AutoSaveSceneNotifier`, `SaveManager`, `GameplayInputBlocker`.
 
@@ -99,6 +107,38 @@
 
 ---
 
+<<<<<<< HEAD
+=======
+### Gambling disease (`Gambling disease.unity`)
+
+Префаб `Assets/Import/Prefabs/SlotMachine.prefab` — расставить по карте.
+
+| Компонент | Скрипт |
+|-----------|--------|
+| Притяжение + QTE букв | `SlotMachineController` |
+| Триггер перед автоматом | `SlotMachineLureZone` |
+| UI буквы (экран) | `SlotMachineLetterUI` |
+| Homeless: урон по таймеру в зоне видимости | `PeriodicProximityDamageEnemy` |
+
+Настройка: **Tools → Gambling → Настроить префаб SlotMachine** / **Homeless**.
+
+---
+
+### Bipolar (`Bipolar.unity`)
+
+Луг и кошмар — **две далёкие зоны одной сцены**. Триггер: мгновенное затемнение → телепорт → смена пост-обработки.
+
+| Компонент | Скрипт |
+|-----------|--------|
+| Пост-обработка / свет / небо | `BipolarMindscapeController` |
+| Триггер телепорта между зонами | `BipolarMindscapeSwitchTrigger` |
+| Финал уровня (затемнение → успех) | `BipolarEndTrigger` |
+
+**Настройка:** объект `BipolarMindscape` + контроллер; два Volume (луг / кошмар); триггеры с `Player Spawn` и `Target Mode`.
+
+---
+
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 ### Victory (`Victory.unity`)
 
 Финальная сцена после прохождения всех уровней — только UI/камера, без боевой логики. Загрузка из `LevelSuccessFlow.ResolveReturnScene`.

@@ -142,6 +142,7 @@ public class EnemyHealth : MonoBehaviour
             yield return null;
         }
         
+<<<<<<< HEAD
         // Делаем врага неактивным или уничтожаем его
         gameObject.SetActive(false);
         
@@ -152,6 +153,10 @@ public class EnemyHealth : MonoBehaviour
         }
         
         Destroy(gameObject);
+=======
+        // Оставляем объект в сцене неактивным — так его можно восстановить из сохранения.
+        gameObject.SetActive(false);
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     }
 
     public void ResetHealth()

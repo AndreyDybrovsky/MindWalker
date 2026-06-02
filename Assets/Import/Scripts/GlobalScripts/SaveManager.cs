@@ -329,6 +329,7 @@ public class SaveManager : MonoBehaviour
         
         Debug.Log("Начинаем применение данных сохранения...");
         
+<<<<<<< HEAD
         yield return SaveGamePlayerUtility.ApplyPlayerStateWhenReady(saveData);
         Debug.Log($"Игрок восстановлен: HP {saveData.playerHealth}/{saveData.playerMaxHealth}, позиция {saveData.playerPosition}");
 
@@ -339,6 +340,17 @@ public class SaveManager : MonoBehaviour
             yield return new WaitForSeconds(0.15f);
             SaveGamePlayerUtility.TryApplyPlayerState(saveData);
         }
+=======
+        bool applyPlayerTransform = !SaveGamePlayerUtility.IsPtsdInDangerScene();
+        yield return SaveGamePlayerUtility.ApplyPlayerStateWhenReady(saveData, applyPlayerTransform);
+
+        if (applyPlayerTransform)
+            Debug.Log($"Игрок восстановлен: HP {saveData.playerHealth}/{saveData.playerMaxHealth}, позиция {saveData.playerPosition}");
+        else
+            Debug.Log($"Игрок восстановлен (без телепорта): HP {saveData.playerHealth}/{saveData.playerMaxHealth}");
+
+        int restoredCount = SaveGameEnemyUtility.RestoreEnemies(saveData);
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         
         // Применяем время таймера
         GameTimer gameTimer = FindFirstObjectByType<GameTimer>();
@@ -419,6 +431,7 @@ public class SaveManager : MonoBehaviour
         saveData.UpdateSaveDate();
         saveData.currentScene = SceneManager.GetActiveScene().name;
 
+<<<<<<< HEAD
         if (!SaveGamePlayerUtility.TryCollectPlayerState(saveData))
             Debug.Log("SaveManager: игрок в сцене не найден — позиция и HP оставлены из предыдущего сохранения.");
         
@@ -428,6 +441,18 @@ public class SaveManager : MonoBehaviour
             saveData.enemies = new List<GameSaveData.EnemyData>();
 
         if (enemies.Length > 0)
+=======
+        bool collectPlayerTransform = !SaveGamePlayerUtility.IsPtsdInDangerScene();
+        if (!SaveGamePlayerUtility.TryCollectPlayerState(saveData, collectPlayerTransform))
+            Debug.Log("SaveManager: игрок в сцене не найден — позиция и HP оставлены из предыдущего сохранения.");
+        
+        // Собираем данные противников (в лобби врагов нет — не затираем список из сейва)
+        EnemyHealth[] enemyHealthComponents = FindObjectsByType<EnemyHealth>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        if (saveData.enemies == null)
+            saveData.enemies = new List<GameSaveData.EnemyData>();
+
+        if (enemyHealthComponents.Length > 0)
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         {
             saveData.enemies.Clear();
 
@@ -438,8 +463,14 @@ public class SaveManager : MonoBehaviour
             GameObject bossInScene = null;
             if (bossSpawnManager != null && bossSpawnManager.IsBossSpawned)
             {
+<<<<<<< HEAD
                 foreach (GameObject enemy in enemies)
                 {
+=======
+                foreach (EnemyHealth bossHealth in enemyHealthComponents)
+                {
+                    GameObject enemy = bossHealth != null ? bossHealth.gameObject : null;
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
                     if (enemy != null && enemy.name.Contains("(Boss)"))
                     {
                         bossInScene = enemy;
@@ -448,9 +479,19 @@ public class SaveManager : MonoBehaviour
                 }
             }
 
+<<<<<<< HEAD
             foreach (GameObject enemy in enemies)
             {
                 if (enemy == null || enemy == bossInScene)
+=======
+            foreach (EnemyHealth enemyHealth in enemyHealthComponents)
+            {
+                if (enemyHealth == null)
+                    continue;
+
+                GameObject enemy = enemyHealth.gameObject;
+                if (!enemy.CompareTag("Enemy") || enemy == bossInScene)
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
                     continue;
 
                 string enemyName = enemy.name;
@@ -464,6 +505,7 @@ public class SaveManager : MonoBehaviour
                     enemyId = enemyName,
                     position = isPatrolGuard ? Vector3.zero : enemy.transform.position,
                     rotation = isPatrolGuard ? Quaternion.identity : enemy.transform.rotation,
+<<<<<<< HEAD
                     isAlive = enemy.activeSelf,
                     enemyType = isPatrolGuard ? "PatrolConeGuard" : "EnemyController"
                 };
@@ -479,6 +521,14 @@ public class SaveManager : MonoBehaviour
                     enemyData.maxHealth = 100f;
                 }
 
+=======
+                    isAlive = !enemyHealth.IsDead,
+                    enemyType = isPatrolGuard ? "PatrolConeGuard" : "EnemyController",
+                    health = enemyHealth.CurrentHealth,
+                    maxHealth = enemyHealth.MaxHealth
+                };
+
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
                 saveData.enemies.Add(enemyData);
             }
 

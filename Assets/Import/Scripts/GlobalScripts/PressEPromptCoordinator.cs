@@ -27,6 +27,10 @@ public static class PressEPromptCoordinator
 
         float maxReveal = 0f;
         bool anyVisible = false;
+<<<<<<< HEAD
+=======
+        IPressEPromptContributor bestContributor = null;
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 
         for (int i = Contributors.Count - 1; i >= 0; i--)
         {
@@ -41,7 +45,15 @@ public static class PressEPromptCoordinator
                 continue;
 
             anyVisible = true;
+<<<<<<< HEAD
             maxReveal = Mathf.Max(maxReveal, contributor.PressPromptReveal);
+=======
+            if (contributor.PressPromptReveal >= maxReveal)
+            {
+                maxReveal = contributor.PressPromptReveal;
+                bestContributor = contributor;
+            }
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         }
 
         if (anyVisible)
@@ -49,6 +61,10 @@ public static class PressEPromptCoordinator
             if (!view.gameObject.activeSelf)
                 view.gameObject.SetActive(true);
 
+<<<<<<< HEAD
+=======
+            bestContributor?.ApplySharedPressPromptText(view);
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
             view.SetReveal(maxReveal);
         }
         else
@@ -64,4 +80,8 @@ public interface IPressEPromptContributor
 {
     float PressPromptReveal { get; }
     bool IsPressPromptVisible { get; }
+<<<<<<< HEAD
+=======
+    void ApplySharedPressPromptText(PressEPromptView view);
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 }

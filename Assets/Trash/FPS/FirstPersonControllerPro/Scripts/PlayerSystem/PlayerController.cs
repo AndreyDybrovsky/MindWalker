@@ -44,6 +44,14 @@ namespace ElmanGameDevTools.PlayerSystem
         private float _currentPitch;
         private float _smoothInputX;
 
+<<<<<<< HEAD
+=======
+        [Header("EXTERNAL LOOK")]
+        [SerializeField] private float externalLookSmooth = 14f;
+        private bool _externalLookActive;
+        private Vector3 _externalLookWorldPoint;
+
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         [Header("CAMERA EFFECTS")]
         public bool enableCameraTilt = true;
         public float tiltAmount = 2f;
@@ -92,6 +100,41 @@ namespace ElmanGameDevTools.PlayerSystem
         public bool IsCrouching => _isCrouching;
         public MovementState CurrentState => _currentMovementState;
 
+<<<<<<< HEAD
+=======
+        /// <summary>
+        /// Подброс вверх на заданную высоту (метры от точки отталкивания до вершины дуги).
+        /// </summary>
+        public void LaunchToHeight(float height)
+        {
+            if (controller == null || height <= 0f)
+                return;
+
+            _velocity.y = Mathf.Sqrt(height * -2f * gravity);
+            _hasJumped = true;
+            _isGrounded = false;
+            _currentMovementState = MovementState.Jumping;
+        }
+
+        /// <summary>Взгляд на точку в мире (мини-игры, катсцены). Отключает мышь.</summary>
+        public void SetExternalLookAtWorldPoint(Vector3 worldPoint, bool active)
+        {
+            _externalLookActive = active;
+            if (active)
+                _externalLookWorldPoint = worldPoint;
+        }
+
+        /// <summary>Мгновенно направить камеру на точку (без рывка на следующем кадре).</summary>
+        public void SnapLookAtWorldPoint(Vector3 worldPoint)
+        {
+            _externalLookActive = true;
+            _externalLookWorldPoint = worldPoint;
+            ApplyExternalLookTowards(worldPoint, 1f);
+        }
+
+        public bool IsExternalLookActive => _externalLookActive;
+
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         private void Start()
         {
             if (controller == null) controller = GetComponent<CharacterController>();
@@ -111,9 +154,24 @@ namespace ElmanGameDevTools.PlayerSystem
 
         private void Update()
         {
+<<<<<<< HEAD
             // Если CharacterController отключён/неактивен (часто так делают на паузе/в меню/при смерти),
             // любые вызовы Move() будут спамить ошибками.
             if (controller == null || !controller.enabled || !controller.gameObject.activeInHierarchy)
+=======
+            if (controller == null || !controller.gameObject.activeInHierarchy)
+                return;
+
+            if (_externalLookActive)
+            {
+                ApplyExternalLookTowards(_externalLookWorldPoint, Mathf.Clamp01(Time.deltaTime * externalLookSmooth));
+                return;
+            }
+
+            // Если CharacterController отключён/неактивен (часто так делают на паузе/в меню/при смерти),
+            // любые вызовы Move() будут спамить ошибками.
+            if (!controller.enabled)
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
                 return;
 
             if (GameplayInputBlocker.IsBlocked)
@@ -232,6 +290,15 @@ namespace ElmanGameDevTools.PlayerSystem
 
         private void HandleCameraControl()
         {
+<<<<<<< HEAD
+=======
+            if (_externalLookActive)
+            {
+                ApplyExternalLookTowards(_externalLookWorldPoint, Mathf.Clamp01(Time.deltaTime * externalLookSmooth));
+                return;
+            }
+
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
             if (GameplayInputBlocker.ShouldSuppressMouseLook)
                 return;
 
@@ -275,8 +342,55 @@ namespace ElmanGameDevTools.PlayerSystem
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, isActuallyRunning ? runFov : normalFov, Time.deltaTime * fovChangeSpeed);
         }
 
+<<<<<<< HEAD
         private void HandleHeadBob()
         {
+=======
+        private void ApplyExternalLookTowards(Vector3 worldPoint, float smooth)
+        {
+            if (playerCamera == null)
+                return;
+
+            Vector3 origin = playerCamera.position;
+            Vector3 direction = worldPoint - origin;
+            if (direction.sqrMagnitude < 0.0001f)
+                return;
+
+            Vector3 flat = direction;
+            flat.y = 0f;
+            if (flat.sqrMagnitude < 0.0001f)
+                flat = transform.forward;
+
+            float targetYaw = Mathf.Atan2(flat.x, flat.z) * Mathf.Rad2Deg;
+            float horizontalDistance = new Vector2(direction.x, direction.z).magnitude;
+            float targetPitch = Mathf.Atan2(-direction.y, horizontalDistance) * Mathf.Rad2Deg;
+            targetPitch = Mathf.Clamp(targetPitch, maxLookDownAngle, maxLookUpAngle);
+
+            smooth = Mathf.Clamp01(smooth);
+            _targetYaw = targetYaw;
+            _targetPitch = targetPitch;
+            _currentYaw = Mathf.LerpAngle(_currentYaw, _targetYaw, smooth);
+            _currentPitch = Mathf.Lerp(_currentPitch, _targetPitch, smooth);
+            _currentTilt = Mathf.Lerp(_currentTilt, 0f, smooth);
+            _smoothInputX = 0f;
+
+            transform.rotation = Quaternion.Euler(0f, _currentYaw, 0f);
+            playerCamera.localRotation = Quaternion.Euler(_currentPitch, 0f, _currentTilt);
+
+            float currentCamH = _cameraBaseHeight * (controller.height / _originalHeight);
+            Vector3 camPos = playerCamera.localPosition;
+            camPos.x = Mathf.Lerp(camPos.x, 0f, smooth);
+            camPos.z = Mathf.Lerp(camPos.z, 0f, smooth);
+            camPos.y = Mathf.Lerp(camPos.y, currentCamH, smooth);
+            playerCamera.localPosition = camPos;
+        }
+
+        private void HandleHeadBob()
+        {
+            if (_externalLookActive)
+                return;
+
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
             float moveMag = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).magnitude;
             float currentCamH = _cameraBaseHeight * (controller.height / _originalHeight);
 

@@ -114,6 +114,24 @@ public class PatientInfoBoardView : MonoBehaviour
         RefreshLocalizedTexts();
     }
 
+<<<<<<< HEAD
+=======
+    /// <summary>Привязать World Space Canvas к камере игрока (нужно после спавна под камерой).</summary>
+    public void BindViewCamera(Camera cam)
+    {
+        if (cam == null)
+            return;
+
+        Canvas[] canvases = GetComponentsInChildren<Canvas>(true);
+        for (int i = 0; i < canvases.Length; i++)
+        {
+            Canvas canvas = canvases[i];
+            if (canvas != null && canvas.renderMode == RenderMode.WorldSpace)
+                canvas.worldCamera = cam;
+        }
+    }
+
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     public void SetVisualReveal(float alpha)
     {
         _visibility = Mathf.Clamp01(alpha);

@@ -12,6 +12,11 @@ public class FadeStart : MonoBehaviour
 
     private void Awake()
     {
+<<<<<<< HEAD
+=======
+        ResolveFadeLayer();
+
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         if (fadeLayer != null)
         {
             fadeLayer.alpha = 1f;
@@ -21,6 +26,7 @@ public class FadeStart : MonoBehaviour
 
     private void Start()
     {
+<<<<<<< HEAD
         if (fadeLayer != null)
         {
             isFading = true;
@@ -31,6 +37,31 @@ public class FadeStart : MonoBehaviour
         {
             Debug.LogWarning($"{nameof(FadeStart)}: CanvasGroup не назначен.");
         }
+=======
+        if (fadeLayer == null)
+            return;
+
+        if (IsAnyFadeActive)
+            return;
+
+        isFading = true;
+        IsAnyFadeActive = true;
+        StartCoroutine(FadeOutRoutine());
+    }
+
+    private void ResolveFadeLayer()
+    {
+        if (fadeLayer != null)
+            return;
+
+        if (TryGetComponent(out CanvasGroup selfGroup))
+            fadeLayer = selfGroup;
+        else
+            fadeLayer = GetComponentInChildren<CanvasGroup>(true);
+
+        if (fadeLayer == null)
+            fadeLayer = ScreenFadeUtility.EnsureFadeCanvasGroup();
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     }
 
     private System.Collections.IEnumerator FadeOutRoutine()

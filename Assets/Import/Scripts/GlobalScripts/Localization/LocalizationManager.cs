@@ -205,7 +205,11 @@ public class LocalizationManager : MonoBehaviour
         try
         {
             string locValue = LocalizationSettings.StringDatabase.GetLocalizedString(StringTableCollectionName, key);
+<<<<<<< HEAD
             if (!string.IsNullOrEmpty(locValue) && locValue != key)
+=======
+            if (LocalizationStringUtility.IsValidTranslation(locValue, key))
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
                 return locValue;
         }
         catch { }

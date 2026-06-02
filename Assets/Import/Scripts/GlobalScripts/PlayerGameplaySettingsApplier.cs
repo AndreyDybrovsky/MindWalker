@@ -10,19 +10,36 @@ public class PlayerGameplaySettingsApplier : MonoBehaviour
     [SerializeField] private int maxResolveFrames = 120;
 
     private PlayerController _player;
+<<<<<<< HEAD
 
     private void OnEnable()
     {
         if (SettingsManager.Instance != null)
             SettingsManager.Instance.OnSettingsApplied += ApplyFromSettings;
+=======
+    private SettingsManager _settingsManager;
+
+    private void OnEnable()
+    {
+        _settingsManager = SettingsManager.Instance;
+        if (_settingsManager != null)
+            _settingsManager.OnSettingsApplied += ApplyFromSettings;
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 
         StartCoroutine(ApplyWhenReady());
     }
 
     private void OnDisable()
     {
+<<<<<<< HEAD
         if (SettingsManager.Instance != null)
             SettingsManager.Instance.OnSettingsApplied -= ApplyFromSettings;
+=======
+        if (_settingsManager != null)
+            _settingsManager.OnSettingsApplied -= ApplyFromSettings;
+
+        _settingsManager = null;
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     }
 
     private IEnumerator ApplyWhenReady()

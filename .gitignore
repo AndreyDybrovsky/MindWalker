@@ -107,3 +107,10 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+<<<<<<< HEAD
+=======
+
+*.zip
+*.7z
+
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)

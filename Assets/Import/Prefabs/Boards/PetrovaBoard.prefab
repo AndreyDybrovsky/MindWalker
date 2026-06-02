@@ -15,7 +15,11 @@ PrefabInstance:
     - target: {fileID: 94556400727399352, guid: 99642d3edc63685448907020a45e5eb3, type: 3}
       propertyPath: portraitSprite
       value: 
+<<<<<<< HEAD
       objectReference: {fileID: 21300000, guid: da57d5a4a4c4a564cb3689b947fb6df0, type: 3}
+=======
+      objectReference: {fileID: 21300000, guid: 60925d12d7ab65649aa9f9d98cf44bcf, type: 3}
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     - target: {fileID: 94556400727399352, guid: 99642d3edc63685448907020a45e5eb3, type: 3}
       propertyPath: locKeyDiagnosis
       value: patient.depression.diagnosis

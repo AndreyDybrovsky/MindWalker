@@ -108,12 +108,29 @@ public class BossSpawnManager : MonoBehaviour
 
     private void SpawnBoss()
     {
+<<<<<<< HEAD
         SpawnBossInternal(
             bossSpawnPoint != null ? bossSpawnPoint.position : transform.position,
             bossSpawnPoint != null ? bossSpawnPoint.rotation : transform.rotation,
             showMessage: true,
             playSound: true
         );
+=======
+        SpawnBossFromEncounter(showMessage: true, playSound: true);
+    }
+
+    /// <summary>Сцена казино: бой после диалога с боссом (без ожидания уничтожения всех врагов).</summary>
+    public void SpawnBossFromEncounter(bool showMessage = false, bool playSound = true)
+    {
+        if (bossSpawned || bossPrefab == null)
+            return;
+
+        SpawnBossInternal(
+            bossSpawnPoint != null ? bossSpawnPoint.position : transform.position,
+            bossSpawnPoint != null ? bossSpawnPoint.rotation : transform.rotation,
+            showMessage,
+            playSound);
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     }
     
     private void SpawnBossInternal(Vector3 position, Quaternion rotation, bool showMessage = true, bool playSound = true)

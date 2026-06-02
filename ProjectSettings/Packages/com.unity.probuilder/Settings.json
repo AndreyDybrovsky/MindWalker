@@ -72,6 +72,19 @@
                 "value": "{\"m_Value\":true}"
             },
             {
+<<<<<<< HEAD
+=======
+                "type": "System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+                "key": "GrowSelection.useAngle",
+                "value": "{\"m_Value\":true}"
+            },
+            {
+                "type": "System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+                "key": "GrowSelection.iterativeGrow",
+                "value": "{\"m_Value\":false}"
+            },
+            {
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
                 "type": "UnityEngine.ProBuilder.LogLevel, Unity.ProBuilder, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
                 "key": "log.level",
                 "value": "{\"m_Value\":3}"
@@ -149,7 +162,11 @@
             {
                 "type": "UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
                 "key": "ShapeBuilder.LastSize.Plane",
+<<<<<<< HEAD
                 "value": "{\"m_Value\":{\"x\":8.952248573303223,\"y\":0.0,\"z\":-10.448314666748047}}"
+=======
+                "value": "{\"m_Value\":{\"x\":59.313655853271487,\"y\":0.0,\"z\":33.922157287597659}}"
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
             },
             {
                 "type": "UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
@@ -200,6 +217,14 @@
                 "type": "System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
                 "key": "ExtrudeFaces.distance",
                 "value": "{\"m_Value\":0.5}"
+<<<<<<< HEAD
+=======
+            },
+            {
+                "type": "System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+                "key": "GrowSelection.angleValue",
+                "value": "{\"m_Value\":15.699999809265137}"
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
             }
         ]
     }

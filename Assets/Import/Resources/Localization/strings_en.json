@@ -9,7 +9,24 @@
     { "key": "save.unknown", "value": "Unknown" },
     { "key": "save.hp", "value": "HP: {0}/{1}" },
     { "key": "scene.hint_press_e", "value": "Press E" },
+<<<<<<< HEAD
     { "key": "game.autosave", "value": "Autosave" },
+=======
+    { "key": "scene.gambling.boss_intro_1", "value": "So you dared to come back. What for?" },
+    { "key": "scene.gambling.boss_intro_2", "value": "Do you really want to test your luck one last time?" },
+    { "key": "scene.gambling.boss_refuse_1", "value": "Have you actually learned something?" },
+    { "key": "scene.gambling.boss_refuse_2", "value": "You still won't leave here in one piece." },
+    { "key": "scene.gambling.wheel_spin", "value": "Spin" },
+    { "key": "scene.depression.find_timer", "value": "Find the patient: {0}" },
+    { "key": "scene.depression.calm_timer", "value": "Calm them: {0}" },
+    { "key": "scene.depression.calm_interact", "value": "Calm" },
+    { "key": "game.autosave", "value": "Autosave" },
+    { "key": "lobby.quest_progress", "value": "Save them: {0}/{1}" },
+    { "key": "scene.ocd.objective_0", "value": "Make the bed" },
+    { "key": "scene.ocd.objective_1", "value": "Rotate objects to a 45° angle" },
+    { "key": "slotmachine.hint", "value": "Press the shown letter on your keyboard" },
+    { "key": "slotmachine.progress", "value": "{0}/{1}" },
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     { "key": "patient.status_sick", "value": "Sick" },
     { "key": "patient.status_healthy", "value": "Healthy" },
     { "key": "patient.status_lost", "value": "Lost" },
@@ -27,8 +44,27 @@
     { "key": "patient.autism.diagnosis", "value": "Autism spectrum disorder" },
     { "key": "patient.autism.notes", "value": "Based on an online test result" },
     { "key": "patient.autism.age", "value": "17" },
+<<<<<<< HEAD
     { "key": "Menu.Grishanin", "value": "Patient: Grishanin Igor\nDeviation: PTSD" },
     { "key": "Menu.Lyukshin", "value": "Patient: Lyukshin Nikita\nDeviation: Dissociative identity disorder" },
+=======
+    { "key": "patient.ludomania.name", "value": "Liukshin N.Yu." },
+    { "key": "patient.ludomania.diagnosis", "value": "Gambling disorder" },
+    { "key": "patient.ludomania.notes", "value": "Lost his kidney, lunch, and secret atomic reactor blueprints in poker" },
+    { "key": "patient.ludomania.age", "value": "24" },
+    { "key": "patient.bipolar.name", "value": "Vasiltsova A. S." },
+    { "key": "patient.bipolar.diagnosis", "value": "Bipolar disorder" },
+    { "key": "patient.bipolar.notes", "value": "Thinks he is Napoleon in the morning. A roller coaster with no registration or SMS" },
+    { "key": "patient.bipolar.age", "value": "21" },
+    { "key": "patient.ocd.name", "value": "Krivets S.D." },
+    { "key": "patient.ocd.diagnosis", "value": "Obsessive-compulsive disorder" },
+    { "key": "patient.ocd.notes", "value": "Cannot fall asleep until everything is rotated to a 45-degree angle" },
+    { "key": "patient.ocd.age", "value": "21" },
+    { "key": "Menu.Grishanin", "value": "Patient: Grishanin Igor\nDeviation: PTSD" },
+    { "key": "Menu.Lyukshin", "value": "Patient: Liukshin N.Yu.\nDeviation: Gambling disorder" },
+    { "key": "Menu.Krivets", "value": "Patient: Krivets S.D.\nDeviation: OCD" },
+    { "key": "Menu.Vasiltsova", "value": "Patient: Vasiltsova A. S.\nDeviation: Bipolar disorder" },
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     { "key": "Menu.Zakharova", "value": "Patient: Zakharova Polina\nDeviation: Autism" },
     { "key": "Menu.Petrova", "value": "Patient: Petrova Ekaterina\nDeviation: Depression" },
     { "key": "Menu.NoName1", "value": "Patient: —\nDeviation: —" },
@@ -63,7 +99,11 @@
     { "key": "Settings.Quality.4", "value": "Ultra" },
     { "key": "Settings.Quality.5", "value": "Custom" },
     { "key": "pause.exit_warning.question", "value": "Are you sure?" },
+<<<<<<< HEAD
     { "key": "pause.exit_warning.confirm", "value": "Save them" },
+=======
+    { "key": "pause.exit_warning.confirm", "value": "Accept" },
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     { "key": "pause.exit_warning.cancel", "value": "Cancel" }
   ]
 }

@@ -25,6 +25,18 @@ public class TopDownPlayerMovement : MonoBehaviour
         set => cameraTransform = value;
     }
 
+<<<<<<< HEAD
+=======
+    /// <summary>Подброс вверх на заданную высоту (метры до вершины дуги).</summary>
+    public void LaunchToHeight(float height)
+    {
+        if (height <= 0f)
+            return;
+
+        _verticalVelocity = Mathf.Sqrt(height * -2f * gravity);
+    }
+
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     private void Awake()
     {
         _controller = GetComponent<CharacterController>();

@@ -105,13 +105,32 @@ public static class SaveGameEnemyUtility
         return enemyName;
     }
 
+<<<<<<< HEAD
+=======
+    private static bool ShouldStayDead(GameSaveData.EnemyData enemyData)
+    {
+        return enemyData == null || !enemyData.isAlive || enemyData.health <= 0f;
+    }
+
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     private static void ApplyPatrolGuard(
         GameObject enemy,
         PatrolConeGuardEnemy patrolGuard,
         GameSaveData.EnemyData enemyData)
     {
+<<<<<<< HEAD
         if (!enemyData.isAlive)
         {
+=======
+        if (ShouldStayDead(enemyData))
+        {
+            if (enemy.TryGetComponent(out EnemyHealth deadHealth))
+            {
+                float maxHp = enemyData.maxHealth > 0f ? enemyData.maxHealth : deadHealth.MaxHealth;
+                deadHealth.SetHealth(0f, maxHp);
+            }
+
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
             enemy.SetActive(false);
             return;
         }
@@ -129,8 +148,19 @@ public static class SaveGameEnemyUtility
 
     private static void ApplyStandardEnemy(GameObject enemy, GameSaveData.EnemyData enemyData)
     {
+<<<<<<< HEAD
         if (!enemyData.isAlive)
         {
+=======
+        if (ShouldStayDead(enemyData))
+        {
+            if (enemy.TryGetComponent(out EnemyHealth deadHealth))
+            {
+                float maxHp = enemyData.maxHealth > 0f ? enemyData.maxHealth : deadHealth.MaxHealth;
+                deadHealth.SetHealth(0f, maxHp);
+            }
+
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
             enemy.SetActive(false);
             return;
         }

@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+=======
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 using UnityEngine.SceneManagement;
 
 /// <summary>
@@ -33,9 +40,19 @@ public class GlobalProgressTracker : MonoBehaviour
     [SerializeField] private TextMeshProUGUI progressTextUI; // UI текст для отображения "Спаси их: X/6"
     [SerializeField] private TextMesh progressText3D; // 3D текст для отображения (если используется 3D текст)
 
+<<<<<<< HEAD
     [Header("Автопривязка UI после загрузки сцены")]
     [SerializeField] private bool autoRebindTextsOnSceneLoad = true;
     [SerializeField] private string progressTextUIGameObjectName = "GlobalProgressText";
+=======
+    [Header("Локализация QuestText")]
+    [SerializeField] private string progressLocalizationKey = "lobby.quest_progress";
+    [SerializeField] private string progressFallbackFormat = "Спаси их: {0}/{1}";
+
+    [Header("Автопривязка UI после загрузки сцены")]
+    [SerializeField] private bool autoRebindTextsOnSceneLoad = true;
+    [SerializeField] private string progressTextUIGameObjectName = "QuestText";
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     [SerializeField] private string progressText3DGameObjectName = "";
 
     [Header("Список локаций")]
@@ -69,12 +86,28 @@ public class GlobalProgressTracker : MonoBehaviour
     {
         if (autoRebindTextsOnSceneLoad)
             SceneManager.sceneLoaded += OnSceneLoaded;
+<<<<<<< HEAD
+=======
+
+        EnsureLanguageSubscription();
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     }
 
     private void OnDisable()
     {
         if (autoRebindTextsOnSceneLoad)
             SceneManager.sceneLoaded -= OnSceneLoaded;
+<<<<<<< HEAD
+=======
+
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged -= OnLanguageChanged;
+    }
+
+    private void OnLanguageChanged(GameLanguage _)
+    {
+        UpdateProgressDisplay();
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     }
 
     private void Start()
@@ -84,9 +117,25 @@ public class GlobalProgressTracker : MonoBehaviour
         {
             SaveLevelSceneNames();
         }
+<<<<<<< HEAD
         
         UpdateProgressDisplay();
         TryAutoBindTexts();
+=======
+
+        EnsureLanguageSubscription();
+        TryAutoBindTexts();
+        UpdateProgressDisplay();
+    }
+
+    private void EnsureLanguageSubscription()
+    {
+        if (LocalizationManager.Instance == null)
+            return;
+
+        LocalizationManager.Instance.OnLanguageChanged -= OnLanguageChanged;
+        LocalizationManager.Instance.OnLanguageChanged += OnLanguageChanged;
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -98,6 +147,7 @@ public class GlobalProgressTracker : MonoBehaviour
 
     private void TryAutoBindTexts()
     {
+<<<<<<< HEAD
         // Если ссылки уже заданы (например, вручную в инспекторе), не трогаем
         if (progressTextUI == null)
         {
@@ -134,6 +184,19 @@ public class GlobalProgressTracker : MonoBehaviour
                     progressTextUI = candidate;
             }
         }
+=======
+        if (progressTextUI == null)
+            progressTextUI = FindProgressLabelByName(progressTextUIGameObjectName);
+
+        if (progressTextUI == null)
+            progressTextUI = FindProgressLabelByName("QuestText");
+
+        if (progressTextUI == null)
+            progressTextUI = FindProgressLabelByName("Quest");
+
+        if (progressTextUI == null)
+            progressTextUI = FindProgressLabelByTextFragment("Спаси их");
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
 
         if (progressText3D == null && !string.IsNullOrWhiteSpace(progressText3DGameObjectName))
         {
@@ -143,6 +206,47 @@ public class GlobalProgressTracker : MonoBehaviour
         }
     }
 
+<<<<<<< HEAD
+=======
+    private static TextMeshProUGUI FindProgressLabelByName(string objectName)
+    {
+        if (string.IsNullOrWhiteSpace(objectName))
+            return null;
+
+        GameObject go = GameObject.Find(objectName);
+        if (go != null && go.TryGetComponent(out TextMeshProUGUI direct))
+            return direct;
+
+        TextMeshProUGUI[] all = FindObjectsByType<TextMeshProUGUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        for (int i = 0; i < all.Length; i++)
+        {
+            if (all[i] != null && all[i].gameObject.name == objectName)
+                return all[i];
+        }
+
+        return null;
+    }
+
+    private static TextMeshProUGUI FindProgressLabelByTextFragment(string fragment)
+    {
+        if (string.IsNullOrWhiteSpace(fragment))
+            return null;
+
+        TextMeshProUGUI[] all = FindObjectsByType<TextMeshProUGUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        for (int i = 0; i < all.Length; i++)
+        {
+            TextMeshProUGUI label = all[i];
+            if (label == null || string.IsNullOrEmpty(label.text))
+                continue;
+
+            if (label.text.IndexOf(fragment, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                return label;
+        }
+
+        return null;
+    }
+
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     /// <summary>
     /// Отметить локацию как завершенную
     /// </summary>
@@ -183,15 +287,45 @@ public class GlobalProgressTracker : MonoBehaviour
     /// </summary>
     public void UpdateProgressDisplay()
     {
+<<<<<<< HEAD
         string progressString = $"Спаси их: {completedLevels.Count}/{totalLevels}";
         
         if (progressTextUI != null)
             progressTextUI.text = progressString;
         
+=======
+        string progressString = FormatProgressString(completedLevels.Count, totalLevels);
+
+        if (progressTextUI != null)
+            progressTextUI.text = progressString;
+
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
         if (progressText3D != null)
             progressText3D.text = progressString;
     }
 
+<<<<<<< HEAD
+=======
+    private string FormatProgressString(int completed, int total)
+    {
+        if (LocalizationManager.Instance != null && !string.IsNullOrEmpty(progressLocalizationKey))
+            return LocalizationManager.Instance.T(progressLocalizationKey, completed, total);
+
+        string format = string.IsNullOrEmpty(progressFallbackFormat)
+            ? "Спаси их: {0}/{1}"
+            : progressFallbackFormat;
+
+        try
+        {
+            return string.Format(format, completed, total);
+        }
+        catch
+        {
+            return $"{completed}/{total}";
+        }
+    }
+
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     /// <summary>
     /// Сохранить прогресс
     /// </summary>
@@ -301,6 +435,24 @@ public class GlobalProgressTracker : MonoBehaviour
     }
 
     /// <summary>
+<<<<<<< HEAD
+=======
+    /// Заполнить список сцен уровней, если он пуст (лобби / первый запуск).
+    /// </summary>
+    public void EnsureDefaultLevelScenes(IReadOnlyList<string> defaults)
+    {
+        if (defaults == null || defaults.Count == 0)
+            return;
+
+        if (levelSceneNames != null && levelSceneNames.Count > 0)
+            return;
+
+        levelSceneNames = new List<string>(defaults);
+        SaveLevelSceneNames();
+    }
+
+    /// <summary>
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     /// Установить ссылки на 3D текст для отображения прогресса
     /// </summary>
     public void SetProgressText3D(TextMesh text3D)

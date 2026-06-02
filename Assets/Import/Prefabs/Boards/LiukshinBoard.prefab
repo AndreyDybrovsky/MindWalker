@@ -9,9 +9,31 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 94556400727399352, guid: 99642d3edc63685448907020a45e5eb3, type: 3}
+<<<<<<< HEAD
       propertyPath: portraitSprite
       value: 
       objectReference: {fileID: 21300000, guid: 8b132076696c9de4d96073ffd3d77e11, type: 3}
+=======
+      propertyPath: locKeyNotes
+      value: patient.ludomania.notes
+      objectReference: {fileID: 0}
+    - target: {fileID: 94556400727399352, guid: 99642d3edc63685448907020a45e5eb3, type: 3}
+      propertyPath: portraitSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b09eb7b80b9ae2c40b6907426fc9cad6, type: 3}
+    - target: {fileID: 94556400727399352, guid: 99642d3edc63685448907020a45e5eb3, type: 3}
+      propertyPath: locKeyPatientAgeNumber
+      value: patient.ludomania.age
+      objectReference: {fileID: 0}
+    - target: {fileID: 94556400727399352, guid: 99642d3edc63685448907020a45e5eb3, type: 3}
+      propertyPath: locKeyDiagnosis
+      value: patient.ludomania.diagnosis
+      objectReference: {fileID: 0}
+    - target: {fileID: 94556400727399352, guid: 99642d3edc63685448907020a45e5eb3, type: 3}
+      propertyPath: locKeyPatientName
+      value: patient.ludomania.name
+      objectReference: {fileID: 0}
+>>>>>>> 1d5712d3 (Чистый коммит без громадного файла)
     - target: {fileID: 94556400727399352, guid: 99642d3edc63685448907020a45e5eb3, type: 3}
       propertyPath: linkedLevelSceneName
       value: ludomania
