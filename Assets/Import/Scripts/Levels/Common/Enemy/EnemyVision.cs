@@ -8,6 +8,8 @@ public class EnemyVision : MonoBehaviour
     [SerializeField] private LayerMask playerLayer = 1 << 0;
     [SerializeField] private LayerMask obstacleLayer;
 
+    public LayerMask ObstacleLayers => obstacleLayer;
+
     [Header("События")]
     public UnityEvent<Transform> OnPlayerDetected;
     public UnityEvent OnPlayerLost;
@@ -119,7 +121,22 @@ public class EnemyVision : MonoBehaviour
 
     private bool HasLineOfSight(Transform target)
     {
-        Vector3 origin = transform.position + Vector3.up * 1.4f;
+        if (target == null)
+            return false;
+
+        float[] eyeHeights = { 0.95f, 1.25f, 1.55f };
+        for (int i = 0; i < eyeHeights.Length; i++)
+        {
+            if (HasLineOfSightAtHeight(target, eyeHeights[i]))
+                return true;
+        }
+
+        return false;
+    }
+
+    private bool HasLineOfSightAtHeight(Transform target, float eyeHeight)
+    {
+        Vector3 origin = transform.position + Vector3.up * eyeHeight;
         Vector3 targetPosition = PlayerAimUtility.GetAimPoint(target);
 
         Vector3 direction = targetPosition - origin;
@@ -132,7 +149,6 @@ public class EnemyVision : MonoBehaviour
 
         for (int i = 0; i < hits.Length; i++)
         {
-            Transform hitTransform = hits[i].collider.transform;
             if (IsPlayerCollider(hits[i].collider))
                 return true;
 

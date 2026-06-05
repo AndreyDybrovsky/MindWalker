@@ -526,29 +526,79 @@ public class SlotMachineController : MonoBehaviour
 
     private void EnsureAudioSources()
     {
-        if (sfxSource == null)
+        EnsureDedicatedSfxSource();
+        EnsureDedicatedAmbientSource();
+    }
+
+    /// <summary>One-shots (верный/неверный ключ) — отдельный источник, иначе PlayOneShot обрывает loop ambient.</summary>
+    private void EnsureDedicatedSfxSource()
+    {
+        if (sfxSource != null && sfxSource != trappedAmbientSource)
         {
-            sfxSource = GetComponent<AudioSource>();
-            if (sfxSource == null)
-                sfxSource = gameObject.AddComponent<AudioSource>();
+            ConfigureSfxSource(sfxSource);
+            return;
         }
 
-        sfxSource.playOnAwake = false;
-        sfxSource.loop = false;
-        sfxSource.spatialBlend = 0f;
-        AudioMixerRoutingUtility.BindSourceToSfx(sfxSource);
+        if (TryGetComponent(out AudioSource onRoot))
+            sfxSource = onRoot;
+        else
+            sfxSource = gameObject.AddComponent<AudioSource>();
 
-        if (trappedAmbientSource == null)
+        ConfigureSfxSource(sfxSource);
+    }
+
+    private void ConfigureSfxSource(AudioSource source)
+    {
+        source.playOnAwake = false;
+        source.loop = false;
+        source.spatialBlend = 0f;
+        AudioMixerRoutingUtility.BindSourceToSfx(source);
+    }
+
+    private void EnsureDedicatedAmbientSource()
+    {
+        if (trappedAmbientSource != null && trappedAmbientSource != sfxSource)
         {
-            GameObject ambientGo = new GameObject("TrappedAmbientAudio");
-            ambientGo.transform.SetParent(transform, false);
-            trappedAmbientSource = ambientGo.AddComponent<AudioSource>();
+            ConfigureAmbientSource(trappedAmbientSource);
+            return;
         }
 
-        trappedAmbientSource.playOnAwake = false;
-        trappedAmbientSource.loop = true;
-        trappedAmbientSource.spatialBlend = 0f;
-        AudioMixerRoutingUtility.BindSourceToSfx(trappedAmbientSource);
+        Transform ambientRoot = transform.Find("TrappedAmbientAudio");
+        if (ambientRoot != null && ambientRoot.TryGetComponent(out AudioSource existing) && existing != sfxSource)
+        {
+            trappedAmbientSource = existing;
+            ConfigureAmbientSource(trappedAmbientSource);
+            return;
+        }
+
+        GameObject ambientGo = new GameObject("TrappedAmbientAudio");
+        ambientGo.transform.SetParent(transform, false);
+        trappedAmbientSource = ambientGo.AddComponent<AudioSource>();
+        ConfigureAmbientSource(trappedAmbientSource);
+    }
+
+    private void ConfigureAmbientSource(AudioSource source)
+    {
+        source.playOnAwake = false;
+        source.loop = true;
+        source.spatialBlend = 0f;
+        AudioMixerRoutingUtility.BindSourceToSfx(source);
+    }
+
+    private float ResolveSfxVolumeScale()
+    {
+        if (SettingsManager.Instance == null)
+            return sfxVolume;
+
+        return sfxVolume * Mathf.Clamp01(SettingsManager.Instance.GetCurrentSettings().sfxVolume);
+    }
+
+    private float ResolveAmbientVolumeScale()
+    {
+        if (SettingsManager.Instance == null)
+            return ambientVolume;
+
+        return ambientVolume * Mathf.Clamp01(SettingsManager.Instance.GetCurrentSettings().sfxVolume);
     }
 
     private void PlaySfx(AudioClip clip)
@@ -556,16 +606,20 @@ public class SlotMachineController : MonoBehaviour
         if (clip == null || sfxSource == null)
             return;
 
-        sfxSource.PlayOneShot(clip, sfxVolume);
+        sfxSource.PlayOneShot(clip, ResolveSfxVolumeScale());
     }
 
     private void StartTrappedAmbience()
     {
+        EnsureAudioSources();
+
         if (trappedAmbientLoop == null || trappedAmbientSource == null)
             return;
 
         trappedAmbientSource.clip = trappedAmbientLoop;
-        trappedAmbientSource.volume = ambientVolume;
+        trappedAmbientSource.volume = ResolveAmbientVolumeScale();
+        trappedAmbientSource.loop = true;
+
         if (!trappedAmbientSource.isPlaying)
             trappedAmbientSource.Play();
     }
@@ -615,7 +669,12 @@ public class SlotMachineController : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    /// <summary>Вызывается из Tools → Gambling → Настроить префаб SlotMachine.</summary>
+    private void Reset()
+    {
+        ApplyEditorPrefabLayout();
+    }
+
+    /// <summary>Создаёт якоря LureZone / MachineFront / PlayerStandPoint в префабе.</summary>
     public void ApplyEditorPrefabLayout()
     {
         transform.localPosition = Vector3.zero;

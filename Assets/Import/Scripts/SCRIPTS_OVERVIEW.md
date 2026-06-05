@@ -70,6 +70,10 @@
 | Часы на руке (опционально) | `WatchHandDisplay` на префабе `Watch` |
 | Атмосфера | `LevelAtmosphere` |
 | Цепочка моментов ОКР (E → fade → надпись) | `OCDMomentTrigger` |
+| Авто-момент ОКР (касание без E) | `OCDAutoMomentZone` |
+| Сбор 4 точек «Исправь всё» (день 4) | `OCDFixAllCollectiblePoint`, `OCDFixAllCollectibleManager` |
+| Включение дня на сцене (Day1–4) | `OCDMissionDayController` |
+| Атмосфера ОКР (пресеты + override ambient/Volume) | `OCDSceneAtmosphereController`, `OCDAtmospherePreset`, `OCDAtmosphereOverrides` |
 
 **Глобально (не в сцене, но работают):** `AutoSaveSceneNotifier`, `SaveManager`, `GameplayInputBlocker`.
 
@@ -109,9 +113,9 @@
 | Притяжение + QTE букв | `SlotMachineController` |
 | Триггер перед автоматом | `SlotMachineLureZone` |
 | UI буквы (экран) | `SlotMachineLetterUI` |
-| Homeless: урон по таймеру в зоне видимости | `PeriodicProximityDamageEnemy` |
+| Ludomania / бездомные: преследование + рукопашка | `EnemyController` + `PeriodicProximityDamageEnemy` |
 
-Настройка: **Tools → Gambling → Настроить префаб SlotMachine** / **Homeless**.
+Префаб слот-машины: на корень `SlotMachineController` (при добавлении компонента якоря создаются сами; в инспекторе — «Пересобрать якоря»).
 
 ---
 

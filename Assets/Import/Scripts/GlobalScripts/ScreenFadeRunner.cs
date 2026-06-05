@@ -13,6 +13,7 @@ public static class ScreenFadeRunner
             yield break;
 
         fade.gameObject.SetActive(true);
+        ScreenFadeUtility.PrepareForFade(fade);
         fade.blocksRaycasts = true;
         float from = fade.alpha;
         float elapsed = 0f;
@@ -34,6 +35,7 @@ public static class ScreenFadeRunner
             yield break;
 
         fade.gameObject.SetActive(true);
+        ScreenFadeUtility.PrepareForFade(fade);
         float from = fade.alpha;
         float elapsed = 0f;
 

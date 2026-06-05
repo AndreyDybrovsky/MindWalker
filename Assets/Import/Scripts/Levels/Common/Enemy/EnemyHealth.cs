@@ -1,19 +1,24 @@
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// Система здоровья врага с плавной смертью и particle system
 /// </summary>
 public class EnemyHealth : MonoBehaviour
 {
+    private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+    private static readonly int ColorId = Shader.PropertyToID("_Color");
+
     [Header("Настройки здоровья")]
     [SerializeField] private float maxHealth = 50f;
     [SerializeField] private float currentHealth;
 
     [Header("Эффекты смерти")]
-    [SerializeField] private ParticleSystem deathParticleSystem; // Particle System для эффекта смерти
-    [SerializeField] private float fadeOutDuration = 1f; // Длительность плавного исчезновения
+    [SerializeField] private ParticleSystem deathParticleSystem;
+    [Tooltip("Длительность плавного исчезновения модели и затухания звука смерти.")]
+    [SerializeField] private float fadeOutDuration = 1.35f;
 
     [Header("Эффекты смерти (процедурные партиклы)")]
     [Tooltip("Если включено — при смерти спавним красный «круговой взрыв» частиц (даже если deathParticleSystem не задан).")]
@@ -35,29 +40,26 @@ public class EnemyHealth : MonoBehaviour
     public float MaxHealth => maxHealth;
     public bool IsDead => isDead;
 
-    private bool isDead = false;
-    private Renderer[] renderers; // Все рендереры врага для плавного исчезновения
-    private Material[] originalMaterials;
-    private Color[] originalColors;
+    private bool isDead;
+    private FadeRendererEntry[] _fadeRenderers;
+    private MaterialPropertyBlock _fadePropertyBlock;
+    private AudioSource _deathAudioSource;
+    private Collider[] _colliders;
+    private Coroutine _deathRoutine;
+
+    private struct FadeRendererEntry
+    {
+        public Renderer Renderer;
+        public Color BaseColor;
+        public int ColorPropertyId;
+        public bool HasColorProperty;
+    }
 
     private void Start()
     {
         currentHealth = maxHealth;
-        
-        // Получаем все рендереры для плавного исчезновения
-        renderers = GetComponentsInChildren<Renderer>();
-        originalMaterials = new Material[renderers.Length];
-        originalColors = new Color[renderers.Length];
-        
-        for (int i = 0; i < renderers.Length; i++)
-        {
-            if (renderers[i] != null && renderers[i].material != null)
-            {
-                originalMaterials[i] = renderers[i].material;
-                originalColors[i] = renderers[i].material.color;
-            }
-        }
-        
+        CacheFadeRenderers();
+        EnsureDeathAudioSource();
         OnHealthChanged?.Invoke(currentHealth);
     }
 
@@ -67,13 +69,11 @@ public class EnemyHealth : MonoBehaviour
 
         currentHealth -= damage;
         currentHealth = Mathf.Max(0f, currentHealth);
-        
+
         OnHealthChanged?.Invoke(currentHealth);
 
         if (currentHealth <= 0f && !isDead)
-        {
             Die();
-        }
     }
 
     public void Heal(float amount)
@@ -82,17 +82,35 @@ public class EnemyHealth : MonoBehaviour
 
         currentHealth += amount;
         currentHealth = Mathf.Min(maxHealth, currentHealth);
-        
+
         OnHealthChanged?.Invoke(currentHealth);
     }
 
     private void Die()
     {
         if (isDead) return;
-        
+
         isDead = true;
-        
-        // Отключаем компоненты врага (поведение, стрельбу и т.д.)
+
+        OnEnemyDeath?.Invoke();
+
+        DisableEnemyBehaviour();
+        DisableNavMeshAgents();
+        DisableColliders();
+
+        if (deathParticleSystem != null)
+            deathParticleSystem.Play();
+        else if (spawnProceduralDeathParticles)
+            SpawnProceduralDeathParticles();
+
+        if (_deathRoutine != null)
+            StopCoroutine(_deathRoutine);
+
+        _deathRoutine = StartCoroutine(DeathFadeRoutine());
+    }
+
+    private void DisableEnemyBehaviour()
+    {
         EnemyController enemyController = GetComponent<EnemyController>();
         if (enemyController != null)
             enemyController.enabled = false;
@@ -100,7 +118,7 @@ public class EnemyHealth : MonoBehaviour
         StationaryEnemyController stationaryController = GetComponent<StationaryEnemyController>();
         if (stationaryController != null)
             stationaryController.enabled = false;
-        
+
         EnemyShooting enemyShooting = GetComponent<EnemyShooting>();
         if (enemyShooting != null)
             enemyShooting.enabled = false;
@@ -112,24 +130,209 @@ public class EnemyHealth : MonoBehaviour
         PatrolConeGuardEnemy patrolGuard = GetComponent<PatrolConeGuardEnemy>();
         if (patrolGuard != null)
             patrolGuard.enabled = false;
-        
-        DisableNavMeshAgents();
-        
-        // Проигрываем particle system эффект
-        if (deathParticleSystem != null)
+    }
+
+    private IEnumerator DeathFadeRoutine()
+    {
+        float duration = Mathf.Max(0.05f, fadeOutDuration);
+        PrepareMaterialsForFade();
+
+        AudioClip deathClip = ResolveDeathClip();
+        float deathPeakVolume = ResolveDeathPeakVolume();
+        BeginDeathSound(deathClip, deathPeakVolume);
+
+        float elapsed = 0f;
+        while (elapsed < duration)
         {
-            deathParticleSystem.Play();
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float fade = 1f - Mathf.SmoothStep(0f, 1f, t);
+
+            ApplyFadeAlpha(fade);
+            UpdateDeathSoundVolume(deathPeakVolume, fade);
+
+            yield return null;
         }
-        else if (spawnProceduralDeathParticles)
+
+        ApplyFadeAlpha(0f);
+        UpdateDeathSoundVolume(deathPeakVolume, 0f);
+
+        if (_deathAudioSource != null)
+            _deathAudioSource.Stop();
+
+        gameObject.SetActive(false);
+        _deathRoutine = null;
+    }
+
+    private void CacheFadeRenderers()
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
+        var entries = new System.Collections.Generic.List<FadeRendererEntry>(renderers.Length);
+
+        for (int i = 0; i < renderers.Length; i++)
         {
-            SpawnProceduralDeathParticles();
+            Renderer r = renderers[i];
+            if (r == null)
+                continue;
+
+            Material mat = r.sharedMaterial;
+            if (mat == null)
+                continue;
+
+            FadeRendererEntry entry = new FadeRendererEntry
+            {
+                Renderer = r,
+                HasColorProperty = false
+            };
+
+            if (mat.HasProperty(BaseColorId))
+            {
+                entry.ColorPropertyId = BaseColorId;
+                entry.BaseColor = mat.GetColor(BaseColorId);
+                entry.HasColorProperty = true;
+            }
+            else if (mat.HasProperty(ColorId))
+            {
+                entry.ColorPropertyId = ColorId;
+                entry.BaseColor = mat.GetColor(ColorId);
+                entry.HasColorProperty = true;
+            }
+
+            if (entry.HasColorProperty)
+                entries.Add(entry);
         }
-        
-        // Вызываем событие смерти
-        OnEnemyDeath?.Invoke();
-        
-        // Запускаем плавное исчезновение
-        StartCoroutine(FadeOutAndDestroy());
+
+        _fadeRenderers = entries.ToArray();
+        _fadePropertyBlock = new MaterialPropertyBlock();
+    }
+
+    private void PrepareMaterialsForFade()
+    {
+        if (_fadeRenderers == null)
+            return;
+
+        for (int i = 0; i < _fadeRenderers.Length; i++)
+        {
+            Renderer r = _fadeRenderers[i].Renderer;
+            if (r == null)
+                continue;
+
+            Material instance = r.material;
+            ConfigureMaterialForAlphaFade(instance);
+        }
+    }
+
+    private void ApplyFadeAlpha(float alpha01)
+    {
+        if (_fadeRenderers == null || _fadePropertyBlock == null)
+            return;
+
+        alpha01 = Mathf.Clamp01(alpha01);
+
+        for (int i = 0; i < _fadeRenderers.Length; i++)
+        {
+            FadeRendererEntry entry = _fadeRenderers[i];
+            if (!entry.HasColorProperty || entry.Renderer == null)
+                continue;
+
+            Color c = entry.BaseColor;
+            c.a *= alpha01;
+
+            entry.Renderer.GetPropertyBlock(_fadePropertyBlock);
+            _fadePropertyBlock.SetColor(entry.ColorPropertyId, c);
+            entry.Renderer.SetPropertyBlock(_fadePropertyBlock);
+        }
+    }
+
+    private static void ConfigureMaterialForAlphaFade(Material mat)
+    {
+        if (mat == null)
+            return;
+
+        if (!mat.HasProperty("_Surface"))
+            return;
+
+        mat.SetFloat("_Surface", 1f);
+        mat.SetFloat("_Blend", 0f);
+        mat.SetOverrideTag("RenderType", "Transparent");
+        mat.SetInt("_SrcBlend", (int)BlendMode.SrcAlpha);
+        mat.SetInt("_DstBlend", (int)BlendMode.OneMinusSrcAlpha);
+        mat.SetInt("_ZWrite", 0);
+        mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+        mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+        mat.renderQueue = (int)RenderQueue.Transparent;
+    }
+
+    private void EnsureDeathAudioSource()
+    {
+        Transform root = transform.Find("DeathAudio");
+        if (root == null)
+        {
+            GameObject go = new GameObject("DeathAudio");
+            go.transform.SetParent(transform, false);
+            root = go.transform;
+        }
+
+        if (!root.TryGetComponent(out _deathAudioSource))
+            _deathAudioSource = root.gameObject.AddComponent<AudioSource>();
+
+        _deathAudioSource.playOnAwake = false;
+        _deathAudioSource.loop = false;
+        _deathAudioSource.spatialBlend = 1f;
+        _deathAudioSource.minDistance = 2f;
+        _deathAudioSource.maxDistance = 24f;
+        AudioMixerRoutingUtility.BindSourceToSfx(_deathAudioSource);
+    }
+
+    private AudioClip ResolveDeathClip()
+    {
+        EnemyController controller = GetComponent<EnemyController>();
+        if (controller != null && controller.DeathSound != null)
+            return controller.DeathSound;
+
+        return Resources.Load<AudioClip>("Sounds/Ludomania/fail");
+    }
+
+    private float ResolveDeathPeakVolume()
+    {
+        EnemyController controller = GetComponent<EnemyController>();
+        float volume = controller != null ? controller.DeathSoundVolume : 0.85f;
+
+        float sfx = SettingsManager.Instance != null
+            ? SettingsManager.Instance.GetCurrentSettings().sfxVolume
+            : 1f;
+
+        return volume * Mathf.Clamp01(sfx);
+    }
+
+    private void BeginDeathSound(AudioClip clip, float peakVolume)
+    {
+        if (clip == null || _deathAudioSource == null || peakVolume <= 0.001f)
+            return;
+
+        EnsureDeathAudioSource();
+        _deathAudioSource.clip = clip;
+        _deathAudioSource.volume = peakVolume;
+        _deathAudioSource.mute = false;
+        _deathAudioSource.Play();
+    }
+
+    private void UpdateDeathSoundVolume(float peakVolume, float fade01)
+    {
+        if (_deathAudioSource == null || !_deathAudioSource.isPlaying)
+            return;
+
+        _deathAudioSource.volume = peakVolume * Mathf.Clamp01(fade01);
+    }
+
+    private void DisableColliders()
+    {
+        _colliders = GetComponentsInChildren<Collider>(true);
+        for (int i = 0; i < _colliders.Length; i++)
+        {
+            if (_colliders[i] != null)
+                _colliders[i].enabled = false;
+        }
     }
 
     private void SpawnProceduralDeathParticles()
@@ -138,8 +341,6 @@ public class EnemyHealth : MonoBehaviour
         go.transform.position = transform.position + Vector3.up * 0.9f;
 
         ParticleSystem ps = go.AddComponent<ParticleSystem>();
-        // На некоторых конфигурациях Unity/рендер-пайплайна PS может стартовать сразу после добавления компонента.
-        // Останавливаем и чистим, чтобы безопасно настроить модули без предупреждений.
         ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 
         ParticleSystemRenderer renderer = ps.GetComponent<ParticleSystemRenderer>();
@@ -175,7 +376,7 @@ public class EnemyHealth : MonoBehaviour
         shape.radius = Mathf.Max(0f, proceduralRadius);
         shape.arcMode = ParticleSystemShapeMultiModeValue.Random;
         shape.alignToDirection = false;
-        shape.rotation = new Vector3(90f, 0f, 0f); // выброс по плоскости XZ
+        shape.rotation = new Vector3(90f, 0f, 0f);
 
         ParticleSystem.VelocityOverLifetimeModule vel = ps.velocityOverLifetime;
         vel.enabled = true;
@@ -210,7 +411,6 @@ public class EnemyHealth : MonoBehaviour
             return null;
 
         Material mat = new Material(shader);
-        // На всякий: если шейдер поддерживает _BaseColor — красим им.
         if (mat.HasProperty("_BaseColor"))
             mat.SetColor("_BaseColor", proceduralParticleColor);
         if (mat.HasProperty("_Color"))
@@ -220,54 +420,46 @@ public class EnemyHealth : MonoBehaviour
         return proceduralParticleMaterial;
     }
 
-    private IEnumerator FadeOutAndDestroy()
-    {
-        float elapsedTime = 0f;
-        
-        while (elapsedTime < fadeOutDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            float alpha = 1f - (elapsedTime / fadeOutDuration);
-            alpha = Mathf.Clamp01(alpha);
-            
-            // Плавно уменьшаем прозрачность всех рендереров
-            for (int i = 0; i < renderers.Length; i++)
-            {
-                if (renderers[i] != null && renderers[i].material != null)
-                {
-                    Color color = originalColors[i];
-                    color.a = alpha;
-                    renderers[i].material.color = color;
-                }
-            }
-            
-            yield return null;
-        }
-        
-        // Оставляем объект в сцене неактивным — так его можно восстановить из сохранения.
-        gameObject.SetActive(false);
-    }
-
     public void ResetHealth()
     {
         isDead = false;
         currentHealth = maxHealth;
-        
-        // Восстанавливаем цвета
-        for (int i = 0; i < renderers.Length && i < originalColors.Length; i++)
+
+        if (_deathRoutine != null)
         {
-            if (renderers[i] != null && renderers[i].material != null)
+            StopCoroutine(_deathRoutine);
+            _deathRoutine = null;
+        }
+
+        RestoreFadeVisuals();
+
+        if (_colliders != null)
+        {
+            for (int i = 0; i < _colliders.Length; i++)
             {
-                renderers[i].material.color = originalColors[i];
+                if (_colliders[i] != null)
+                    _colliders[i].enabled = true;
             }
         }
-        
+
         OnHealthChanged?.Invoke(currentHealth);
     }
 
-    /// <summary>
-    /// Устанавливает здоровье врага при загрузке сохранения
-    /// </summary>
+    private void RestoreFadeVisuals()
+    {
+        if (_fadeRenderers == null)
+            return;
+
+        for (int i = 0; i < _fadeRenderers.Length; i++)
+        {
+            FadeRendererEntry entry = _fadeRenderers[i];
+            if (entry.Renderer == null)
+                continue;
+
+            entry.Renderer.SetPropertyBlock(null);
+        }
+    }
+
     private void DisableNavMeshAgents()
     {
         UnityEngine.AI.NavMeshAgent[] agents = GetComponentsInChildren<UnityEngine.AI.NavMeshAgent>(true);
@@ -282,40 +474,20 @@ public class EnemyHealth : MonoBehaviour
     {
         maxHealth = maxHealthValue;
         currentHealth = Mathf.Clamp(health, 0f, maxHealth);
-        
-        // Если здоровье 0 или меньше, помечаем как мертвого, но не вызываем Die() (чтобы избежать эффектов)
+
         if (currentHealth <= 0f)
         {
             isDead = true;
-            // Отключаем компоненты врага
-            EnemyController enemyController = GetComponent<EnemyController>();
-            if (enemyController != null)
-                enemyController.enabled = false;
-
-            StationaryEnemyController stationaryController = GetComponent<StationaryEnemyController>();
-            if (stationaryController != null)
-                stationaryController.enabled = false;
-            
-            EnemyShooting enemyShooting = GetComponent<EnemyShooting>();
-            if (enemyShooting != null)
-                enemyShooting.enabled = false;
-
-            EnemyVision enemyVision = GetComponentInChildren<EnemyVision>();
-            if (enemyVision != null)
-                enemyVision.enabled = false;
-
-            PatrolConeGuardEnemy patrolGuard = GetComponent<PatrolConeGuardEnemy>();
-            if (patrolGuard != null)
-                patrolGuard.enabled = false;
-            
+            DisableEnemyBehaviour();
             DisableNavMeshAgents();
+            DisableColliders();
         }
         else
         {
-            // Сбрасываем флаг смерти, если здоровье восстановлено
             isDead = false;
+            RestoreFadeVisuals();
         }
-        
+
         OnHealthChanged?.Invoke(currentHealth);
     }
 }

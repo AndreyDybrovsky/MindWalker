@@ -44,13 +44,13 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0.25, g: 0.6729804, b: 1, a: 1}
-  m_Intensity: 1.4
+  m_Intensity: 0.7
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -150,7 +150,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.7236, y: 2.7236, z: 2.7236}
+  m_LocalScale: {x: 1.2551166, y: 1.2551166, z: 1.2551166}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2777316727696906570}
@@ -195,10 +195,15 @@ MonoBehaviour:
   activeAtStart: 1
   disableAfterPlayed: 1
   guideLight: {fileID: 0}
-  captionUI: {fileID: 0}
+  pulseGuideLight: 1
+  disableDuringBlack: []
+  enableDuringBlack: []
+  objectivePanel: {fileID: 0}
+  objectiveStyleReference: {fileID: 0}
   objectiveLocalizationKey: scene.ocd.objective_0
   objectiveFallbackText: 
   objectiveFormatArgs: []
+  captionUI: {fileID: 0}
   captionLocalizationKey: scene.OCD_Text0
   captionFallbackText: 
   captionFormatArgs: []
@@ -211,9 +216,13 @@ MonoBehaviour:
   soundVolume: 1
   soundDelayAfterFade: 0.08
   screenFadeInDuration: 0.75
-  captionHoldDuration: 3.5
-  screenFadeOutDuration: 0.65
+  captionHoldDuration: 3
+  screenFadeOutDuration: 0.75
+  maxBlackHoldAfterSound: 0.75
   lockPlayerMovement: 1
+  atmospherePreset: 0
+  applyAtmosphereOnBlack: 1
+  blendAtmosphereDuringFadeOut: 1
 --- !u!82 &2610731477184029940
 AudioSource:
   m_ObjectHideFlags: 0

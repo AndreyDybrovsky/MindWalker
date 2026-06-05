@@ -69,6 +69,11 @@ public class OCDObjectiveUI : MonoBehaviour
         GameObject root = new GameObject("OCDObjectiveUI_Auto");
         s_shared = root.AddComponent<OCDObjectiveUI>();
         s_shared.BuildUi();
+
+        TMP_Text questStyle = FindQuestTextLabel();
+        if (questStyle != null)
+            s_shared.ApplyStyleFrom(questStyle);
+
         return s_shared;
     }
 
@@ -84,6 +89,25 @@ public class OCDObjectiveUI : MonoBehaviour
         return previousObjectiveText;
     }
 
+    private static TMP_Text FindQuestTextLabel()
+    {
+        GameObject named = GameObject.Find("QuestText");
+        if (named != null && named.TryGetComponent(out TextMeshProUGUI direct))
+            return direct;
+
+        TextMeshProUGUI[] all = Object.FindObjectsByType<TextMeshProUGUI>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None);
+
+        for (int i = 0; i < all.Length; i++)
+        {
+            if (all[i] != null && all[i].gameObject.name == "QuestText")
+                return all[i];
+        }
+
+        return null;
+    }
+
     /// <summary>Задать TMP-образец стиля (обычно с <see cref="OCDMomentTrigger"/>).</summary>
     public void ApplyStyleFrom(TMP_Text reference)
     {
@@ -97,6 +121,11 @@ public class OCDObjectiveUI : MonoBehaviour
     private void Awake()
     {
         ResolveReferences();
+
+        // QuestText на HUD игрока — не перестраиваем RectTransform.
+        if (transform.Find("ObjectivePanel") == null)
+            return;
+
         ApplyPanelLayout();
         ApplyStyleToLines();
         HidePreviousLine();
@@ -392,6 +421,20 @@ public class OCDObjectiveUI : MonoBehaviour
             canvasGroup.alpha = visible ? 1f : 0f;
 
         gameObject.SetActive(visible);
+    }
+
+    /// <summary>Скрыть/показать панель целей без отключения объекта (для полноэкранного fade).</summary>
+    public void SetHudVisible(bool visible)
+    {
+        ResolveReferences();
+
+        if (canvasGroup != null)
+            canvasGroup.alpha = visible ? 1f : 0f;
+
+        if (!visible)
+            return;
+
+        SetRootVisible(true);
     }
 
     private static string ResolveLocalized(string key, string[] formatArgs, string fallback)

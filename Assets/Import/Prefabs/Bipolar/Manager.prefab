@@ -1,0 +1,377 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1482000598518486650
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1693780281615061210}
+  - component: {fileID: 3587942129579086238}
+  m_Layer: 0
+  m_Name: PostHappy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1693780281615061210
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482000598518486650}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8141404945032567556}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3587942129579086238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482000598518486650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 36189975777a63f4f915c0825f568b95, type: 2}
+--- !u!1 &2297341970834944834
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8141404945032567556}
+  - component: {fileID: 636361535765614922}
+  m_Layer: 0
+  m_Name: Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8141404945032567556
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2297341970834944834}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7887231837331770676}
+  - {fileID: 1693780281615061210}
+  - {fileID: 7790134420425807175}
+  - {fileID: 170160133917752584}
+  - {fileID: 4763846446220496599}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &636361535765614922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2297341970834944834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57205e38bac74555918225ed24c03e64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  directionalLight: {fileID: 0}
+  homeMorningVolume: {fileID: 3587942129579086238}
+  outdoorDayVolume: {fileID: 3056906155204209666}
+  homeEveningVolume: {fileID: 8598248063975440446}
+  outdoorNightVolume: {fileID: 0}
+  ambientMusicSource: {fileID: 0}
+  homeMorningMusic: {fileID: 0}
+  outdoorDayMusic: {fileID: 0}
+  homeEveningMusic: {fileID: 0}
+  outdoorNightMusic: {fileID: 0}
+  musicVolume: 0.42
+  homeMorningSnapshot:
+    lightColor: {r: 0, g: 0, b: 0, a: 0}
+    lightIntensity: 0
+    lightEuler: {x: 0, y: 0, z: 0}
+    ambientSky: {r: 0, g: 0, b: 0, a: 0}
+    ambientEquator: {r: 0, g: 0, b: 0, a: 0}
+    ambientGround: {r: 0, g: 0, b: 0, a: 0}
+    ambientIntensity: 0
+    fogEnabled: 0
+    fogColor: {r: 0, g: 0, b: 0, a: 0}
+    fogDensity: 0
+  outdoorDaySnapshot:
+    lightColor: {r: 0, g: 0, b: 0, a: 0}
+    lightIntensity: 0
+    lightEuler: {x: 0, y: 0, z: 0}
+    ambientSky: {r: 0, g: 0, b: 0, a: 0}
+    ambientEquator: {r: 0, g: 0, b: 0, a: 0}
+    ambientGround: {r: 0, g: 0, b: 0, a: 0}
+    ambientIntensity: 0
+    fogEnabled: 0
+    fogColor: {r: 0, g: 0, b: 0, a: 0}
+    fogDensity: 0
+  homeEveningSnapshot:
+    lightColor: {r: 0, g: 0, b: 0, a: 0}
+    lightIntensity: 0
+    lightEuler: {x: 0, y: 0, z: 0}
+    ambientSky: {r: 0, g: 0, b: 0, a: 0}
+    ambientEquator: {r: 0, g: 0, b: 0, a: 0}
+    ambientGround: {r: 0, g: 0, b: 0, a: 0}
+    ambientIntensity: 0
+    fogEnabled: 0
+    fogColor: {r: 0, g: 0, b: 0, a: 0}
+    fogDensity: 0
+  outdoorNightSnapshot:
+    lightColor: {r: 0, g: 0, b: 0, a: 0}
+    lightIntensity: 0
+    lightEuler: {x: 0, y: 0, z: 0}
+    ambientSky: {r: 0, g: 0, b: 0, a: 0}
+    ambientEquator: {r: 0, g: 0, b: 0, a: 0}
+    ambientGround: {r: 0, g: 0, b: 0, a: 0}
+    ambientIntensity: 0
+    fogEnabled: 0
+    fogColor: {r: 0, g: 0, b: 0, a: 0}
+    fogDensity: 0
+  captureSceneDefaultsOnAwake: 1
+  enableOnOutdoorDay: []
+  disableOnOutdoorDay: []
+  enableOnHomeEvening: []
+  disableOnHomeEvening: []
+--- !u!1 &4060501564375653065
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 170160133917752584}
+  - component: {fileID: 8598248063975440446}
+  m_Layer: 0
+  m_Name: PostOCD_EveningHome
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &170160133917752584
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4060501564375653065}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8141404945032567556}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8598248063975440446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4060501564375653065}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 0
+  sharedProfile: {fileID: 11400000, guid: f8c26bcdef5d401bbeedc17bbbd7d1b2, type: 2}
+--- !u!1 &7022605036086124233
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4763846446220496599}
+  - component: {fileID: 2032284468775302317}
+  m_Layer: 0
+  m_Name: PostNightmare
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4763846446220496599
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7022605036086124233}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8141404945032567556}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2032284468775302317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7022605036086124233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 149dcc3f5f02fcc43bd61e9036397159, type: 2}
+--- !u!1 &8575962153025180382
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7790134420425807175}
+  - component: {fileID: 3056906155204209666}
+  m_Layer: 0
+  m_Name: PostOCD_OutdoorDay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7790134420425807175
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8575962153025180382}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8141404945032567556}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3056906155204209666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8575962153025180382}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 0
+  sharedProfile: {fileID: 11400000, guid: a2f0bc6867fa44c59df3c50555cfa844, type: 2}
+--- !u!1001 &6158632419809999745
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8141404945032567556}
+    m_Modifications:
+    - target: {fileID: 4036008251575596725, guid: 74955fbdcc8857b45ab6c5423019f3e8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036008251575596725, guid: 74955fbdcc8857b45ab6c5423019f3e8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036008251575596725, guid: 74955fbdcc8857b45ab6c5423019f3e8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036008251575596725, guid: 74955fbdcc8857b45ab6c5423019f3e8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036008251575596725, guid: 74955fbdcc8857b45ab6c5423019f3e8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036008251575596725, guid: 74955fbdcc8857b45ab6c5423019f3e8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036008251575596725, guid: 74955fbdcc8857b45ab6c5423019f3e8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036008251575596725, guid: 74955fbdcc8857b45ab6c5423019f3e8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036008251575596725, guid: 74955fbdcc8857b45ab6c5423019f3e8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4036008251575596725, guid: 74955fbdcc8857b45ab6c5423019f3e8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4446970589186250840, guid: 74955fbdcc8857b45ab6c5423019f3e8, type: 3}
+      propertyPath: m_Name
+      value: BipolarMindscape
+      objectReference: {fileID: 0}
+    - target: {fileID: 6972833732470758429, guid: 74955fbdcc8857b45ab6c5423019f3e8, type: 3}
+      propertyPath: meadowPostProcessVolume
+      value: 
+      objectReference: {fileID: 3587942129579086238}
+    - target: {fileID: 6972833732470758429, guid: 74955fbdcc8857b45ab6c5423019f3e8, type: 3}
+      propertyPath: nightmarePostProcessVolume
+      value: 
+      objectReference: {fileID: 2032284468775302317}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 74955fbdcc8857b45ab6c5423019f3e8, type: 3}
+--- !u!4 &7887231837331770676 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4036008251575596725, guid: 74955fbdcc8857b45ab6c5423019f3e8, type: 3}
+  m_PrefabInstance: {fileID: 6158632419809999745}
+  m_PrefabAsset: {fileID: 0}

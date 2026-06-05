@@ -54,23 +54,47 @@ public class OCDMomentTrigger : PlayerInteractionZone
     [SerializeField] private bool autoCloseCaptionOnApproach = true;
     [SerializeField] private float autoCloseCaptionDuration = 0.22f;
 
-    [Header("Звук")]
+    [Header("Звук в темноте")]
     [SerializeField] private AudioSource audioSource;
+    [Tooltip("Устаревшее поле: если Black Screen Sounds пуст — используется как единственный звук.")]
     [SerializeField] private AudioClip momentSound;
+    [Tooltip("Несколько звуков подряд, пока экран чёрный.")]
+    [SerializeField] private AudioClip[] blackScreenSounds;
+    [Tooltip("Пауза перед каждым следующим звуком (длина = звуков − 1). Пусто — Black Screen Sound Gap.")]
+    [SerializeField] private float[] delaysBetweenBlackSounds;
+    [SerializeField] private float blackScreenSoundGap = 0.12f;
     [SerializeField, Range(0f, 1f)] private float soundVolume = 1f;
     [SerializeField] private float soundDelayAfterFade = 0.08f;
 
+    [Header("Звук при появлении нижнего текста")]
+    [SerializeField] private AudioClip captionRevealSound;
+    [SerializeField, Range(0f, 1f)] private float captionRevealSoundVolume = 1f;
+
+    [Header("Атмосфера (улица / вечер дома)")]
+    [Tooltip("Пресет света, пост-обработки и ambient-музыки. Нужен OCDSceneAtmosphereController на сцене.")]
+    [SerializeField] private OCDAtmospherePreset atmospherePreset = OCDAtmospherePreset.None;
+    [SerializeField] private bool applyAtmosphereOnBlack = true;
+    [Tooltip("Плавный переход атмосферы во время осветления экрана.")]
+    [SerializeField] private bool blendAtmosphereDuringFadeOut = true;
+    [SerializeField] private OCDAtmosphereOverrides atmosphereOverrides;
+
     [Header("Тайминг")]
     [SerializeField] private float screenFadeInDuration = 0.75f;
-    [SerializeField] private float captionHoldDuration = 3.5f;
-    [SerializeField] private float screenFadeOutDuration = 0.65f;
+    [SerializeField] private float captionHoldDuration = 3f;
+    [Tooltip("Осветление экрана после звука.")]
+    [SerializeField] private float screenFadeOutDuration = 0.75f;
+    [Tooltip("Сколько держать экран чёрным после старта звука (не дольше длины клипа).")]
+    [SerializeField] private float maxBlackHoldAfterSound = 0.75f;
     [SerializeField] private bool lockPlayerMovement = true;
+    [Tooltip("Если выключено — момент запускается только через OCDAutoMomentZone или внешний вызов BeginMomentSequence.")]
+    [SerializeField] private bool requirePressE = true;
 
     private bool _isUnlocked;
     private bool _hasPlayed;
     private bool _momentSequenceRunning;
     private CanvasGroup _fadeCanvasGroup;
     private bool _isAutoClosingCaption;
+    private bool _controlReleasedInSequence;
 
     public float PressPromptReveal => _isUnlocked ? Reveal : 0f;
     public bool IsPressPromptVisible => _isUnlocked && PlayerInZone && !InteractionBusy && PromptView != null;
@@ -96,6 +120,8 @@ public class OCDMomentTrigger : PlayerInteractionZone
         _fadeCanvasGroup = ScreenFadeUtility.EnsureFadeCanvasGroup();
         if (_fadeCanvasGroup != null && _fadeCanvasGroup.alpha > 0.99f)
             _fadeCanvasGroup.alpha = 0f;
+
+        ReleaseScreenFadeBlock();
 
         if (activeAtStart)
             ShowObjectiveForThisMoment();
@@ -135,6 +161,13 @@ public class OCDMomentTrigger : PlayerInteractionZone
             return;
         }
 
+        if (!requirePressE)
+        {
+            PlayerInZone = false;
+            PressEPromptCoordinator.Refresh();
+            return;
+        }
+
         // Если игрок подошёл к следующему триггеру, пока текст ещё на экране — прячем текст и только потом даём подсказку E.
         if (autoCloseCaptionOnApproach && !_isAutoClosingCaption && !InteractionBusy)
         {
@@ -168,6 +201,18 @@ public class OCDMomentTrigger : PlayerInteractionZone
         if (!_isUnlocked || InteractionBusy || _hasPlayed)
             return;
 
+        BeginMomentSequence();
+    }
+
+    /// <summary>Запуск момента без E (авто-зона, сбор всех точек FixAll и т.п.).</summary>
+    public bool CanBeginFromAutoZone =>
+        _isUnlocked && !InteractionBusy && !(_hasPlayed && disableAfterPlayed);
+
+    public void BeginMomentSequence()
+    {
+        if (!_isUnlocked || InteractionBusy || (_hasPlayed && disableAfterPlayed))
+            return;
+
         InteractionBusy = true;
         PlayerInZone = false;
         Reveal = 0f;
@@ -188,6 +233,7 @@ public class OCDMomentTrigger : PlayerInteractionZone
         _isUnlocked = true;
         ApplyUnlockedState();
         UpdateGuideLightState();
+        // Цель уже выставлена через AdvanceObjectiveAfterCompletion у предыдущего триггера.
     }
 
     private void ApplyUnlockedState()
@@ -233,57 +279,212 @@ public class OCDMomentTrigger : PlayerInteractionZone
     {
         _hasPlayed = true;
         _momentSequenceRunning = true;
+        _controlReleasedInSequence = false;
         ApplyUnlockedState();
-        AdvanceObjectiveAfterCompletion();
         GameplayInputBlocker.SetBlocked(true);
 
         if (lockPlayerMovement)
             SetPlayerControlLocked(true);
 
-        // 1) Полное затемнение
-        yield return ScreenFadeRunner.FadeToBlack(screenFadeInDuration, _fadeCanvasGroup);
+        _fadeCanvasGroup = ScreenFadeUtility.EnsureFadeCanvasGroup();
+        ReleaseScreenFadeBlock();
+        SetMomentHudVisible(false);
 
-        // Переключение объектов делаем в темноте, чтобы игрок не видел "поп".
-        ApplyBlackSwap();
+        OCDCaptionUI captionUi = captionUI != null ? captionUI : OCDCaptionUI.GetSharedOverlay();
 
-        // 2) После полного затемнения — звук
-        if (soundDelayAfterFade > 0f)
-            yield return new WaitForSecondsRealtime(soundDelayAfterFade);
+        try
+        {
+            // 1) Полное затемнение
+            yield return ScreenFadeRunner.FadeToBlack(screenFadeInDuration, _fadeCanvasGroup);
 
-        float soundDuration = 0f;
-        if (momentSound != null)
-            soundDuration = Mathf.Max(0f, momentSound.length);
+            AdvanceObjectiveAfterCompletion();
 
-        if (momentSound != null && audioSource != null)
-            audioSource.PlayOneShot(momentSound, soundVolume);
+            // Переключение объектов делаем в темноте, чтобы игрок не видел "поп".
+            ApplyBlackSwap();
+            ApplyAtmosphereTransition();
 
-        // Новый триггер активируется сразу после звука в темноте.
-        if (nextMoment != null)
-            nextMoment.ActivateInSequence();
+            // 2) После полного затемнения — звук
+            if (soundDelayAfterFade > 0f)
+                yield return new WaitForSecondsRealtime(soundDelayAfterFade);
 
-        UpdateGuideLightState();
+            float soundDuration = ComputeBlackSoundsDuration();
+            yield return PlayBlackScreenSoundsRoutine();
 
-        // Ждём, пока звук прозвучит, и только потом начинаем осветление.
-        if (soundDuration > 0.001f)
-            yield return new WaitForSecondsRealtime(soundDuration);
+            // Новый триггер активируется сразу после звука в темноте.
+            if (nextMoment != null)
+            {
+                if (OCDMissionDayController.Instance != null)
+                    OCDMissionDayController.Instance.ActivateDayContaining(nextMoment);
+                nextMoment.ActivateInSequence();
+            }
 
-        // 3) Плавно убираем затемнение
-        yield return ScreenFadeRunner.FadeFromBlack(screenFadeOutDuration, _fadeCanvasGroup);
+            UpdateGuideLightState();
 
-        // 4) Возвращаем управление и одновременно показываем текст
+            float blackHold = Mathf.Min(soundDuration, Mathf.Max(0f, maxBlackHoldAfterSound));
+            if (blackHold > 0.001f)
+                yield return new WaitForSecondsRealtime(blackHold);
+
+            // 3) Плавно убираем затемнение (атмосфера может меняться параллельно)
+            if (blendAtmosphereDuringFadeOut && atmospherePreset != OCDAtmospherePreset.None)
+                StartAtmosphereBlend(screenFadeOutDuration);
+
+            yield return ScreenFadeRunner.FadeFromBlack(screenFadeOutDuration, _fadeCanvasGroup);
+
+            SetMomentHudVisible(true);
+
+            // 4) Нижняя надпись: управление — сразу после появления текста
+            string caption = ResolveCaptionText();
+            if (captionUi != null)
+                yield return captionUi.ShowCaptionFadeIn(caption, captionFadeInDuration);
+
+            PlayCaptionRevealSound();
+
+            ReleaseMomentPlayerControl();
+
+            if (captionUi != null)
+                StartCoroutine(captionUi.CaptionHoldAndFadeOut(captionHoldDuration, captionFadeOutDuration));
+        }
+        finally
+        {
+            ReleaseScreenFadeBlock();
+            SetMomentHudVisible(true);
+            ReleaseMomentPlayerControl();
+        }
+    }
+
+    private void ReleaseMomentPlayerControl()
+    {
+        if (_controlReleasedInSequence)
+            return;
+
+        _controlReleasedInSequence = true;
         GameplayInputBlocker.SetBlocked(false);
+
         if (lockPlayerMovement)
             SetPlayerControlLocked(false);
-
-        string caption = ResolveCaptionText();
-        OCDCaptionUI ui = captionUI != null ? captionUI : OCDCaptionUI.GetSharedOverlay();
-        if (ui != null)
-            yield return ui.ShowRoutine(caption, captionFadeInDuration, captionHoldDuration, captionFadeOutDuration);
 
         InteractionBusy = false;
         _momentSequenceRunning = false;
         _isUnlocked = false;
         ApplyUnlockedState();
+    }
+
+    private static void ReleaseScreenFadeBlock()
+    {
+        CanvasGroup fade = ScreenFadeUtility.EnsureFadeCanvasGroup();
+        if (fade == null)
+            return;
+
+        fade.blocksRaycasts = false;
+        fade.interactable = false;
+    }
+
+    private void ApplyAtmosphereTransition()
+    {
+        if (!applyAtmosphereOnBlack || atmospherePreset == OCDAtmospherePreset.None)
+            return;
+
+        OCDSceneAtmosphereController atmosphere = OCDSceneAtmosphereController.Instance;
+        if (atmosphere == null)
+            atmosphere = FindFirstObjectByType<OCDSceneAtmosphereController>();
+
+        if (atmosphere == null)
+        {
+            Debug.LogWarning(
+                $"OCDMomentTrigger '{name}': задан Atmosphere Preset, но на сцене нет OCDSceneAtmosphereController.",
+                this);
+            return;
+        }
+
+        if (!blendAtmosphereDuringFadeOut)
+            atmosphere.ApplyPresetImmediate(atmospherePreset, atmosphereOverrides);
+    }
+
+    private void StartAtmosphereBlend(float duration)
+    {
+        OCDSceneAtmosphereController atmosphere = OCDSceneAtmosphereController.Instance;
+        if (atmosphere == null)
+            return;
+
+        atmosphere.ApplyPresetDuringFade(atmospherePreset, duration, atmosphereOverrides);
+    }
+
+    private AudioClip[] GetEffectiveBlackScreenSounds()
+    {
+        if (blackScreenSounds != null && blackScreenSounds.Length > 0)
+            return blackScreenSounds;
+
+        if (momentSound != null)
+            return new[] { momentSound };
+
+        return System.Array.Empty<AudioClip>();
+    }
+
+    private float GetDelayBeforeBlackSound(int soundIndex)
+    {
+        if (soundIndex <= 0)
+            return 0f;
+
+        if (delaysBetweenBlackSounds != null && soundIndex - 1 < delaysBetweenBlackSounds.Length)
+            return Mathf.Max(0f, delaysBetweenBlackSounds[soundIndex - 1]);
+
+        return Mathf.Max(0f, blackScreenSoundGap);
+    }
+
+    private float ComputeBlackSoundsDuration()
+    {
+        AudioClip[] clips = GetEffectiveBlackScreenSounds();
+        float total = 0f;
+
+        for (int i = 0; i < clips.Length; i++)
+        {
+            if (i > 0)
+                total += GetDelayBeforeBlackSound(i);
+
+            if (clips[i] != null)
+                total += clips[i].length;
+        }
+
+        return total;
+    }
+
+    private IEnumerator PlayBlackScreenSoundsRoutine()
+    {
+        AudioClip[] clips = GetEffectiveBlackScreenSounds();
+        if (audioSource == null || clips.Length == 0)
+            yield break;
+
+        for (int i = 0; i < clips.Length; i++)
+        {
+            float delay = GetDelayBeforeBlackSound(i);
+            if (delay > 0.001f)
+                yield return new WaitForSecondsRealtime(delay);
+
+            if (clips[i] != null)
+                audioSource.PlayOneShot(clips[i], soundVolume);
+        }
+    }
+
+    private void PlayCaptionRevealSound()
+    {
+        if (captionRevealSound == null || audioSource == null)
+            return;
+
+        audioSource.PlayOneShot(captionRevealSound, captionRevealSoundVolume);
+    }
+
+    private void SetMomentHudVisible(bool visible)
+    {
+        OCDObjectiveUI objective = ResolveObjectivePanel();
+        if (objective != null)
+            objective.SetHudVisible(visible);
+
+        if (visible)
+            return;
+
+        OCDCaptionUI caption = captionUI != null ? captionUI : OCDCaptionUI.GetSharedOverlay();
+        if (caption != null && caption.IsVisible)
+            StartCoroutine(caption.HideSmooth(autoCloseCaptionDuration));
     }
 
     private void ApplyBlackSwap()

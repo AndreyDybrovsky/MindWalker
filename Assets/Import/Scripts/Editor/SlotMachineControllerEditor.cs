@@ -8,12 +8,11 @@ public class SlotMachineControllerEditor : Editor
     public override void OnInspectorGUI()
     {
         EditorGUILayout.HelpBox(
-            "Настройка:\n" +
-            "1) Tools → Gambling → Настроить префаб SlotMachine.\n" +
-            "2) В префабе под Object есть PlayerPoint (переименуется в PlayerStandPoint) — перетащите перед экраном автомата.\n" +
-            "3) LureZone — оранжевый бокс в Gizmos (зона входа).\n" +
-            "4) Буквы QTE — на экране по центру (не Canvas на префабе).\n" +
-            "5) Если героя уносит далеко — PlayerPoint стоит не там или дальше Max Lure Distance.",
+            "Добавьте компонент на корень префаба или нажмите «Пересобрать якоря».\n" +
+            "• MachineFront — лицо автомата; PlayerStandPoint — куда подводится игрок.\n" +
+            "• LureZone — оранжевый бокс (Gizmos): зона входа.\n" +
+            "• Буквы QTE — общий UI на экране, не Canvas на префабе.\n" +
+            "• Героя уносит далеко — сдвиньте PlayerStandPoint или увеличьте Max Lure Distance.",
             MessageType.Info);
 
         DrawDefaultInspector();
@@ -21,7 +20,7 @@ public class SlotMachineControllerEditor : Editor
         SlotMachineController controller = (SlotMachineController)target;
         EditorGUILayout.Space(8f);
 
-        if (GUILayout.Button("Пересобрать якоря (как в меню Tools)"))
+        if (GUILayout.Button("Пересобрать якоря"))
         {
             Undo.RecordObject(controller, "Rebuild SlotMachine anchors");
             controller.ApplyEditorPrefabLayout();

@@ -14,16 +14,62 @@ public class FadeStart : MonoBehaviour
     {
         ResolveFadeLayer();
 
-        if (fadeLayer != null)
+        if (fadeLayer == null)
+            return;
+
+        if (ShouldStartBlack())
         {
             fadeLayer.alpha = 1f;
             fadeLayer.blocksRaycasts = true;
         }
+        else
+        {
+            fadeLayer.alpha = 0f;
+            fadeLayer.blocksRaycasts = false;
+        }
+    }
+
+    private static bool ShouldStartBlack()
+    {
+        GameObject globalFade = GameObject.Find("FadeCanvas");
+        if (globalFade != null && globalFade.TryGetComponent(out CanvasGroup globalGroup))
+            return globalGroup.alpha > 0.5f;
+
+        return false;
+    }
+
+    private void OnEnable()
+    {
+        TryBeginFadeOut();
     }
 
     private void Start()
     {
-        if (fadeLayer == null)
+        TryBeginFadeOut();
+    }
+
+    public static void ResetFadeGate()
+    {
+        IsAnyFadeActive = false;
+    }
+
+    public void ForceFadeOutIfNeeded()
+    {
+        ResolveFadeLayer();
+        if (fadeLayer == null || fadeLayer.alpha < 0.02f)
+            return;
+
+        isFading = false;
+        IsAnyFadeActive = false;
+        TryBeginFadeOut();
+    }
+
+    private void TryBeginFadeOut()
+    {
+        if (fadeLayer == null || isFading)
+            return;
+
+        if (fadeLayer.alpha < 0.02f)
             return;
 
         if (IsAnyFadeActive)
@@ -44,8 +90,6 @@ public class FadeStart : MonoBehaviour
         else
             fadeLayer = GetComponentInChildren<CanvasGroup>(true);
 
-        if (fadeLayer == null)
-            fadeLayer = ScreenFadeUtility.EnsureFadeCanvasGroup();
     }
 
     private System.Collections.IEnumerator FadeOutRoutine()

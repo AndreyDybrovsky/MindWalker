@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public static class LevelSuccessFlow
 {
+    public const string TrueVictorySceneName = "TrueVictory";
+
     public static void MarkCurrentLevelCompleted()
     {
         string clearedScene = SceneManager.GetActiveScene().name;
@@ -17,12 +19,15 @@ public static class LevelSuccessFlow
 
     public static string ResolveReturnScene(string lobbySceneName, string victorySceneName)
     {
-        if (GlobalProgressTracker.Instance != null
-            && GlobalProgressTracker.Instance.CompletedLevelsCount >= GlobalProgressTracker.Instance.TotalLevels
-            && !string.IsNullOrWhiteSpace(victorySceneName))
-        {
+        bool allLevelsDone = GlobalProgressTracker.Instance != null
+            && GlobalProgressTracker.Instance.CompletedLevelsCount
+            >= GlobalProgressTracker.Instance.TotalLevels;
+
+        if (allLevelsDone && CollectableDocumentProgress.AllCollected)
+            return TrueVictorySceneName;
+
+        if (allLevelsDone && !string.IsNullOrWhiteSpace(victorySceneName))
             return victorySceneName;
-        }
 
         return string.IsNullOrWhiteSpace(lobbySceneName) ? "Main" : lobbySceneName;
     }

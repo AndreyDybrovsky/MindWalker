@@ -212,7 +212,12 @@ public class DepressionPanicMomentZone : MonoBehaviour
         _isFirstSpawn = !data.firstEncounterCompleted;
 
         if (data.patientActive)
-            RestoreActivePatient(data);
+        {
+            if (data.firstEncounterCompleted)
+                RestorePatientAfterFirstEncounter(data);
+            else
+                RestoreActivePatient(data);
+        }
 
         if (data.countdownActive && data.countdownRemaining > 0.01f && _spawnedCharacter != null)
             ResumeCountdownFromSave(data);
@@ -228,6 +233,21 @@ public class DepressionPanicMomentZone : MonoBehaviour
             _loopRoutine = StartCoroutine(ZonePanicLoopFromRespawnWait(data.respawnWaitRemaining));
         else if (!_eventActive)
             _loopRoutine = StartCoroutine(ZonePanicLoop());
+    }
+
+    private void RestorePatientAfterFirstEncounter(DepressionPanicSaveData data)
+    {
+        _isFirstSpawn = false;
+
+        if (!TrySpawnPatient(false))
+            return;
+
+        _findPhaseActive = false;
+        if (_calmInteraction != null)
+            _calmInteraction.SetInteractionEnabled(data.phase == PhaseCalm);
+
+        if (data.phase == PhaseCalm)
+            BeginCalmPhaseAfterFind();
     }
 
     private void RestoreActivePatient(DepressionPanicSaveData data)

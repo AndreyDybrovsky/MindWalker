@@ -60,7 +60,7 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
 
     public float PressPromptReveal => _reveal;
     public bool IsPressPromptVisible =>
-        _playerInZone && !IsLevelEntryBlocked() && !_isTransitioning;
+        _playerInZone && !_isTransitioning;
 
     public void ApplySharedPressPromptText(PressEPromptView view)
     {
@@ -386,7 +386,7 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
     {
         SyncPlayerZoneState();
 
-        bool wantShow = _playerInZone && !IsLevelEntryBlocked() && !_isTransitioning;
+        bool wantShow = _playerInZone && !_isTransitioning;
         float targetReveal = wantShow ? 1f : 0f;
         _reveal = Mathf.MoveTowards(_reveal, targetReveal, revealSpeed * Time.deltaTime);
 
@@ -711,27 +711,11 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
 
     private void CheckAndUpdateTeleportState()
     {
+        if (_triggerCollider != null && !_triggerCollider.enabled)
+            _triggerCollider.enabled = true;
+
         if (IsLevelEntryBlocked())
         {
-            if (_triggerCollider != null)
-                _triggerCollider.enabled = false;
-
-            _reveal = 0f;
-            if (promptCanvasGroup != null)
-            {
-                promptCanvasGroup.alpha = 0f;
-                promptCanvasGroup.blocksRaycasts = false;
-            }
-
-            ApplyPromptTextAlpha();
-
-            if (_spawnedBoard != null)
-            {
-                Destroy(_spawnedBoard);
-                _spawnedBoard = null;
-                _boardView = null;
-            }
-
             if (promptText != null)
                 promptText.color = Color.green;
             if (promptText3D != null)

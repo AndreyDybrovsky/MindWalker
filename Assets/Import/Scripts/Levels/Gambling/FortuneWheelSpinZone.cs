@@ -7,11 +7,16 @@ using UnityEngine;
 public class FortuneWheelSpinZone : PlayerInteractionZone
 {
     [SerializeField] private FortuneWheelController wheel;
-    [SerializeField] private string promptLocalizationKey = "scene.gambling.wheel_spin";
-    [SerializeField] private string promptFallback = "Крутить";
 
     private bool _waitingForSpin;
     private System.Action _onSpinComplete;
+
+    protected override void Awake()
+    {
+        promptLocalizationKey = "scene.gambling.wheel_spin";
+        promptFallbackText = "Крутить";
+        base.Awake();
+    }
 
     public void Bind(FortuneWheelController controller)
     {
@@ -41,7 +46,7 @@ public class FortuneWheelSpinZone : PlayerInteractionZone
         if (PromptView == null)
             return;
 
-        string text = PressEPromptUtility.ResolveLocalizedText(promptLocalizationKey, promptFallback);
+        string text = PressEPromptUtility.ResolveLocalizedText(promptLocalizationKey, promptFallbackText);
         PromptView.SetText(text);
     }
 

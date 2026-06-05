@@ -7,8 +7,8 @@ using UnityEngine;
 public abstract class PlayerInteractionZone : MonoBehaviour, IPressEPromptContributor
 {
     [Header("Подсказка")]
-    [SerializeField] private string promptLocalizationKey = "scene.hint_press_e";
-    [SerializeField] private string promptFallbackText = "Нажми E";
+    [SerializeField] protected string promptLocalizationKey = "scene.hint_press_e";
+    [SerializeField] protected string promptFallbackText = "Нажми E";
     [SerializeField] private float revealSpeed = 4f;
 
     protected bool PlayerInZone;

@@ -3297,7 +3297,7 @@ MonoBehaviour:
     key: Main.Exit
     fallback: Exit
   - text: {fileID: 445259160808641195}
-    key: save.Load
+    key: save.Save
     fallback: Save
 --- !u!1 &2374174088565377153
 GameObject:

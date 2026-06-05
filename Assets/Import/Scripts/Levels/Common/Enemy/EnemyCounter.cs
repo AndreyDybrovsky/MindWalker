@@ -141,4 +141,36 @@ public class EnemyCounter : MonoBehaviour
         defeatedEnemies = defeated;
         OnEnemyCountChanged?.Invoke(remainingEnemies);
     }
+
+    /// <summary>Пересчёт по живым врагам на сцене (после загрузки сейва).</summary>
+    public void RebuildFromScene()
+    {
+        trackedEnemies.Clear();
+        defeatedEnemySet.Clear();
+        CountEnemies();
+
+        BossSpawnManager bossSpawn = BossSpawnManager.Instance != null
+            ? BossSpawnManager.Instance
+            : FindFirstObjectByType<BossSpawnManager>();
+
+        if (bossSpawn != null && bossSpawn.IsBossSpawned)
+        {
+            EnemyHealth[] all = FindObjectsByType<EnemyHealth>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < all.Length; i++)
+            {
+                EnemyHealth health = all[i];
+                if (health == null)
+                    continue;
+
+                GameObject enemy = health.gameObject;
+                if (!enemy.name.Contains("(Boss)"))
+                    continue;
+
+                if (!trackedEnemies.Contains(enemy))
+                    AddEnemy(enemy, health);
+            }
+        }
+
+        OnEnemyCountChanged?.Invoke(remainingEnemies);
+    }
 }

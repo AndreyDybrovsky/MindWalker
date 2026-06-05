@@ -16,6 +16,11 @@ public class EnemyShooting : MonoBehaviour
     [SerializeField] private bool aimOnlyOnYAxis = true;
     [SerializeField] private float maxShootDistance = 50f;
 
+    [Header("Звук выстрела (SFX)")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip shootSound;
+    [SerializeField, Range(0f, 1f)] private float shootSoundVolume = 0.75f;
+
     [Header("Отладка")]
     [SerializeField] private bool debugMode = false;
 
@@ -35,6 +40,11 @@ public class EnemyShooting : MonoBehaviour
             if (debugMode)
                 Debug.Log($"EnemyShooting: Автоматически создан firePoint для {gameObject.name}");
         }
+
+        if (shootSound == null)
+            shootSound = Resources.Load<AudioClip>("Sounds/Shoot");
+
+        EnsureAudioSource();
     }
 
     private void Start()
@@ -44,6 +54,23 @@ public class EnemyShooting : MonoBehaviour
             Debug.LogError($"EnemyShooting: Префаб пули не назначен для {gameObject.name}!");
             enabled = false;
         }
+    }
+
+    private void OnEnable()
+    {
+        if (SettingsManager.Instance != null)
+            SettingsManager.Instance.OnSettingsApplied += OnSettingsApplied;
+    }
+
+    private void OnDisable()
+    {
+        if (SettingsManager.Instance != null)
+            SettingsManager.Instance.OnSettingsApplied -= OnSettingsApplied;
+    }
+
+    private void OnSettingsApplied()
+    {
+        ApplySfxVolume();
     }
 
     private void Update()
@@ -136,5 +163,75 @@ public class EnemyShooting : MonoBehaviour
         {
             rb.linearVelocity = direction * bulletSpeed;
         }
+
+        PlayShootSound();
+    }
+
+    private void EnsureAudioSource()
+    {
+        if (audioSource != null)
+        {
+            ConfigureShootAudioSource(audioSource);
+            return;
+        }
+
+        Transform shootRoot = transform.Find("ShootAudio");
+        if (shootRoot != null)
+            shootRoot.TryGetComponent(out audioSource);
+
+        if (audioSource == null)
+        {
+            GameObject shootGo = new GameObject("ShootAudio");
+            shootGo.transform.SetParent(transform, false);
+            audioSource = shootGo.AddComponent<AudioSource>();
+        }
+
+        ConfigureShootAudioSource(audioSource);
+    }
+
+    private void ConfigureShootAudioSource(AudioSource source)
+    {
+        if (source == null)
+            return;
+
+        audioSource = source;
+        audioSource.playOnAwake = false;
+        audioSource.loop = false;
+        audioSource.spatialBlend = 1f;
+        audioSource.minDistance = 2f;
+        audioSource.maxDistance = 28f;
+        AudioMixerRoutingUtility.BindSourceToSfx(audioSource);
+        ApplySfxVolume();
+    }
+
+    private void ApplySfxVolume()
+    {
+        if (audioSource == null)
+            return;
+
+        float sfx = SettingsManager.Instance != null
+            ? SettingsManager.Instance.GetCurrentSettings().sfxVolume
+            : 1f;
+
+        audioSource.volume = shootSoundVolume * Mathf.Clamp01(sfx);
+        audioSource.mute = sfx <= 0.001f;
+    }
+
+    private void PlayShootSound()
+    {
+        if (shootSound == null)
+            return;
+
+        EnsureAudioSource();
+        ApplySfxVolume();
+
+        float sfx = SettingsManager.Instance != null
+            ? SettingsManager.Instance.GetCurrentSettings().sfxVolume
+            : 1f;
+
+        if (sfx <= 0.001f)
+            return;
+
+        audioSource.PlayOneShot(shootSound, shootSoundVolume * Mathf.Clamp01(sfx));
     }
 }

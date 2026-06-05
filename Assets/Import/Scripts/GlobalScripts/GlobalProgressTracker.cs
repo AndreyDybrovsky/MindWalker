@@ -220,6 +220,9 @@ public class GlobalProgressTracker : MonoBehaviour
     /// </summary>
     public void UpdateProgressDisplay()
     {
+        if (!ShouldShowLobbyProgressInActiveScene())
+            return;
+
         string progressString = FormatProgressString(completedLevels.Count, totalLevels);
 
         if (progressTextUI != null)
@@ -227,6 +230,22 @@ public class GlobalProgressTracker : MonoBehaviour
 
         if (progressText3D != null)
             progressText3D.text = progressString;
+    }
+
+    /// <summary>На уровнях пациентов QuestText используется для целей OCD и т.п.</summary>
+    private static bool ShouldShowLobbyProgressInActiveScene()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (string.IsNullOrEmpty(sceneName))
+            return true;
+
+        if (sceneName.IndexOf("OCD", System.StringComparison.OrdinalIgnoreCase) >= 0)
+            return false;
+
+        if (FindFirstObjectByType<OCDMomentTrigger>(FindObjectsInactive.Include) != null)
+            return false;
+
+        return true;
     }
 
     private string FormatProgressString(int completed, int total)

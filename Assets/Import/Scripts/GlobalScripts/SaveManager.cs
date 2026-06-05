@@ -207,6 +207,7 @@ public class SaveManager : MonoBehaviour
     // Сохраняет игру в новый слот (создает новую игру)
     public bool SaveNewGame(int slotIndex)
     {
+        CollectableDocumentProgress.ClearForNewGame();
         GameSaveData saveData = CollectGameData();
         saveData.saveName = "";
         saveData.saveNameKey = "save.default_name";
@@ -373,13 +374,6 @@ public class SaveManager : MonoBehaviour
         else
             LobbyPatientProgress.ClearAll();
         
-        // Восстанавливаем состояние счетчика врагов
-        EnemyCounter enemyCounter = FindFirstObjectByType<EnemyCounter>();
-        if (enemyCounter != null && saveData.enemyCounterTotalEnemies > 0)
-        {
-            enemyCounter.SetState(saveData.enemyCounterTotalEnemies, saveData.enemyCounterDefeatedEnemies);
-        }
-        
         // Восстанавливаем босса, если он был заспавнен
         if (saveData.bossWasSpawned)
         {
@@ -389,7 +383,6 @@ public class SaveManager : MonoBehaviour
             
             if (bossSpawnManager != null && bossSpawnManager.WillSpawnBoss)
             {
-                // Заспавниваем босса с сохраненными данными
                 bossSpawnManager.LoadBossState(saveData.bossPosition, saveData.bossRotation, 
                     saveData.bossHealth, saveData.bossMaxHealth, saveData.bossIsAlive);
                 Debug.Log($"Восстановлен босс: позиция {saveData.bossPosition}, здоровье {saveData.bossHealth}/{saveData.bossMaxHealth}, жив: {saveData.bossIsAlive}");
@@ -399,11 +392,17 @@ public class SaveManager : MonoBehaviour
                 Debug.LogWarning("SaveManager: Босс был заспавнен в сохранении, но BossSpawnManager не найден или не настроен!");
             }
         }
+
+        EnemyCounter enemyCounter = FindFirstObjectByType<EnemyCounter>();
+        if (enemyCounter != null)
+            enemyCounter.RebuildFromScene();
         
         // Дополнительная задержка для обновления NavMesh агентов
         yield return new WaitForSeconds(0.1f);
         
         DepressionPanicMomentZone.RestoreAllFromSave(saveData);
+        CollectableDocumentProgress.LoadFromSave(saveData);
+        CollectableDocumentProgress.RefreshSceneDocuments();
 
         Debug.Log($"Данные сохранения применены к игре. Восстановлено противников: {restoredCount}/{saveData.enemies.Count}");
         _skipNextAutoSave = false;
@@ -566,6 +565,7 @@ public class SaveManager : MonoBehaviour
 
         saveData.lostPatientLevels = LobbyPatientProgress.ExportToList();
         DepressionPanicMomentZone.CaptureAllToSave(saveData);
+        CollectableDocumentProgress.WriteToSave(saveData);
         
         // Сохраняем время игры (если есть менеджер времени)
         // saveData.playTime = GameTimeManager.Instance.GetPlayTime();
@@ -599,6 +599,7 @@ public class SaveManager : MonoBehaviour
                 Debug.Log($"SaveManager: Прогресс очищен при удалении сохранения {slotIndex} (новая игра)");
             }
 
+            CollectableDocumentProgress.ClearForNewGame();
             LobbyPatientProgress.ClearAll();
             
             // Сбрасываем текущий слот только если не указано keepCurrentSlot
