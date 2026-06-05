@@ -49,6 +49,29 @@ public static class LevelSceneProgress
     }
 
     /// <summary>
+    /// Считает уникальных пациентов — связанные сцены (напр. PTSD + PTSD in Danger) считаются как один.
+    /// Используется для проверки "все пациенты пройдены" без двойного счёта.
+    /// </summary>
+    public static int CountUniquePatientGroups(System.Collections.Generic.IEnumerable<string> completedScenes)
+    {
+        if (completedScenes == null)
+            return 0;
+
+        var canonical = new System.Collections.Generic.HashSet<string>();
+        foreach (string scene in completedScenes)
+        {
+            string key = scene;
+            foreach (string linked in GetLinkedScenes(scene))
+            {
+                if (string.Compare(linked, key, System.StringComparison.Ordinal) < 0)
+                    key = linked;
+            }
+            canonical.Add(key);
+        }
+        return canonical.Count;
+    }
+
+    /// <summary>
     /// Старые сохранения могли отметить только «PTSD in Danger» — синхронизируем связанные сцены.
     /// </summary>
     public static void SyncLinkedProgressFromSave()

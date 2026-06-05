@@ -401,6 +401,7 @@ public class SaveManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         
         DepressionPanicMomentZone.RestoreAllFromSave(saveData);
+        OCDMomentTrigger.RestoreAllFromSave(saveData);
         CollectableDocumentProgress.LoadFromSave(saveData);
         CollectableDocumentProgress.RefreshSceneDocuments();
 
@@ -565,6 +566,7 @@ public class SaveManager : MonoBehaviour
 
         saveData.lostPatientLevels = LobbyPatientProgress.ExportToList();
         DepressionPanicMomentZone.CaptureAllToSave(saveData);
+        OCDMomentTrigger.CaptureAllToSave(saveData);
         CollectableDocumentProgress.WriteToSave(saveData);
         
         // Сохраняем время игры (если есть менеджер времени)

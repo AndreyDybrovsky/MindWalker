@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -89,12 +90,17 @@ public class OCDMomentTrigger : PlayerInteractionZone
     [Tooltip("Если выключено — момент запускается только через OCDAutoMomentZone или внешний вызов BeginMomentSequence.")]
     [SerializeField] private bool requirePressE = true;
 
+    [Header("Сохранение")]
+    [Tooltip("Уникальный ID для системы сохранений. Оставьте пустым — генерируется автоматически по позиции в иерархии.")]
+    [SerializeField] private string momentSaveId;
+
     private bool _isUnlocked;
     private bool _hasPlayed;
     private bool _momentSequenceRunning;
     private CanvasGroup _fadeCanvasGroup;
     private bool _isAutoClosingCaption;
     private bool _controlReleasedInSequence;
+    private bool _saveRestoreApplied;
 
     public float PressPromptReveal => _isUnlocked ? Reveal : 0f;
     public bool IsPressPromptVisible => _isUnlocked && PlayerInZone && !InteractionBusy && PromptView != null;
@@ -102,9 +108,6 @@ public class OCDMomentTrigger : PlayerInteractionZone
     protected override void Start()
     {
         base.Start();
-
-        _isUnlocked = activeAtStart;
-        ApplyUnlockedState();
 
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
@@ -122,6 +125,18 @@ public class OCDMomentTrigger : PlayerInteractionZone
             _fadeCanvasGroup.alpha = 0f;
 
         ReleaseScreenFadeBlock();
+
+        // Если состояние уже восстановлено из сохранения — не затираем его
+        if (_saveRestoreApplied)
+        {
+            ApplyUnlockedState();
+            if (_isUnlocked && !_hasPlayed)
+                ShowObjectiveForThisMoment();
+            return;
+        }
+
+        _isUnlocked = activeAtStart;
+        ApplyUnlockedState();
 
         if (activeAtStart)
             ShowObjectiveForThisMoment();
@@ -597,6 +612,98 @@ public class OCDMomentTrigger : PlayerInteractionZone
             return captionFallbackText ?? string.Empty;
 
         return text;
+    }
+
+    // ──────────── Save / Restore ────────────
+
+    public string GetMomentSaveId()
+    {
+        if (!string.IsNullOrEmpty(momentSaveId))
+            return momentSaveId;
+
+        // Автоматический уникальный ID на основе позиции в иерархии
+        var indices = new List<int>(8);
+        Transform t = transform;
+        while (t != null)
+        {
+            indices.Add(t.GetSiblingIndex());
+            t = t.parent;
+        }
+        indices.Reverse();
+        return "m:" + string.Join("/", indices);
+    }
+
+    /// <summary>Восстанавливает состояние момента из сохранения. Безопасно вызывать до Start().</summary>
+    public void RestoreState(bool hasPlayed, bool isUnlocked)
+    {
+        _saveRestoreApplied = true;
+        _hasPlayed = hasPlayed;
+        _isUnlocked = isUnlocked;
+        ApplyUnlockedState();
+        // ShowObjectiveForThisMoment() будет вызван из Start() после инициализации базового класса
+    }
+
+    public static void CaptureAllToSave(GameSaveData saveData)
+    {
+        if (saveData == null)
+            return;
+
+        OCDMomentTrigger[] triggers = Object.FindObjectsByType<OCDMomentTrigger>(
+            FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+        if (triggers == null || triggers.Length == 0)
+            return;
+
+        var data = new OCDCheckpointSaveData();
+        data.activeDayIndex = OCDMissionDayController.Instance != null
+            ? OCDMissionDayController.Instance.GetActiveDayIndex()
+            : 1;
+
+        for (int i = 0; i < triggers.Length; i++)
+        {
+            OCDMomentTrigger t = triggers[i];
+            if (t == null)
+                continue;
+
+            if (t._hasPlayed)
+                data.playedMomentIds.Add(t.GetMomentSaveId());
+
+            if (t._isUnlocked && !t._hasPlayed)
+                data.currentUnlockedMomentId = t.GetMomentSaveId();
+        }
+
+        SaveGameCustomDataUtility.Write(saveData, "ocd_checkpoints", data);
+    }
+
+    public static void RestoreAllFromSave(GameSaveData saveData)
+    {
+        if (saveData == null)
+            return;
+
+        if (!SaveGameCustomDataUtility.TryRead(saveData, "ocd_checkpoints", out OCDCheckpointSaveData data))
+            return;
+
+        if (OCDMissionDayController.Instance != null)
+            OCDMissionDayController.Instance.SetActiveDayIndex(data.activeDayIndex);
+
+        OCDMomentTrigger[] triggers = Object.FindObjectsByType<OCDMomentTrigger>(
+            FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+        if (triggers == null)
+            return;
+
+        for (int i = 0; i < triggers.Length; i++)
+        {
+            OCDMomentTrigger t = triggers[i];
+            if (t == null)
+                continue;
+
+            string id = t.GetMomentSaveId();
+            bool hasPlayed = data.playedMomentIds != null && data.playedMomentIds.Contains(id);
+            bool isUnlocked = !string.IsNullOrEmpty(data.currentUnlockedMomentId) &&
+                              id == data.currentUnlockedMomentId;
+            t.RestoreState(hasPlayed, isUnlocked);
+        }
     }
 
 #if UNITY_EDITOR

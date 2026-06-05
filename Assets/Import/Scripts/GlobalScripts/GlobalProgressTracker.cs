@@ -50,6 +50,8 @@ public class GlobalProgressTracker : MonoBehaviour
 
     public int TotalLevels => totalLevels;
     public int CompletedLevelsCount => completedLevels.Count;
+    // Уникальные пациенты: PTSD + "PTSD in Danger" = 1 группа, не 2 отдельных счёта
+    public int CompletedPatientGroupsCount => LevelSceneProgress.CountUniquePatientGroups(completedLevels);
 
     private void Awake()
     {
@@ -223,7 +225,7 @@ public class GlobalProgressTracker : MonoBehaviour
         if (!ShouldShowLobbyProgressInActiveScene())
             return;
 
-        string progressString = FormatProgressString(completedLevels.Count, totalLevels);
+        string progressString = FormatProgressString(CompletedPatientGroupsCount, totalLevels);
 
         if (progressTextUI != null)
             progressTextUI.text = progressString;
@@ -413,8 +415,8 @@ public class GlobalProgressTracker : MonoBehaviour
 
         SaveProgress();
         UpdateProgressDisplay();
-        
-        Debug.Log($"GlobalProgressTracker: Загружен прогресс из сохранения: {completedLevels.Count}/{totalLevels} локаций завершено");
+
+        Debug.Log($"GlobalProgressTracker: Загружен прогресс из сохранения: {CompletedPatientGroupsCount}/{totalLevels} пациентов завершено (сцен в сохранении: {completedLevels.Count})");
     }
 
     public List<string> ExportCompletedLevels()

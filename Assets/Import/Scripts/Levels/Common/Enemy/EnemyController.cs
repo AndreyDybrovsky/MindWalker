@@ -444,7 +444,9 @@ public class EnemyController : MonoBehaviour
                 return;
         }
 
-        if (!TryResolveNavMeshDestination(target, out Vector3 resolved, allowPartialPath: isChasing))
+        // allowPartialPath: true — принимаем частичные пути, иначе в городских сценах с фрагментированным NavMesh
+        // враг никогда не получает цель (PathPartial отвергается при isChasing=false)
+        if (!TryResolveNavMeshDestination(target, out Vector3 resolved, allowPartialPath: true))
             return;
 
         if (agent.isOnNavMesh)

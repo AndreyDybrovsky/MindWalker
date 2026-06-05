@@ -70,6 +70,8 @@ public class DepressionPanicMomentZone : MonoBehaviour
 
     [Header("Поведение")]
     [SerializeField] private float cleanupDelay = 0.5f;
+    [Tooltip("Задержка перед первым (туториальным) появлением девочки.")]
+    [SerializeField] private float firstSpawnDelay = 1.5f;
     [Tooltip("Уникальный id зоны в сцене (для сохранения).")]
     [SerializeField] private string zoneSaveId = "main";
 
@@ -158,6 +160,29 @@ public class DepressionPanicMomentZone : MonoBehaviour
         string scene = SceneManager.GetActiveScene().name;
         string id = string.IsNullOrEmpty(zoneSaveId) ? name : zoneSaveId;
         return $"depression_panic:{scene}:{id}";
+    }
+
+    /// <summary>
+    /// Проверяет в текущем слоте сохранения, было ли первое появление уже завершено.
+    /// Позволяет пропустить туториал при повторном посещении сцены без явной загрузки сейва.
+    /// </summary>
+    private bool IsFirstEncounterCompletedInSave()
+    {
+        if (SaveManager.Instance == null)
+            return false;
+
+        int slot = SaveManager.Instance.GetCurrentSaveSlot();
+        if (slot < 0)
+            return false;
+
+        GameSaveData data = SaveManager.Instance.GetSaveData(slot);
+        if (data == null || data.IsEmpty())
+            return false;
+
+        if (!SaveGameCustomDataUtility.TryRead(data, BuildSaveKey(), out DepressionPanicSaveData panicData))
+            return false;
+
+        return panicData.firstEncounterCompleted;
     }
 
     public void CaptureToSave(GameSaveData saveData)
@@ -347,6 +372,11 @@ public class DepressionPanicMomentZone : MonoBehaviour
                 yield break;
             }
 
+            // Если туториальное появление уже было завершено в сохранении этого слота —
+            // не показываем его снова даже при навигации в сцену без явной загрузки сейва
+            if (_isFirstSpawn && IsFirstEncounterCompletedInSave())
+                _isFirstSpawn = false;
+
             if (_isFirstSpawn)
             {
                 yield return RunFirstSpawnPanicEvent();
@@ -371,6 +401,10 @@ public class DepressionPanicMomentZone : MonoBehaviour
 
     private IEnumerator RunFirstSpawnPanicEvent()
     {
+        // Небольшая задержка чтобы игрок успел осмотреться перед туториальным появлением
+        if (firstSpawnDelay > 0f)
+            yield return new WaitForSeconds(firstSpawnDelay);
+
         while (true)
         {
             if (!TrySpawnPatient(true))

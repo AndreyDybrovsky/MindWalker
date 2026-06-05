@@ -30,6 +30,10 @@ public class OCDMissionDayController : MonoBehaviour
             Instance = null;
     }
 
+    public int GetActiveDayIndex() => activeDayIndex;
+
+    public void SetActiveDayIndex(int index) => ApplyActiveDay(index);
+
     public void ActivateDayContaining(Component moment)
     {
         if (moment == null || dayRoots == null)

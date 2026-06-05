@@ -20,7 +20,7 @@ public static class LevelSuccessFlow
     public static string ResolveReturnScene(string lobbySceneName, string victorySceneName)
     {
         bool allLevelsDone = GlobalProgressTracker.Instance != null
-            && GlobalProgressTracker.Instance.CompletedLevelsCount
+            && GlobalProgressTracker.Instance.CompletedPatientGroupsCount
             >= GlobalProgressTracker.Instance.TotalLevels;
 
         if (allLevelsDone && CollectableDocumentProgress.AllCollected)

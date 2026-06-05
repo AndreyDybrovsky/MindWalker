@@ -12,7 +12,7 @@ public class AutoSaveSceneNotifier : MonoBehaviour
     private const string LocalizationKey = "game.autosave";
     private const string FallbackRu = "Автосохранение";
 
-    [SerializeField] private string[] skipSceneNames = { "MainMenu", "Victory" };
+    [SerializeField] private string[] skipSceneNames = { "MainMenu", "Victory", "TrueVictory" };
     [SerializeField] private float saveDelayAfterLoad = 0.4f;
     [SerializeField] private float fadeInDuration = 0.45f;
     [SerializeField] private float visibleDuration = 1.6f;
