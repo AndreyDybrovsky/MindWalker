@@ -45,9 +45,11 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
     [SerializeField] private CanvasGroup fadeCanvasGroup;
 
     private bool _playerInZone;
+    private bool _playerNearby;
     private bool _isTransitioning;
     private Collider _triggerCollider;
     private float _reveal;
+    private float _boardReveal;
 
     private GameObject _spawnedBoard;
     private PatientInfoBoardView _boardView;
@@ -292,7 +294,7 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
     /// <summary>Игрок уже в коллайдере при загрузке сцены — OnTriggerEnter не приходит, включаем UI вручную.</summary>
     private void TryRegisterPlayerIfAlreadyInsideTrigger(bool playEnterSound)
     {
-        if (_isTransitioning || IsLevelEntryBlocked() || _triggerCollider == null)
+        if (_isTransitioning || _triggerCollider == null)
             return;
 
         if (!PlayerTeleportUtility.TryGetPlayerBody(out Transform body))
@@ -303,7 +305,10 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
         if ((closest - pt).sqrMagnitude > 0.0004f)
             return;
 
-        RegisterPlayerInZone(playEnterSound);
+        _playerNearby = true;
+
+        if (!IsLevelEntryBlocked())
+            RegisterPlayerInZone(playEnterSound);
     }
 
     private void RegisterPlayerInZone(bool playEnterSound)
@@ -390,6 +395,9 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
         float targetReveal = wantShow ? 1f : 0f;
         _reveal = Mathf.MoveTowards(_reveal, targetReveal, revealSpeed * Time.deltaTime);
 
+        float boardTarget = (_playerNearby && !_isTransitioning) ? 1f : 0f;
+        _boardReveal = Mathf.MoveTowards(_boardReveal, boardTarget, revealSpeed * Time.deltaTime);
+
         if (_usesSharedPressPrompt)
         {
             PressEPromptCoordinator.Refresh();
@@ -407,7 +415,8 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
         if (wantShow && promptUI != null && !promptUI.activeSelf && !_usesSharedPressPrompt)
             EnsurePromptUiActive();
 
-        if (wantShow && patientBoardPrefab != null)
+        bool boardWantShow = _playerNearby && !_isTransitioning && patientBoardPrefab != null;
+        if (boardWantShow)
         {
             Camera viewCamera = ResolveViewCamera();
             if (viewCamera != null)
@@ -422,15 +431,15 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
                 }
 
                 if (_boardView != null)
-                    _boardView.SetVisualReveal(_reveal);
+                    _boardView.SetVisualReveal(_boardReveal);
             }
         }
         else
         {
             if (_boardView != null)
-                _boardView.SetVisualReveal(_reveal);
+                _boardView.SetVisualReveal(_boardReveal);
 
-            if (!_playerInZone && _reveal <= 0.001f && _spawnedBoard != null)
+            if (!_playerNearby && _boardReveal <= 0.001f && _spawnedBoard != null)
             {
                 Destroy(_spawnedBoard);
                 _spawnedBoard = null;
@@ -447,22 +456,32 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
 
     private void SyncPlayerZoneState()
     {
-        if (_isTransitioning || IsLevelEntryBlocked() || _triggerCollider == null)
+        if (_triggerCollider == null)
             return;
 
         if (!PlayerTeleportUtility.TryGetPlayerBody(out Transform body))
+        {
+            bool changed = _playerInZone || _playerNearby;
+            _playerInZone = false;
+            _playerNearby = false;
+            if (changed) PressEPromptCoordinator.Refresh();
+            return;
+        }
+
+        Vector3 closest = _triggerCollider.ClosestPoint(body.position);
+        bool inside = (closest - body.position).sqrMagnitude <= 0.25f;
+
+        _playerNearby = inside;
+
+        if (_isTransitioning || IsLevelEntryBlocked())
         {
             if (_playerInZone)
             {
                 _playerInZone = false;
                 PressEPromptCoordinator.Refresh();
             }
-
             return;
         }
-
-        Vector3 closest = _triggerCollider.ClosestPoint(body.position);
-        bool inside = (closest - body.position).sqrMagnitude <= 0.25f;
 
         if (inside && !_playerInZone)
             RegisterPlayerInZone(playEnterSound: true);
@@ -599,6 +618,8 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
         if (!IsPlayerBodyCollider(other))
             return;
 
+        _playerNearby = true;
+
         if (IsLevelEntryBlocked())
         {
             _playerInZone = false;
@@ -610,7 +631,12 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
 
     private void OnTriggerStay(Collider other)
     {
-        if (!IsPlayerBodyCollider(other) || _isTransitioning || IsLevelEntryBlocked())
+        if (!IsPlayerBodyCollider(other))
+            return;
+
+        _playerNearby = true;
+
+        if (_isTransitioning || IsLevelEntryBlocked())
             return;
 
         if (!_playerInZone)
@@ -624,6 +650,7 @@ public class SceneTransitionTrigger : MonoBehaviour, IPressEPromptContributor
         if (!IsPlayerBodyCollider(other))
             return;
 
+        _playerNearby = false;
         _playerInZone = false;
         PressEPromptCoordinator.Refresh();
 

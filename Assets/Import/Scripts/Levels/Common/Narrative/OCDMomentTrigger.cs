@@ -90,6 +90,11 @@ public class OCDMomentTrigger : PlayerInteractionZone
     [Tooltip("Если выключено — момент запускается только через OCDAutoMomentZone или внешний вызов BeginMomentSequence.")]
     [SerializeField] private bool requirePressE = true;
 
+    [Header("Без затемнения (выход за дверь, финальные точки)")]
+    [Tooltip("Если включено — момент проигрывается БЕЗ затемнения экрана: только звук, нижняя надпись и переход к следующему триггеру. " +
+             "Движение игрока не блокируется. Подходит для 'Выйди' и точек, где экран не должен темнеть.")]
+    [SerializeField] private bool skipScreenFade = false;
+
     [Header("Сохранение")]
     [Tooltip("Уникальный ID для системы сохранений. Оставьте пустым — генерируется автоматически по позиции в иерархии.")]
     [SerializeField] private string momentSaveId;
@@ -101,6 +106,7 @@ public class OCDMomentTrigger : PlayerInteractionZone
     private bool _isAutoClosingCaption;
     private bool _controlReleasedInSequence;
     private bool _saveRestoreApplied;
+    private bool _activatedBeforeStart;
 
     public float PressPromptReveal => _isUnlocked ? Reveal : 0f;
     public bool IsPressPromptVisible => _isUnlocked && PlayerInZone && !InteractionBusy && PromptView != null;
@@ -121,10 +127,14 @@ public class OCDMomentTrigger : PlayerInteractionZone
         AudioMixerRoutingUtility.BindSourceToSfx(audioSource);
 
         _fadeCanvasGroup = ScreenFadeUtility.EnsureFadeCanvasGroup();
-        if (_fadeCanvasGroup != null && _fadeCanvasGroup.alpha > 0.99f)
+        // Сбрасываем остаточный фейд от предыдущей сцены ТОЛЬКО у стартового триггера.
+        // Триггеры, которые активируются mid-game (Day2, Day3...), не должны трогать
+        // глобальный фейд — он может быть чёрным из-за идущего перехода.
+        if (activeAtStart && _fadeCanvasGroup != null && _fadeCanvasGroup.alpha > 0.99f)
             _fadeCanvasGroup.alpha = 0f;
 
-        ReleaseScreenFadeBlock();
+        if (activeAtStart)
+            ReleaseScreenFadeBlock();
 
         // Если состояние уже восстановлено из сохранения — не затираем его
         if (_saveRestoreApplied)
@@ -132,6 +142,13 @@ public class OCDMomentTrigger : PlayerInteractionZone
             ApplyUnlockedState();
             if (_isUnlocked && !_hasPlayed)
                 ShowObjectiveForThisMoment();
+            return;
+        }
+
+        // Если ActivateInSequence был вызван до Start() (EnableDayOnly из предыдущего дня) — не затираем
+        if (_activatedBeforeStart)
+        {
+            ApplyUnlockedState();
             return;
         }
 
@@ -245,6 +262,7 @@ public class OCDMomentTrigger : PlayerInteractionZone
         if (_hasPlayed && disableAfterPlayed && !_momentSequenceRunning)
             return;
 
+        _activatedBeforeStart = true;
         _isUnlocked = true;
         ApplyUnlockedState();
         UpdateGuideLightState();
@@ -296,21 +314,29 @@ public class OCDMomentTrigger : PlayerInteractionZone
         _momentSequenceRunning = true;
         _controlReleasedInSequence = false;
         ApplyUnlockedState();
-        GameplayInputBlocker.SetBlocked(true);
 
-        if (lockPlayerMovement)
-            SetPlayerControlLocked(true);
+        // В режиме без затемнения не блокируем ввод и движение — игрок продолжает идти.
+        if (!skipScreenFade)
+        {
+            GameplayInputBlocker.SetBlocked(true);
+
+            if (lockPlayerMovement)
+                SetPlayerControlLocked(true);
+        }
 
         _fadeCanvasGroup = ScreenFadeUtility.EnsureFadeCanvasGroup();
         ReleaseScreenFadeBlock();
-        SetMomentHudVisible(false);
+
+        if (!skipScreenFade)
+            SetMomentHudVisible(false);
 
         OCDCaptionUI captionUi = captionUI != null ? captionUI : OCDCaptionUI.GetSharedOverlay();
 
         try
         {
-            // 1) Полное затемнение
-            yield return ScreenFadeRunner.FadeToBlack(screenFadeInDuration, _fadeCanvasGroup);
+            // 1) Полное затемнение (пропускается в режиме без затемнения)
+            if (!skipScreenFade)
+                yield return ScreenFadeRunner.FadeToBlack(screenFadeInDuration, _fadeCanvasGroup);
 
             AdvanceObjectiveAfterCompletion();
 
@@ -325,25 +351,30 @@ public class OCDMomentTrigger : PlayerInteractionZone
             float soundDuration = ComputeBlackSoundsDuration();
             yield return PlayBlackScreenSoundsRoutine();
 
-            // Новый триггер активируется сразу после звука в темноте.
+            // EnableDayOnly включает новый день без выключения старого — иначе корутина триггера
+            // умрёт вместе с корнём старого дня. DeactivateInactiveDays вызовется в Release.
             if (nextMoment != null)
             {
                 if (OCDMissionDayController.Instance != null)
-                    OCDMissionDayController.Instance.ActivateDayContaining(nextMoment);
+                    OCDMissionDayController.Instance.EnableDayOnly(nextMoment);
                 nextMoment.ActivateInSequence();
             }
 
             UpdateGuideLightState();
 
-            float blackHold = Mathf.Min(soundDuration, Mathf.Max(0f, maxBlackHoldAfterSound));
-            if (blackHold > 0.001f)
-                yield return new WaitForSecondsRealtime(blackHold);
+            // В режиме без затемнения экран и не темнел — держать чёрным и осветлять нечего.
+            if (!skipScreenFade)
+            {
+                float blackHold = Mathf.Min(soundDuration, Mathf.Max(0f, maxBlackHoldAfterSound));
+                if (blackHold > 0.001f)
+                    yield return new WaitForSecondsRealtime(blackHold);
 
-            // 3) Плавно убираем затемнение (атмосфера может меняться параллельно)
-            if (blendAtmosphereDuringFadeOut && atmospherePreset != OCDAtmospherePreset.None)
-                StartAtmosphereBlend(screenFadeOutDuration);
+                // 3) Плавно убираем затемнение (атмосфера может меняться параллельно)
+                if (blendAtmosphereDuringFadeOut && atmospherePreset != OCDAtmospherePreset.None)
+                    StartAtmosphereBlend(screenFadeOutDuration);
 
-            yield return ScreenFadeRunner.FadeFromBlack(screenFadeOutDuration, _fadeCanvasGroup);
+                yield return ScreenFadeRunner.FadeFromBlack(screenFadeOutDuration, _fadeCanvasGroup);
+            }
 
             SetMomentHudVisible(true);
 
@@ -356,8 +387,9 @@ public class OCDMomentTrigger : PlayerInteractionZone
 
             ReleaseMomentPlayerControl();
 
+            // Запускаем на captionUi, а не на this — после DeactivateInactiveDays() этот объект уже неактивен
             if (captionUi != null)
-                StartCoroutine(captionUi.CaptionHoldAndFadeOut(captionHoldDuration, captionFadeOutDuration));
+                captionUi.RunCaptionHoldAndFadeOut(captionHoldDuration, captionFadeOutDuration);
         }
         finally
         {
@@ -382,6 +414,8 @@ public class OCDMomentTrigger : PlayerInteractionZone
         _momentSequenceRunning = false;
         _isUnlocked = false;
         ApplyUnlockedState();
+
+        OCDMissionDayController.Instance?.DeactivateInactiveDays();
     }
 
     private static void ReleaseScreenFadeBlock()

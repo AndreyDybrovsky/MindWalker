@@ -1,72 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &991100010
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 991100011}
-  - component: {fileID: 991100012}
-  - component: {fileID: 991100013}
-  m_Layer: 0
-  m_Name: LureZone
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &991100011
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 991100010}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.322, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3774746300158428982}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &991100012
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 991100010}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.2, y: 2.2, z: 2.4}
-  m_Center: {x: 0, y: 1, z: 1.4}
---- !u!114 &991100013
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 991100010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6e4908f55246814688b4f869815bd28, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  machine: {fileID: 991100001}
 --- !u!1 &991100020
 GameObject:
   m_ObjectHideFlags: 0
@@ -2121,7 +2054,6 @@ Transform:
   - {fileID: 991100021}
   - {fileID: 991100031}
   - {fileID: 712896738386035123}
-  - {fileID: 991100011}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &991100001
@@ -2136,11 +2068,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8701993fb4e7eed44990e1ee8c69655e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lureZone: {fileID: 991100013}
   playerStandPoint: {fileID: 991100031}
   machineFront: {fileID: 991100021}
-  lureBoxCenter: {x: 0, y: 1, z: 1.4}
-  lureBoxSize: {x: 2.2, y: 2.2, z: 2.4}
   standLocalOffset: {x: 0, y: 0, z: 1.35}
   pullSpeed: 4.5
   lookTargetForwardOffset: 0.15
@@ -2158,6 +2087,7 @@ MonoBehaviour:
   correctKeySound: {fileID: 8300000, guid: 6fb573ec88edcc649a13fd3867dc21c1, type: 3}
   wrongKeySound: {fileID: 8300000, guid: 7d4f2220b28e39a4c9c1f281f164d3db, type: 3}
   levelCompletedSound: {fileID: 8300000, guid: 4802781093ae2b44b89eb4402e19295a, type: 3}
+  deathByMachineSound: {fileID: 8300000, guid: e39181ad427088c42abff03e3e423864, type: 3}
   trappedAmbientLoop: {fileID: 8300000, guid: 1011180de793e404fb76dd919a012ac3, type: 3}
   sfxVolume: 1
   ambientVolume: 0.55

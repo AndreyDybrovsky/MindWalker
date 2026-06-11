@@ -558,6 +558,7 @@ public class DepressionPanicMomentZone : MonoBehaviour
             return;
 
         _eventActive = false;
+        GameStatsTracker.Instance?.RecordPatientCalmed();
 
         DepressionCountdownUI.StopCountdown();
         FadeOutPatientPanicAudio();

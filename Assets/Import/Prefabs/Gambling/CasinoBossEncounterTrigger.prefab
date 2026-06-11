@@ -1,0 +1,202 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4115740108031751131
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4433527793006217812}
+  - component: {fileID: 8826148599749538396}
+  - component: {fileID: 8328085691287166531}
+  - component: {fileID: 8427602669740143658}
+  m_Layer: 0
+  m_Name: CasinoBossEncounterTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4433527793006217812
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4115740108031751131}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8826148599749538396
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4115740108031751131}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3, y: 2.5, z: 3}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!82 &8328085691287166531
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4115740108031751131}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &8427602669740143658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4115740108031751131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a457723dec3dc4c46a79260eaeb5833d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bossLookTarget: {fileID: 0}
+  cameraFocusPoint: {fileID: 0}
+  fortuneWheel: {fileID: 0}
+  wheelSpinZone: {fileID: 0}
+  bossSpawnManager: {fileID: 0}
+  sceneBossProp: {fileID: 0}
+  captionUI: {fileID: 0}
+  cameraRiseDuration: 1.8
+  cameraRiseHeight: 1.35
+  cameraPitchDown: 8
+  introLine1Key: scene.gambling.boss_intro_1
+  introLine1Fallback: "\u0422\u0430\u043A \u0442\u044B \u043F\u043E\u0441\u043C\u0435\u043B
+    \u0441\u044E\u0434\u0430 \u0432\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F,
+    \u0438 \u0440\u0430\u0434\u0438 \u0447\u0435\u0433\u043E?"
+  introLine2Key: scene.gambling.boss_intro_2
+  introLine2Fallback: "\u041D\u0435\u0443\u0436\u0435\u043B\u0438 \u0445\u043E\u0447\u0435\u0448\u044C
+    \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0441\u0432\u043E\u044E
+    \u0443\u0434\u0430\u0447\u0443 \u0432 \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0439
+    \u0440\u0430\u0437?"
+  refuseLine1Key: scene.gambling.boss_refuse_1
+  refuseLine1Fallback: "\u041D\u0435\u0443\u0436\u0435\u043B\u0438 \u0447\u0435\u043C\u0443-\u0442\u043E
+    \u043D\u0430\u0443\u0447\u0438\u043B\u0441\u044F?"
+  refuseLine2Key: scene.gambling.boss_refuse_2
+  refuseLine2Fallback: "\u041D\u043E \u0442\u0435\u0431\u0435 \u0432\u0441\u0451
+    \u0440\u0430\u0432\u043D\u043E \u0446\u0435\u043B\u044B\u043C \u043E\u0442\u0441\u044E\u0434\u0430
+    \u043D\u0435 \u0443\u0439\u0442\u0438"
+  captionFadeIn: 0.4
+  captionHold: 3.2
+  captionFadeOut: 0.35
+  fadeToBlackDuration: 1.4
+  fadeFromBlackDuration: 0.35
+  blackHoldDuration: 0.15
+  audioSource: {fileID: 8328085691287166531}
+  bossLaughSound: {fileID: 0}
+  soundVolume: 1
+  choicePresenter: {fileID: 0}

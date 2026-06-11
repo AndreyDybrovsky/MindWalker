@@ -59,6 +59,12 @@ public abstract class PlayerInteractionZone : MonoBehaviour, IPressEPromptContri
         ApplyLocalizedPrompt();
     }
 
+    protected virtual void OnDisable()
+    {
+        PlayerInZone = false;
+        PressEPromptCoordinator.Refresh();
+    }
+
     protected virtual void OnDestroy()
     {
         PressEPromptCoordinator.Unregister(this);

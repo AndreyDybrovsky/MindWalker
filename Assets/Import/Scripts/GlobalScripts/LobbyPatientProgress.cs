@@ -50,4 +50,11 @@ public static class LobbyPatientProgress
     {
         LostLevels.Clear();
     }
+
+    /// <summary>
+    /// Количество уникальных потерянных групп пациентов
+    /// (PTSD + "PTSD in Danger" считаются как одна группа).
+    /// </summary>
+    public static int LostUniqueGroupsCount =>
+        LevelSceneProgress.CountUniquePatientGroups(LostLevels);
 }

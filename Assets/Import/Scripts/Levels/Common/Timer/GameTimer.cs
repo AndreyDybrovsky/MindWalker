@@ -29,7 +29,9 @@ public class GameTimer : MonoBehaviour
     [Header("Переход при окончании таймера")]
     [SerializeField] private bool loadMainMenuOnTimerEnd = true;
     [SerializeField] private string mainMenuSceneName = "MainMenu";
-    
+    [Tooltip("Если назначен — по истечении таймера вызывает StartGameOver() вместо прямой загрузки сцены. Это покажет экран ClipBoard с красной печатью.")]
+    [SerializeField] private GameOverManager timerEndGameOver;
+
     [Header("Предупреждающие звуки")]
     [Tooltip("Настройки предупреждающих звуков. Для каждого звука можно задать время воспроизведения")]
     public WarningSoundEntry[] warningSounds = new WarningSoundEntry[]
@@ -281,8 +283,12 @@ public class GameTimer : MonoBehaviour
             }
         }
         
-        // По запросу: при окончании таймера отправляем в MainMenu
-        if (loadMainMenuOnTimerEnd)
+        // Если назначен GameOverManager — делегируем ему (он покажет ClipBoard с красной печатью)
+        if (timerEndGameOver != null)
+        {
+            timerEndGameOver.StartGameOver();
+        }
+        else if (loadMainMenuOnTimerEnd)
         {
             // На всякий случай возвращаем время (таймер может закончиться во время паузы/меню)
             Time.timeScale = 1f;

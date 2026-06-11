@@ -17,20 +17,10 @@ public class SlotMachineController : MonoBehaviour
     private static SlotMachineController s_activeTrap;
 
     [Header("Ссылки (настройте в префабе)")]
-    [Tooltip("Триггер перед автоматом. Если пусто — создаётся автоматически при запуске.")]
-    [SerializeField] private SlotMachineLureZone lureZone;
     [Tooltip("Пустой объект: куда подводится игрок (перед экраном автомата).")]
     [SerializeField] private Transform playerStandPoint;
     [Tooltip("Точка «лица» автомата. Обычно пустой объект MachineFront на корне.")]
     [SerializeField] private Transform machineFront;
-
-    [Header("Зона притяжения (локально от корня автомата)")]
-    [SerializeField] private Vector3 lureBoxCenter = new Vector3(0f, 1f, 1.4f);
-    [SerializeField] private Vector3 lureBoxSize = new Vector3(2.2f, 2.2f, 2.4f);
-
-    [Header("Точка игрока (локально от Machine Front)")]
-    [Tooltip("Смещение точки игрока в локальных координатах Machine Front. Z — в сторону игрока.")]
-    [SerializeField] private Vector3 standLocalOffset = new Vector3(0f, 0f, 1.35f);
 
     [Header("Притяжение")]
     [SerializeField] private float pullSpeed = 4.5f;
@@ -47,17 +37,15 @@ public class SlotMachineController : MonoBehaviour
     [SerializeField] private float healthDrainPerSecond = 10f;
     [SerializeField] private float wrongKeyDamage = 8f;
     [SerializeField] private float timeoutExtraDamage = 12f;
-    [SerializeField] private float escapeCooldown = 4f;
+    [SerializeField] private float escapeCooldown = 7f;
 
     [Header("Звук")]
     [SerializeField] private AudioSource sfxSource;
-    [SerializeField] private AudioSource trappedAmbientSource;
     [SerializeField] private AudioClip correctKeySound;
     [SerializeField] private AudioClip wrongKeySound;
     [SerializeField] private AudioClip levelCompletedSound;
-    [SerializeField] private AudioClip trappedAmbientLoop;
+    [SerializeField] private AudioClip deathByMachineSound;
     [SerializeField, Range(0f, 1f)] private float sfxVolume = 1f;
-    [SerializeField, Range(0f, 1f)] private float ambientVolume = 0.55f;
 
     private enum TrapState
     {
@@ -78,7 +66,6 @@ public class SlotMachineController : MonoBehaviour
     private float _cooldownEndTime;
     private bool _inputBlocked;
     private Coroutine _routine;
-    private Collider _lureCollider;
 
     private void Awake()
     {
@@ -122,9 +109,7 @@ public class SlotMachineController : MonoBehaviour
             return;
         }
 
-        if (_lureCollider != null)
-            _lureCollider.enabled = false;
-
+        GameStatsTracker.Instance?.RecordSlotMachineCatch();
         s_activeTrap = this;
         _routine = StartCoroutine(LureAndTrapRoutine());
     }
@@ -134,12 +119,13 @@ public class SlotMachineController : MonoBehaviour
         _state = TrapState.Pulling;
         LockPlayer();
         ShowApproachOverlay();
-        StartTrappedAmbience();
 
         while (_state == TrapState.Pulling)
         {
             if (_playerBody == null || (_playerHealth != null && _playerHealth.IsDead))
             {
+                if (_playerHealth != null && _playerHealth.IsDead)
+                    PlaySfx(deathByMachineSound);
                 ForceReleasePlayer();
                 yield break;
             }
@@ -166,6 +152,8 @@ public class SlotMachineController : MonoBehaviour
         {
             if (_playerBody == null || (_playerHealth != null && _playerHealth.IsDead))
             {
+                if (_playerHealth != null && _playerHealth.IsDead)
+                    PlaySfx(deathByMachineSound);
                 ForceReleasePlayer();
                 yield break;
             }
@@ -394,16 +382,12 @@ public class SlotMachineController : MonoBehaviour
         }
 
         _state = TrapState.Idle;
-        StopTrappedAmbience();
         SlotMachineLetterUI.GetSharedOverlay().Hide();
 
         if (s_activeTrap == this)
             s_activeTrap = null;
 
         UnlockPlayer();
-
-        if (_lureCollider != null)
-            _lureCollider.enabled = true;
     }
 
     private void LockPlayer()
@@ -502,14 +486,6 @@ public class SlotMachineController : MonoBehaviour
 
         if (playerStandPoint == null)
             playerStandPoint = CreateAutoStandPoint();
-
-        if (lureZone == null)
-            lureZone = GetComponentInChildren<SlotMachineLureZone>(true);
-
-        if (lureZone == null)
-            lureZone = CreateLureZone();
-
-        _lureCollider = lureZone != null ? lureZone.GetComponent<Collider>() : null;
     }
 
     private Transform ResolvePlayerStandTransform()
@@ -527,13 +503,11 @@ public class SlotMachineController : MonoBehaviour
     private void EnsureAudioSources()
     {
         EnsureDedicatedSfxSource();
-        EnsureDedicatedAmbientSource();
     }
 
-    /// <summary>One-shots (верный/неверный ключ) — отдельный источник, иначе PlayOneShot обрывает loop ambient.</summary>
     private void EnsureDedicatedSfxSource()
     {
-        if (sfxSource != null && sfxSource != trappedAmbientSource)
+        if (sfxSource != null)
         {
             ConfigureSfxSource(sfxSource);
             return;
@@ -555,50 +529,12 @@ public class SlotMachineController : MonoBehaviour
         AudioMixerRoutingUtility.BindSourceToSfx(source);
     }
 
-    private void EnsureDedicatedAmbientSource()
-    {
-        if (trappedAmbientSource != null && trappedAmbientSource != sfxSource)
-        {
-            ConfigureAmbientSource(trappedAmbientSource);
-            return;
-        }
-
-        Transform ambientRoot = transform.Find("TrappedAmbientAudio");
-        if (ambientRoot != null && ambientRoot.TryGetComponent(out AudioSource existing) && existing != sfxSource)
-        {
-            trappedAmbientSource = existing;
-            ConfigureAmbientSource(trappedAmbientSource);
-            return;
-        }
-
-        GameObject ambientGo = new GameObject("TrappedAmbientAudio");
-        ambientGo.transform.SetParent(transform, false);
-        trappedAmbientSource = ambientGo.AddComponent<AudioSource>();
-        ConfigureAmbientSource(trappedAmbientSource);
-    }
-
-    private void ConfigureAmbientSource(AudioSource source)
-    {
-        source.playOnAwake = false;
-        source.loop = true;
-        source.spatialBlend = 0f;
-        AudioMixerRoutingUtility.BindSourceToSfx(source);
-    }
-
     private float ResolveSfxVolumeScale()
     {
         if (SettingsManager.Instance == null)
             return sfxVolume;
 
         return sfxVolume * Mathf.Clamp01(SettingsManager.Instance.GetCurrentSettings().sfxVolume);
-    }
-
-    private float ResolveAmbientVolumeScale()
-    {
-        if (SettingsManager.Instance == null)
-            return ambientVolume;
-
-        return ambientVolume * Mathf.Clamp01(SettingsManager.Instance.GetCurrentSettings().sfxVolume);
     }
 
     private void PlaySfx(AudioClip clip)
@@ -609,50 +545,11 @@ public class SlotMachineController : MonoBehaviour
         sfxSource.PlayOneShot(clip, ResolveSfxVolumeScale());
     }
 
-    private void StartTrappedAmbience()
-    {
-        EnsureAudioSources();
-
-        if (trappedAmbientLoop == null || trappedAmbientSource == null)
-            return;
-
-        trappedAmbientSource.clip = trappedAmbientLoop;
-        trappedAmbientSource.volume = ResolveAmbientVolumeScale();
-        trappedAmbientSource.loop = true;
-
-        if (!trappedAmbientSource.isPlaying)
-            trappedAmbientSource.Play();
-    }
-
-    private void StopTrappedAmbience()
-    {
-        if (trappedAmbientSource != null && trappedAmbientSource.isPlaying)
-            trappedAmbientSource.Stop();
-    }
-
-    private SlotMachineLureZone CreateLureZone()
-    {
-        Transform zoneRoot = EnsureChild("LureZone");
-        BoxCollider box = zoneRoot.GetComponent<BoxCollider>();
-        if (box == null)
-            box = zoneRoot.gameObject.AddComponent<BoxCollider>();
-
-        box.isTrigger = true;
-        box.center = lureBoxCenter;
-        box.size = lureBoxSize;
-
-        SlotMachineLureZone zone = zoneRoot.GetComponent<SlotMachineLureZone>();
-        if (zone == null)
-            zone = zoneRoot.gameObject.AddComponent<SlotMachineLureZone>();
-
-        return zone;
-    }
-
     private Transform CreateAutoStandPoint()
     {
         Transform stand = EnsureChild("PlayerStandPoint");
         stand.SetParent(machineFront, false);
-        stand.localPosition = standLocalOffset;
+        stand.localPosition = new Vector3(0f, 0f, 1.35f);
         stand.localRotation = Quaternion.LookRotation(-Vector3.forward, Vector3.up);
         return stand;
     }
@@ -702,18 +599,9 @@ public class SlotMachineController : MonoBehaviour
         if (playerStandPoint == null)
         {
             playerStandPoint = EnsureEditorChild("PlayerStandPoint", objectRoot != null ? objectRoot : machineFront);
-            playerStandPoint.localPosition = standLocalOffset;
+            playerStandPoint.localPosition = new Vector3(0f, 0f, 1.35f);
             playerStandPoint.localRotation = Quaternion.identity;
         }
-
-        Transform lureRoot = transform.Find("LureZone");
-        if (lureRoot == null)
-            lureRoot = EnsureEditorChild("LureZone", transform);
-        BoxCollider box = lureRoot.GetComponent<BoxCollider>() ?? lureRoot.gameObject.AddComponent<BoxCollider>();
-        box.isTrigger = true;
-        box.center = lureBoxCenter;
-        box.size = lureBoxSize;
-        lureZone = lureRoot.GetComponent<SlotMachineLureZone>() ?? lureRoot.gameObject.AddComponent<SlotMachineLureZone>();
 
         SlotMachineLetterUI uiComponent = GetComponent<SlotMachineLetterUI>();
         if (uiComponent != null)
@@ -726,7 +614,6 @@ public class SlotMachineController : MonoBehaviour
         SerializedObject so = new SerializedObject(this);
         so.FindProperty("machineFront").objectReferenceValue = machineFront;
         so.FindProperty("playerStandPoint").objectReferenceValue = playerStandPoint;
-        so.FindProperty("lureZone").objectReferenceValue = lureZone;
         so.ApplyModifiedPropertiesWithoutUndo();
     }
 
@@ -753,11 +640,6 @@ public class SlotMachineController : MonoBehaviour
                 Gizmos.DrawLine(machineFront.position, playerStandPoint.position);
         }
 
-        Gizmos.color = new Color(1f, 0.5f, 0.1f, 0.35f);
-        Matrix4x4 matrix = Matrix4x4.TRS(transform.TransformPoint(lureBoxCenter), transform.rotation, Vector3.one);
-        Gizmos.matrix = matrix;
-        Gizmos.DrawCube(Vector3.zero, lureBoxSize);
-        Gizmos.matrix = Matrix4x4.identity;
     }
 #endif
 }

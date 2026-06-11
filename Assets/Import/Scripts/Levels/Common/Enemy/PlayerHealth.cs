@@ -45,6 +45,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isDead) return;
 
+        GameStatsTracker.Instance?.RecordDamageReceived(damage);
         currentHealth -= damage;
         currentHealth = Mathf.Max(0f, currentHealth);
         

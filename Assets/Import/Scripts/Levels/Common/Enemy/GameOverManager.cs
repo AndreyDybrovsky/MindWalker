@@ -15,6 +15,10 @@ public class GameOverManager : MonoBehaviour
 
     [Header("Настройки сцены")]
     [SerializeField] private string mainMenuSceneName = "MainMenu";
+    [SerializeField] private string lobbySceneName = "Main";
+
+    [Header("Экран результата")]
+    [SerializeField] private LevelResultClipboard resultClipboard;
 
     [Header("Автоматическое создание")]
     [SerializeField] private bool createFadeCanvasIfMissing = true;
@@ -90,11 +94,26 @@ public class GameOverManager : MonoBehaviour
             }
         }
 
-        GameTimer gameTimer = FindFirstObjectByType<GameTimer>();
-        if (gameTimer != null && gameTimer.GetRemainingTime() <= 0f)
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        LevelResultClipboard clipboard = resultClipboard != null
+            ? resultClipboard
+            : FindFirstObjectByType<LevelResultClipboard>();
+
+        if (clipboard != null)
+        {
+            yield return ScreenFadeRunner.FadeFromBlack(0.8f, fadeCanvasGroup);
+
+            bool clipboardDone = false;
+            clipboard.Show(false, () => clipboardDone = true);
+            float timeoutAt = Time.unscaledTime + 120f;
+            yield return new WaitUntil(() => clipboardDone || Time.unscaledTime > timeoutAt);
+
+            yield return ScreenFadeRunner.FadeToBlack(1.5f, fadeCanvasGroup);
+            SceneManager.LoadScene(string.IsNullOrWhiteSpace(lobbySceneName) ? "Main" : lobbySceneName);
+        }
         else
-            SceneManager.LoadScene(mainMenuSceneName);
+        {
+            SceneManager.LoadScene(string.IsNullOrWhiteSpace(lobbySceneName) ? "Main" : lobbySceneName);
+        }
 
         IsFading = false;
     }

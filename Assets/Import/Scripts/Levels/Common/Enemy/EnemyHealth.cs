@@ -19,6 +19,8 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private ParticleSystem deathParticleSystem;
     [Tooltip("Длительность плавного исчезновения модели и затухания звука смерти.")]
     [SerializeField] private float fadeOutDuration = 1.35f;
+    [Tooltip("Пропустить плавное исчезновение — враг деактивируется мгновенно (частицы всё равно воспроизводятся).")]
+    [SerializeField] private bool skipFade = false;
 
     [Header("Эффекты смерти (процедурные партиклы)")]
     [Tooltip("Если включено — при смерти спавним красный «круговой взрыв» частиц (даже если deathParticleSystem не задан).")]
@@ -91,6 +93,7 @@ public class EnemyHealth : MonoBehaviour
         if (isDead) return;
 
         isDead = true;
+        GameStatsTracker.Instance?.RecordEnemyKilled();
 
         OnEnemyDeath?.Invoke();
 
@@ -102,6 +105,12 @@ public class EnemyHealth : MonoBehaviour
             deathParticleSystem.Play();
         else if (spawnProceduralDeathParticles)
             SpawnProceduralDeathParticles();
+
+        if (skipFade)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
 
         if (_deathRoutine != null)
             StopCoroutine(_deathRoutine);

@@ -625,6 +625,7 @@ MonoBehaviour:
   crouchBobFrequency: 8
   bobSmoothness: 10
   cameraWeight: 12
+  externalLookSmooth: 14
   enableCameraTilt: 1
   tiltAmount: 2
   tiltSmoothness: 8
@@ -1321,7 +1322,6 @@ GameObject:
   - component: {fileID: 2822550248998729607}
   - component: {fileID: 3452284958431458905}
   - component: {fileID: 1937980415409433163}
-  - component: {fileID: 566555810039682374}
   m_Layer: 3
   m_Name: Main Camera
   m_TagString: Player
@@ -1448,23 +1448,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!114 &566555810039682374
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4566343684708877230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: edc28a6dad91c9d49ac48a3ac00dc2c5, type: 2}
-  isGlobal: 1
-  blendDistance: 0
-  weight: 1
-  priority: 0
 --- !u!1 &4656870198016365864
 GameObject:
   m_ObjectHideFlags: 0

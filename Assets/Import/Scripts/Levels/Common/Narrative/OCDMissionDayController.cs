@@ -54,6 +54,47 @@ public class OCDMissionDayController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Включает день, содержащий moment, без выключения остальных дней.
+    /// Используется из PlayMomentSequence, чтобы корутина триггера в старом дне не умерла.
+    /// После окончания последовательности вызовите DeactivateInactiveDays().
+    /// </summary>
+    public void EnableDayOnly(Component moment)
+    {
+        if (moment == null || dayRoots == null)
+            return;
+
+        Transform momentTransform = moment.transform;
+        for (int i = 0; i < dayRoots.Length; i++)
+        {
+            GameObject root = dayRoots[i];
+            if (root == null)
+                continue;
+
+            if (momentTransform == root.transform || momentTransform.IsChildOf(root.transform))
+            {
+                activeDayIndex = i + 1;
+                root.SetActive(true);
+                OCDDayDeteriorationController.Instance?.SetDayImmediate(activeDayIndex);
+                return;
+            }
+        }
+    }
+
+    /// <summary>Выключает все дни кроме activeDayIndex. Вызывается после завершения корутины момента.</summary>
+    public void DeactivateInactiveDays()
+    {
+        if (dayRoots == null)
+            return;
+
+        int activeIdx = activeDayIndex - 1;
+        for (int i = 0; i < dayRoots.Length; i++)
+        {
+            if (i != activeIdx && dayRoots[i] != null)
+                dayRoots[i].SetActive(false);
+        }
+    }
+
     private void TryAutoFindDayRoots()
     {
         if (dayRoots != null && dayRoots.Length > 0)
@@ -95,6 +136,10 @@ public class OCDMissionDayController : MonoBehaviour
             if (dayRoots[i] != null)
                 dayRoots[i].SetActive(i == index);
         }
+
+        // Уведомляем контроллер ухудшения и оверлей мыслей — экран чёрный при смене дня.
+        OCDDayDeteriorationController.Instance?.SetDayImmediate(activeDayIndex);
+        OCDIntrusiveThoughtOverlay.Instance?.SetDay(activeDayIndex);
     }
 
 #if UNITY_EDITOR

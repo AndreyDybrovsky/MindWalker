@@ -19,6 +19,7 @@ public class PeriodicProximityDamageEnemy : MonoBehaviour
     [SerializeField] private float meleeEngageGrace = 0.5f;
 
     private bool _playerEngaged;
+    private bool _playerInVision;
     private float _nextDamageTime;
     private float _meleeGraceUntil;
 
@@ -52,11 +53,10 @@ public class PeriodicProximityDamageEnemy : MonoBehaviour
         if (vision == null)
             return;
 
-        if (_playerEngaged)
+        if (_playerEngaged && !_playerInVision)
         {
-            if (IsPlayerWithinMeleeRange())
-                _meleeGraceUntil = Time.time + meleeEngageGrace;
-            else if (Time.time >= _meleeGraceUntil)
+            // После потери зрения: отключаем, если игрок вышел из радиуса удара и grace истёк
+            if (!IsPlayerWithinMeleeRange() && Time.time >= _meleeGraceUntil)
                 _playerEngaged = false;
         }
 
@@ -75,12 +75,13 @@ public class PeriodicProximityDamageEnemy : MonoBehaviour
     private void OnPlayerDetected(Transform _)
     {
         _playerEngaged = true;
-        _meleeGraceUntil = Time.time + meleeEngageGrace;
+        _playerInVision = true;
         _nextDamageTime = Time.time + firstHitDelay;
     }
 
     private void OnPlayerLost()
     {
+        _playerInVision = false;
         _meleeGraceUntil = Time.time + meleeEngageGrace;
     }
 

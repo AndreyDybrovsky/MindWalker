@@ -1,10 +1,11 @@
 using UnityEngine;
 
 /// <summary>
-/// Одна из точек «Исправь всё» (день 4): светится с начала, собирается при касании игрока.
+/// Одна из точек «Исправь всё» (день 4): светится с начала, собирается по нажатию E
+/// (подсказка «Нажми E» появляется при подходе). При сборе показывает свою нижнюю надпись.
 /// </summary>
 [RequireComponent(typeof(Collider))]
-public class OCDFixAllCollectiblePoint : MonoBehaviour
+public class OCDFixAllCollectiblePoint : PlayerInteractionZone
 {
     [SerializeField] private OCDFixAllCollectibleManager manager;
     [SerializeField] private GameObject guideLight;
@@ -12,6 +13,16 @@ public class OCDFixAllCollectiblePoint : MonoBehaviour
     [SerializeField] private AudioClip collectSound;
     [SerializeField, Range(0f, 1f)] private float collectSoundVolume = 1f;
     [SerializeField] private AudioSource audioSource;
+
+    [Header("Надпись при сборе (низ экрана)")]
+    [Tooltip("Если задано — используем этот UI (например MessageText из Player.prefab). Пусто — общий OCDCaptionUI на сцене.")]
+    [SerializeField] private OCDCaptionUI captionUI;
+    [Tooltip("Ключ в strings_*.json / LocalizationBase. Пусто — используется Caption Fallback Text.")]
+    [SerializeField] private string captionLocalizationKey;
+    [SerializeField, TextArea(2, 4)] private string captionFallbackText;
+    [SerializeField] private float captionFadeInDuration = 0.45f;
+    [SerializeField] private float captionHoldDuration = 3f;
+    [SerializeField] private float captionFadeOutDuration = 0.35f;
 
     private bool _collected;
 
@@ -22,11 +33,9 @@ public class OCDFixAllCollectiblePoint : MonoBehaviour
         manager = value;
     }
 
-    private void Awake()
+    protected override void Awake()
     {
-        Collider col = GetComponent<Collider>();
-        if (col != null)
-            col.isTrigger = true;
+        base.Awake(); // коллайдер-триггер, kinematic Rigidbody, общая подсказка «Нажми E»
 
         if (manager == null)
             manager = GetComponentInParent<OCDFixAllCollectibleManager>();
@@ -37,12 +46,20 @@ public class OCDFixAllCollectiblePoint : MonoBehaviour
         SetGuideVisible(true);
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected override void OnInteractPressed()
     {
-        if (_collected || !other.CompareTag("Player"))
+        if (_collected)
             return;
 
         _collected = true;
+        InteractionBusy = true;
+        PlayerInZone = false;
+        Reveal = 0f;
+
+        if (PromptView != null)
+            PromptView.SetReveal(0f);
+
+        PressEPromptCoordinator.Refresh();
 
         if (collectSound != null)
         {
@@ -57,14 +74,33 @@ public class OCDFixAllCollectiblePoint : MonoBehaviour
             audioSource.PlayOneShot(collectSound, collectSoundVolume);
         }
 
-        Collider col = GetComponent<Collider>();
-        if (col != null)
-            col.enabled = false;
+        if (ZoneCollider != null)
+            ZoneCollider.enabled = false;
 
         SetGuideVisible(false);
 
+        ShowCollectCaption();
+
         if (manager != null)
             manager.RegisterCollected(this);
+    }
+
+    /// <summary>Своя нижняя надпись точки при сборе (низ экрана), как у OCDMomentTrigger.</summary>
+    private void ShowCollectCaption()
+    {
+        if (string.IsNullOrEmpty(captionLocalizationKey) && string.IsNullOrEmpty(captionFallbackText))
+            return;
+
+        OCDCaptionUI ui = captionUI != null ? captionUI : OCDCaptionUI.GetSharedOverlay();
+        if (ui == null)
+            return;
+
+        string text = LocalizedTextResolver.Resolve(captionLocalizationKey, null, captionFallbackText);
+        if (string.IsNullOrEmpty(text))
+            return;
+
+        // Запускаем на самом UI (он живёт дольше точки): появление → удержание → скрытие.
+        ui.StartCoroutine(ui.ShowRoutine(text, captionFadeInDuration, captionHoldDuration, captionFadeOutDuration));
     }
 
     private void SetGuideVisible(bool visible)

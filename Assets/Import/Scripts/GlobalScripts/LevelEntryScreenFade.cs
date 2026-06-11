@@ -19,6 +19,10 @@ public class LevelEntryScreenFade : MonoBehaviour
         GameObject host = new GameObject(nameof(LevelEntryScreenFade));
         _instance = host.AddComponent<LevelEntryScreenFade>();
         DontDestroyOnLoad(host);
+
+        // AfterSceneLoad срабатывает после события sceneLoaded, поэтому
+        // для начальной сцены вызываем обработчик вручную.
+        _instance.HandleSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
     }
 
     private void OnEnable()
@@ -32,6 +36,11 @@ public class LevelEntryScreenFade : MonoBehaviour
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        HandleSceneLoaded(scene, mode);
+    }
+
+    private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         FadeStart.ResetFadeGate();
         ClearCanvasFadeIfNotFromTransition();

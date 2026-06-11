@@ -92,7 +92,10 @@ public class OCDFixAllCollectibleManager : MonoBehaviour
             return;
         }
 
+        // Разблокируем и сразу проигрываем момент: надпись появляется автоматически
+        // после сбора последней точки (без нажатия E).
         completionMoment.ActivateInSequence();
+        completionMoment.BeginMomentSequence();
     }
 
 #if UNITY_EDITOR

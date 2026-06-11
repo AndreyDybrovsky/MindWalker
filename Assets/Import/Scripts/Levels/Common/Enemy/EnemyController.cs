@@ -34,6 +34,8 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float chaseSpeed = 5f;
     [SerializeField] private float stoppingDistance = 2f;
     [SerializeField] private float rotationSpeed = 5f; // Скорость поворота к цели
+    [Tooltip("После первого обнаружения враг не теряет игрока: всегда движется к нему по NavMesh, но стреляет только при наличии прямой видимости (без выстрелов сквозь стены).")]
+    [SerializeField] private bool persistentChase = false;
 
     [Header("Область обнаружения")]
     [SerializeField] private EnemyVision vision;
@@ -72,6 +74,7 @@ public class EnemyController : MonoBehaviour
     private float _nextPatrolRetargetTime;
     private float _chaseStuckTimer;
     [SerializeField] private float chaseUnstickDelay = 1.1f;
+    private bool _hasAcquiredTarget;
 
     private void Awake()
     {
@@ -184,7 +187,7 @@ public class EnemyController : MonoBehaviour
             Patrol();
         }
 
-        if (isChasing && blockMovementByBuildingWalls)
+        if (blockMovementByBuildingWalls)
             EnforceBuildingCollision();
 
         UpdateBehaviorAudio();
@@ -329,26 +332,44 @@ public class EnemyController : MonoBehaviour
 
     private void StartChase(Transform player)
     {
-        playerTarget = player;
+        if (player != null)
+        {
+            playerTarget = player;
+            _hasAcquiredTarget = true;
+        }
+
         isChasing = true;
         isPatrolling = false;
         isWaiting = false;
         agent.speed = chaseSpeed;
-        
+
+        // Есть прямая видимость — можно стрелять.
         if (shooting != null)
-            shooting.SetTarget(player);
+            shooting.SetTarget(playerTarget);
     }
 
     private void StopChase()
     {
+        // Прямой видимости больше нет — стрелять нельзя (иначе пули сквозь стены).
+        if (shooting != null)
+            shooting.SetTarget(null);
+
+        // Упорное преследование: цель уже найдена — продолжаем двигаться к игроку,
+        // но без стрельбы, пока снова не появится линия обзора.
+        if (persistentChase && _hasAcquiredTarget && playerTarget != null)
+        {
+            isChasing = true;
+            isPatrolling = false;
+            isWaiting = false;
+            agent.speed = chaseSpeed;
+            return;
+        }
+
         playerTarget = null;
         isChasing = false;
         isPatrolling = true;
         agent.speed = patrolSpeed;
-        
-        if (shooting != null)
-            shooting.SetTarget(null);
-        
+
         SetNewPatrolTarget();
     }
 
@@ -662,10 +683,10 @@ public class EnemyController : MonoBehaviour
         if (col.CompareTag("Enemy") || col.CompareTag("EnemyBullet"))
             return false;
 
-        if (buildingObstacleLayers.value != 0)
-            return ((1 << col.gameObject.layer) & buildingObstacleLayers.value) != 0;
+        if (buildingObstacleLayers.value == 0)
+            return false; // Слой не задан — доверяем NavMesh, не считаем всё стенами
 
-        return true;
+        return ((1 << col.gameObject.layer) & buildingObstacleLayers.value) != 0;
     }
 
     private bool IsSelfCollider(Collider col)

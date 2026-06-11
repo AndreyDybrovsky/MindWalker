@@ -103,6 +103,7 @@ public class PlayerBullet : MonoBehaviour
             if (enemyHealth != null)
             {
                 enemyHealth.TakeDamage(damage);
+                GameStatsTracker.Instance?.RecordDamageDealt(damage);
                 Debug.Log($"PlayerBullet: Нанесен урон {damage} врагу {other.name}. HP: {enemyHealth.CurrentHealth}");
             }
             else

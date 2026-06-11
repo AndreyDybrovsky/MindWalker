@@ -122,8 +122,10 @@ public static class ScreenFadeUtility
             return;
 
         fade.gameObject.SetActive(true);
+        PrepareForFade(fade);
         fade.blocksRaycasts = true;
-        float from = fade.alpha;
+        float from = fade.alpha >= 0.99f ? 0f : fade.alpha;
+        fade.alpha = from;
         await UiMenuTransitions.AnimateCanvasGroupAlpha(fade, from, 1f, duration);
         fade.alpha = 1f;
     }

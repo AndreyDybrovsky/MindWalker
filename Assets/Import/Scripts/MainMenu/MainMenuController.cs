@@ -130,19 +130,7 @@ public class MainMenuController : MonoBehaviour
     private async void RunQuitWithFadeAsync()
     {
         _quitInProgress = true;
-
-        CanvasGroup fade = quitFadeCanvasGroup != null
-            ? quitFadeCanvasGroup
-            : ScreenFadeUtility.EnsureFadeCanvasGroup();
-
-        if (fade != null)
-        {
-            fade.gameObject.SetActive(true);
-            fade.blocksRaycasts = true;
-            float fromAlpha = fade.alpha >= 0.99f ? 0f : fade.alpha;
-            fade.alpha = fromAlpha;
-            await UiMenuTransitions.AnimateCanvasGroupAlpha(fade, fromAlpha, 1f, quitFadeDuration);
-        }
+        await ScreenFadeUtility.FadeToBlackAsync(quitFadeDuration);
 
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;

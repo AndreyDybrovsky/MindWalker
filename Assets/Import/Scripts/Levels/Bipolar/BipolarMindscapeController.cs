@@ -18,6 +18,16 @@ public class BipolarMindscapeController : MonoBehaviour
     [SerializeField] private Material meadowSkybox;
     [SerializeField] private Material nightmareSkybox;
 
+    [Header("Туман — Луг")]
+    [Tooltip("Бледно-зелёный тёплый туман")]
+    [SerializeField] private Color meadowFogColor   = new Color(0.78f, 0.87f, 0.71f, 1f);
+    [SerializeField] private float meadowFogDensity = 0.006f;
+
+    [Header("Туман — Кошмар")]
+    [Tooltip("Тёмный синеватый туман")]
+    [SerializeField] private Color nightmareFogColor   = new Color(0.04f, 0.04f, 0.11f, 1f);
+    [SerializeField] private float nightmareFogDensity = 0.04f;
+
     public BipolarMindscapeMode CurrentMode { get; private set; } = BipolarMindscapeMode.Meadow;
 
     public event Action<BipolarMindscapeMode> OnModeChanged;
@@ -31,29 +41,29 @@ public class BipolarMindscapeController : MonoBehaviour
     {
         CurrentMode = mode;
 
-        SetVolumeActive(meadowPostProcessVolume, mode == BipolarMindscapeMode.Meadow);
+        SetVolumeActive(meadowPostProcessVolume,    mode == BipolarMindscapeMode.Meadow);
         SetVolumeActive(nightmarePostProcessVolume, mode == BipolarMindscapeMode.Nightmare);
 
-        if (meadowDirectionalLight != null)
-            meadowDirectionalLight.enabled = mode == BipolarMindscapeMode.Meadow;
+        if (meadowDirectionalLight    != null) meadowDirectionalLight.enabled    = mode == BipolarMindscapeMode.Meadow;
+        if (nightmareDirectionalLight != null) nightmareDirectionalLight.enabled = mode == BipolarMindscapeMode.Nightmare;
 
-        if (nightmareDirectionalLight != null)
-            nightmareDirectionalLight.enabled = mode == BipolarMindscapeMode.Nightmare;
+        if      (mode == BipolarMindscapeMode.Meadow     && meadowSkybox    != null) RenderSettings.skybox = meadowSkybox;
+        else if (mode == BipolarMindscapeMode.Nightmare  && nightmareSkybox != null) RenderSettings.skybox = nightmareSkybox;
 
-        if (mode == BipolarMindscapeMode.Meadow && meadowSkybox != null)
-            RenderSettings.skybox = meadowSkybox;
-        else if (mode == BipolarMindscapeMode.Nightmare && nightmareSkybox != null)
-            RenderSettings.skybox = nightmareSkybox;
+        // Туман — применяется мгновенно (экран всегда чёрный в момент переключения)
+        bool isMeadow = mode == BipolarMindscapeMode.Meadow;
+        RenderSettings.fog        = true;
+        RenderSettings.fogMode    = FogMode.Exponential;
+        RenderSettings.fogColor   = isMeadow ? meadowFogColor   : nightmareFogColor;
+        RenderSettings.fogDensity = isMeadow ? meadowFogDensity : nightmareFogDensity;
 
         OnModeChanged?.Invoke(mode);
     }
 
     private static void SetVolumeActive(Volume volume, bool active)
     {
-        if (volume == null)
-            return;
-
+        if (volume == null) return;
         volume.enabled = active;
-        volume.weight = active ? 1f : 0f;
+        volume.weight  = active ? 1f : 0f;
     }
 }

@@ -74,6 +74,7 @@ public class LevelCompletionManager : MonoBehaviour
     private IEnumerator CompleteLevel()
     {
         SetFadingState(true);
+        GameStatsTracker.Instance?.OnLevelCompleted(SceneManager.GetActiveScene().name);
 
         GameTimer gameTimer = FindFirstObjectByType<GameTimer>();
         if (gameTimer != null)

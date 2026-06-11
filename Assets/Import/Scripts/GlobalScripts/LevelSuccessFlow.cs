@@ -2,12 +2,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Общая логика успешного прохождения уровня и выбора сцены возврата (лобби / финал).
+/// Общая логика успешного прохождения уровня и выбора сцены возврата (лобби / концовка).
+/// Концовка определяется <see cref="EndingEvaluator"/>, когда все пациенты обработаны
+/// (спасены + потеряны >= totalLevels).
 /// </summary>
 public static class LevelSuccessFlow
 {
-    public const string TrueVictorySceneName = "TrueVictory";
-
     public static void MarkCurrentLevelCompleted()
     {
         string clearedScene = SceneManager.GetActiveScene().name;
@@ -19,16 +19,19 @@ public static class LevelSuccessFlow
 
     public static string ResolveReturnScene(string lobbySceneName, string victorySceneName)
     {
-        bool allLevelsDone = GlobalProgressTracker.Instance != null
-            && GlobalProgressTracker.Instance.CompletedPatientGroupsCount
-            >= GlobalProgressTracker.Instance.TotalLevels;
+        if (GlobalProgressTracker.Instance == null)
+            return string.IsNullOrWhiteSpace(lobbySceneName) ? "Main" : lobbySceneName;
 
-        if (allLevelsDone && CollectableDocumentProgress.AllCollected)
-            return TrueVictorySceneName;
+        int saved = GlobalProgressTracker.Instance.CompletedPatientGroupsCount;
+        int total = GlobalProgressTracker.Instance.TotalLevels;
+        int lost  = LobbyPatientProgress.LostUniqueGroupsCount;
 
-        if (allLevelsDone && !string.IsNullOrWhiteSpace(victorySceneName))
-            return victorySceneName;
+        bool allProcessed = (saved + lost) >= total;
 
-        return string.IsNullOrWhiteSpace(lobbySceneName) ? "Main" : lobbySceneName;
+        if (!allProcessed)
+            return string.IsNullOrWhiteSpace(lobbySceneName) ? "Main" : lobbySceneName;
+
+        EndingType ending = EndingEvaluator.Evaluate(saved, total);
+        return EndingEvaluator.GetSceneName(ending);
     }
 }

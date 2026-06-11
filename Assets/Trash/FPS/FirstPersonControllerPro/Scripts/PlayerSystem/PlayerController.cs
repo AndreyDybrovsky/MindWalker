@@ -231,7 +231,7 @@ namespace ElmanGameDevTools.PlayerSystem
             Vector3 moveInput = transform.right * Input.GetAxis("Horizontal") + transform.forward * Input.GetAxis("Vertical");
             if (moveInput.magnitude > 1f) moveInput.Normalize();
 
-            if (Input.GetButtonDown("Jump") && _isGrounded && !_isCrouching)
+            if (Input.GetButtonDown("Jump") && _isGrounded && !_isCrouching && !_hasJumped)
             {
                 _velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
                 _hasJumped = true;

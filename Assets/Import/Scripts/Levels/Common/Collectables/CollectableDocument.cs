@@ -152,8 +152,9 @@ public class CollectableDocument : PlayerInteractionZone
         _proximityActive = false;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
         StopProximitySound();
     }
 }

@@ -322,6 +322,29 @@ public class PatientInfoBoardView : MonoBehaviour
         return string.IsNullOrEmpty(t) || t == key ? string.Empty : t;
     }
 
+    /// <summary>
+    /// Принудительно показывает нужную печать без проверки прогресса уровня.
+    /// Используется экраном результата уровня.
+    /// </summary>
+    public void ForceStamp(bool isSuccess)
+    {
+        if (stampImage == null)
+            return;
+
+        Sprite stamp = isSuccess ? stampHealthy : stampLost;
+        stampImage.sprite = stamp;
+        stampImage.enabled = stamp != null;
+
+        if (statusText != null)
+        {
+            string key = isSuccess ? locKeyStatusHealthy : locKeyStatusLost;
+            string label = Loc(key);
+            if (string.IsNullOrEmpty(label))
+                label = isSuccess ? "Здоров" : "Потерян";
+            statusText.text = label;
+        }
+    }
+
     private void RefreshStatusVisuals(PatientLobbyStatus status)
     {
         string sick = Loc(locKeyStatusSick);
