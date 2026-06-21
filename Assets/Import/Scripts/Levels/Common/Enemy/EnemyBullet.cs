@@ -113,25 +113,11 @@ public class EnemyBullet : MonoBehaviour
             
             // Наносим урон игроку
             PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
-            if (playerHealth != null)
-            {
-                playerHealth.TakeDamage(damage);
-                Debug.Log($"EnemyBullet: Нанесен урон {damage} игроку. HP: {playerHealth.CurrentHealth}");
-            }
-            else
-            {
-                // Пытаемся найти PlayerHealth в дочерних объектах или родителе
+            if (playerHealth == null)
                 playerHealth = other.GetComponentInParent<PlayerHealth>();
-                if (playerHealth != null)
-                {
-                    playerHealth.TakeDamage(damage);
-                    Debug.Log($"EnemyBullet: Нанесен урон {damage} игроку (найден в родителе). HP: {playerHealth.CurrentHealth}");
-                }
-                else
-                {
-                    Debug.LogWarning($"EnemyBullet: PlayerHealth не найден на объекте с тегом {playerTag}!");
-                }
-            }
+
+            if (playerHealth != null)
+                playerHealth.TakeDamage(damage);
 
             // Немедленно уничтожаем пулю
             Destroy(gameObject);
@@ -189,10 +175,7 @@ public class EnemyBullet : MonoBehaviour
             }
             
             if (playerHealth != null)
-            {
                 playerHealth.TakeDamage(damage);
-                Debug.Log($"EnemyBullet: Нанесен урон {damage} игроку (через OnCollisionEnter). HP: {playerHealth.CurrentHealth}");
-            }
 
             Destroy(gameObject);
         }

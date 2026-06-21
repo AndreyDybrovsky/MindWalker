@@ -37,6 +37,12 @@ public abstract class PlayerInteractionZone : MonoBehaviour, IPressEPromptContri
             ZoneCollider.isTrigger = true;
 
         EnsureTriggerRigidbody();
+        PressEPromptCoordinator.Register(this);
+        // Промпт создаётся в Start() — к тому моменту Player/PressEText уже инициализированы
+    }
+
+    protected virtual void Start()
+    {
         PromptView = PressEPromptUtility.CreatePrompt();
         _usesSharedPrompt = PressEPromptUtility.IsSharedView(PromptView);
 
@@ -48,11 +54,6 @@ public abstract class PlayerInteractionZone : MonoBehaviour, IPressEPromptContri
             PromptView.SetReveal(0f);
         }
 
-        PressEPromptCoordinator.Register(this);
-    }
-
-    protected virtual void Start()
-    {
         if (LocalizationManager.Instance != null)
             LocalizationManager.Instance.OnLanguageChanged += OnLanguageChanged;
 

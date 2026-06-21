@@ -21,8 +21,8 @@ public class CollectableDocument : PlayerInteractionZone
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip pickupSound;
     [SerializeField] private AudioClip proximitySound;
-    [SerializeField] private float proximityDistance = 2.2f;
-    [SerializeField, Range(0f, 1f)] private float proximityVolume = 0.22f;
+    [SerializeField] private float proximityDistance = 9f;
+    [SerializeField, Range(0f, 1f)] private float proximityVolume = 0.35f;
 
     private bool _proximityActive;
 
@@ -44,6 +44,14 @@ public class CollectableDocument : PlayerInteractionZone
 
         if (audioSource == null)
             TryGetComponent(out audioSource);
+
+        if (audioSource != null)
+        {
+            audioSource.spatialBlend = 1f;
+            audioSource.loop = true;
+            audioSource.playOnAwake = false;
+            AudioMixerRoutingUtility.BindSourceToSfx(audioSource);
+        }
     }
 
     protected override void Start()
@@ -79,12 +87,7 @@ public class CollectableDocument : PlayerInteractionZone
         CollectableDocumentProgress.MarkCollected(id);
 
         if (pickupSound != null)
-        {
-            if (audioSource != null)
-                audioSource.PlayOneShot(pickupSound);
-            else
-                AudioSource.PlayClipAtPoint(pickupSound, transform.position);
-        }
+            AudioSource.PlayClipAtPoint(pickupSound, transform.position);
 
         StopProximitySound();
         gameObject.SetActive(false);
@@ -130,6 +133,7 @@ public class CollectableDocument : PlayerInteractionZone
                 audioSource.spatialBlend = 1f;
                 audioSource.loop = true;
                 audioSource.playOnAwake = false;
+                AudioMixerRoutingUtility.BindSourceToSfx(audioSource);
             }
 
             audioSource.clip = proximitySound;

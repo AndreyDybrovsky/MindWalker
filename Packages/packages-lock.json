@@ -8,13 +8,54 @@
       "url": "https://packages.unity.com"
     },
     "com.ivanmurzak.unity.mcp": {
-      "version": "0.79.0",
-      "depth": 0,
+      "version": "0.81.0",
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.test-framework": "1.1.33",
         "com.unity.modules.uielements": "1.0.0",
         "extensions.unity.playerprefsex": "2.1.5"
+      },
+      "url": "https://package.openupm.com"
+    },
+    "com.ivanmurzak.unity.mcp.animation": {
+      "version": "1.2.19",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.ivanmurzak.unity.mcp": "0.81.0",
+        "com.unity.modules.animation": "1.0.0"
+      },
+      "url": "https://package.openupm.com"
+    },
+    "com.ivanmurzak.unity.mcp.cinemachine": {
+      "version": "1.0.5",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.ivanmurzak.unity.mcp": "0.81.0",
+        "com.unity.cinemachine": "3.1.6"
+      },
+      "url": "https://package.openupm.com"
+    },
+    "com.ivanmurzak.unity.mcp.particlesystem": {
+      "version": "1.2.19",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.ivanmurzak.unity.mcp": "0.81.0",
+        "com.unity.modules.particlesystem": "1.0.0"
+      },
+      "url": "https://package.openupm.com"
+    },
+    "com.ivanmurzak.unity.mcp.terrain": {
+      "version": "1.0.5",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.ivanmurzak.unity.mcp": "0.81.0",
+        "com.unity.modules.terrain": "1.0.0",
+        "com.unity.modules.terrainphysics": "1.0.0"
       },
       "url": "https://package.openupm.com"
     },
@@ -102,8 +143,8 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.cinemachine": {
-      "version": "3.1.5",
-      "depth": 0,
+      "version": "3.1.6",
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.splines": "2.0.0",

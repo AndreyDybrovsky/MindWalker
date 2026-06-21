@@ -674,6 +674,8 @@ public class OCDMomentTrigger : PlayerInteractionZone
         _hasPlayed = hasPlayed;
         _isUnlocked = isUnlocked;
         ApplyUnlockedState();
+        if (hasPlayed)
+            ApplyBlackSwap(); // восстанавливаем состояния объектов (кровать, объекты сцены)
         // ShowObjectiveForThisMoment() будет вызван из Start() после инициализации базового класса
     }
 

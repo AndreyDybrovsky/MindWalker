@@ -20,7 +20,10 @@ public static class LevelSuccessFlow
     public static string ResolveReturnScene(string lobbySceneName, string victorySceneName)
     {
         if (GlobalProgressTracker.Instance == null)
+        {
+            Debug.LogWarning("[LevelSuccessFlow] GlobalProgressTracker.Instance == null → returning lobby");
             return string.IsNullOrWhiteSpace(lobbySceneName) ? "Main" : lobbySceneName;
+        }
 
         int saved = GlobalProgressTracker.Instance.CompletedPatientGroupsCount;
         int total = GlobalProgressTracker.Instance.TotalLevels;
@@ -28,10 +31,14 @@ public static class LevelSuccessFlow
 
         bool allProcessed = (saved + lost) >= total;
 
+        Debug.Log($"[LevelSuccessFlow] saved={saved} lost={lost} total={total} allProcessed={allProcessed}");
+
         if (!allProcessed)
             return string.IsNullOrWhiteSpace(lobbySceneName) ? "Main" : lobbySceneName;
 
         EndingType ending = EndingEvaluator.Evaluate(saved, total);
-        return EndingEvaluator.GetSceneName(ending);
+        string scene = EndingEvaluator.GetSceneName(ending);
+        Debug.Log($"[LevelSuccessFlow] Ending={ending} → scene={scene}");
+        return scene;
     }
 }

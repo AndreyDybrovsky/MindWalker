@@ -26,12 +26,14 @@ public class EnemyVision : MonoBehaviour
         CachePlayerReferences();
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        if (_playerRoot == null)
-            CachePlayerReferences();
+        InvokeRepeating(nameof(CheckForPlayer), 0f, 0.15f);
+    }
 
-        CheckForPlayer();
+    private void OnDisable()
+    {
+        CancelInvoke(nameof(CheckForPlayer));
     }
 
     private void CachePlayerReferences()
@@ -45,6 +47,9 @@ public class EnemyVision : MonoBehaviour
 
     private void CheckForPlayer()
     {
+        if (_playerRoot == null)
+            CachePlayerReferences();
+
         bool foundPlayer = false;
         Transform foundTransform = null;
 
@@ -161,14 +166,14 @@ public class EnemyVision : MonoBehaviour
 
     private bool IsObstacle(Collider col)
     {
+        if (col == null || col.isTrigger) return false;
+        if (IsPlayerCollider(col)) return false;
+
+        // Собственные коллайдеры (дуло, тело) не должны блокировать зрение
+        if (col.transform.root == transform.root) return false;
+
         if (obstacleLayer.value != 0)
             return ((1 << col.gameObject.layer) & obstacleLayer.value) != 0;
-
-        if (col.isTrigger)
-            return false;
-
-        if (IsPlayerCollider(col))
-            return false;
 
         return true;
     }

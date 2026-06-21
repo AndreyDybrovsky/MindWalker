@@ -78,42 +78,21 @@ public class GameOverManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(holdTime);
 
         string failedScene = SceneManager.GetActiveScene().name;
-        LobbyPatientProgress.MarkLost(failedScene);
+        foreach (string linked in LevelSceneProgress.GetLinkedScenes(failedScene))
+            LobbyPatientProgress.MarkLost(linked);
 
         Time.timeScale = 1f;
         Time.fixedDeltaTime = 0.02f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
+        // Сохраняем потерянного пациента в файл сохранения
         if (SaveManager.Instance != null && SaveManager.Instance.GetCurrentSaveSlot() >= 0)
-        {
-            if (SaveManager.Instance.ReloadCurrentCheckpoint(persistLostPatientForActiveScene: true))
-            {
-                IsFading = false;
-                yield break;
-            }
-        }
+            SaveManager.Instance.SaveCurrentGame();
 
-        LevelResultClipboard clipboard = resultClipboard != null
-            ? resultClipboard
-            : FindFirstObjectByType<LevelResultClipboard>();
-
-        if (clipboard != null)
-        {
-            yield return ScreenFadeRunner.FadeFromBlack(0.8f, fadeCanvasGroup);
-
-            bool clipboardDone = false;
-            clipboard.Show(false, () => clipboardDone = true);
-            float timeoutAt = Time.unscaledTime + 120f;
-            yield return new WaitUntil(() => clipboardDone || Time.unscaledTime > timeoutAt);
-
-            yield return ScreenFadeRunner.FadeToBlack(1.5f, fadeCanvasGroup);
-            SceneManager.LoadScene(string.IsNullOrWhiteSpace(lobbySceneName) ? "Main" : lobbySceneName);
-        }
-        else
-        {
-            SceneManager.LoadScene(string.IsNullOrWhiteSpace(lobbySceneName) ? "Main" : lobbySceneName);
-        }
+        string lobby = string.IsNullOrWhiteSpace(lobbySceneName) ? "Main" : lobbySceneName;
+        string targetScene = LevelSuccessFlow.ResolveReturnScene(lobby, string.Empty);
+        SceneManager.LoadScene(targetScene);
 
         IsFading = false;
     }

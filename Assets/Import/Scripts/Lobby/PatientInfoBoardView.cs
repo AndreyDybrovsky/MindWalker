@@ -46,7 +46,7 @@ public class PatientInfoBoardView : MonoBehaviour
     [Tooltip("Число лет, например ключ patient.ptsd.age со значением \"18\".")]
     [SerializeField] private string locKeyPatientAgeNumber;
 
-    [Header("Печать (спрайты)")]
+    [Header("Печать (спрайты — опционально, если нет отдельных Image)")]
     [SerializeField] private Sprite stampHealthy;
     [SerializeField] private Sprite stampLost;
 
@@ -57,7 +57,12 @@ public class PatientInfoBoardView : MonoBehaviour
     [SerializeField] private TMP_Text diagnosisText;
     [SerializeField] private TMP_Text notesText;
     [SerializeField] private TMP_Text statusText;
+    [Tooltip("Одиночный Image для штампа (спрайт меняется). Если заданы stampHealthyImage/stampLostImage — не используется.")]
     [SerializeField] private Image stampImage;
+    [Tooltip("Отдельный Image для штампа «Вылечен». Если задан — управляется независимо от stampImage.")]
+    [SerializeField] private Image stampHealthyImage;
+    [Tooltip("Отдельный Image для штампа «Потерян». Если задан — управляется независимо от stampImage.")]
+    [SerializeField] private Image stampLostImage;
 
     private float _visibility;
     private Vector3 _shownLocalScale;
@@ -328,45 +333,68 @@ public class PatientInfoBoardView : MonoBehaviour
     /// </summary>
     public void ForceStamp(bool isSuccess)
     {
-        if (stampImage == null)
-            return;
-
-        Sprite stamp = isSuccess ? stampHealthy : stampLost;
-        stampImage.sprite = stamp;
-        stampImage.enabled = stamp != null;
+        // Режим двух отдельных Image (GoodStamp / BadStamp)
+        if (stampHealthyImage != null || stampLostImage != null)
+        {
+            if (stampHealthyImage != null) stampHealthyImage.enabled = isSuccess;
+            if (stampLostImage    != null) stampLostImage.enabled    = !isSuccess;
+        }
+        else if (stampImage != null)
+        {
+            Sprite stamp = isSuccess ? stampHealthy : stampLost;
+            stampImage.sprite  = stamp;
+            stampImage.enabled = stamp != null;
+        }
 
         if (statusText != null)
         {
-            string key = isSuccess ? locKeyStatusHealthy : locKeyStatusLost;
+            string key   = isSuccess ? locKeyStatusHealthy : locKeyStatusLost;
             string label = Loc(key);
             if (string.IsNullOrEmpty(label))
                 label = isSuccess ? "Здоров" : "Потерян";
-            statusText.text = label;
+            statusText.text  = label;
+            statusText.color = isSuccess ? new Color(0.1f, 0.65f, 0.1f) : new Color(0.75f, 0.08f, 0.08f);
         }
     }
 
     private void RefreshStatusVisuals(PatientLobbyStatus status)
     {
-        string sick = Loc(locKeyStatusSick);
+        string sick    = Loc(locKeyStatusSick);
         string healthy = Loc(locKeyStatusHealthy);
-        string lost = Loc(locKeyStatusLost);
+        string lost    = Loc(locKeyStatusLost);
 
-        if (string.IsNullOrEmpty(sick)) sick = "Болен";
+        if (string.IsNullOrEmpty(sick))    sick    = "Болен";
         if (string.IsNullOrEmpty(healthy)) healthy = "Здоров";
-        if (string.IsNullOrEmpty(lost)) lost = "Потерян";
+        if (string.IsNullOrEmpty(lost))    lost    = "Потерян";
 
         string label = status switch
         {
             PatientLobbyStatus.Healthy => healthy,
-            PatientLobbyStatus.Lost => lost,
+            PatientLobbyStatus.Lost    => lost,
             _ => sick
         };
 
         if (statusText != null)
-            statusText.text = label;
+        {
+            statusText.text  = label;
+            statusText.color = status switch
+            {
+                PatientLobbyStatus.Healthy => new Color(0.1f,  0.65f, 0.1f),
+                PatientLobbyStatus.Lost    => new Color(0.75f, 0.08f, 0.08f),
+                _ => new Color(0.4f, 0.4f, 0.4f)
+            };
+        }
 
-        if (stampImage == null)
+        // Режим двух отдельных Image
+        if (stampHealthyImage != null || stampLostImage != null)
+        {
+            if (stampHealthyImage != null) stampHealthyImage.enabled = status == PatientLobbyStatus.Healthy;
+            if (stampLostImage    != null) stampLostImage.enabled    = status == PatientLobbyStatus.Lost;
             return;
+        }
+
+        // Режим одного Image
+        if (stampImage == null) return;
 
         if (status == PatientLobbyStatus.Sick)
         {
@@ -375,7 +403,7 @@ public class PatientInfoBoardView : MonoBehaviour
         }
 
         Sprite stamp = status == PatientLobbyStatus.Healthy ? stampHealthy : stampLost;
-        stampImage.sprite = stamp;
+        stampImage.sprite  = stamp;
         stampImage.enabled = stamp != null;
     }
 }

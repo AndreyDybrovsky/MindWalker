@@ -25,7 +25,11 @@ public class LevelSuccessExitTrigger : PlayerInteractionZone
     [SerializeField, Range(0f, 1f)] private float soundVolume = 1f;
     [Tooltip("Пауза после звука подбора оружия, перед выстрелом.")]
     [SerializeField] private float pauseAfterWeaponPickup = 0.55f;
-    [Tooltip("Пауза после выстрела, перед финальным звуком уровня.")]
+    [Tooltip("Сколько раз повторить звук выстрела.")]
+    [SerializeField] private int shootingRepeatCount = 1;
+    [Tooltip("Пауза между повторными выстрелами.")]
+    [SerializeField] private float pauseBetweenShots = 0.28f;
+    [Tooltip("Пауза после последнего выстрела, перед финальным звуком уровня.")]
     [SerializeField] private float pauseAfterShooting = 0.65f;
     [Tooltip("Пауза после финального звука, перед загрузкой лобби.")]
     [SerializeField] private float pauseAfterLevelComplete = 0.9f;
@@ -121,7 +125,14 @@ public class LevelSuccessExitTrigger : PlayerInteractionZone
             yield return new WaitForSecondsRealtime(delayBeforeSoundBlock);
 
         yield return PlayClipAndWait(weaponPickupSound, pauseAfterWeaponPickup);
-        yield return PlayClipAndWait(shootingSound, pauseAfterShooting);
+
+        int repeats = Mathf.Max(1, shootingRepeatCount);
+        for (int i = 0; i < repeats; i++)
+        {
+            float pause = (i < repeats - 1) ? pauseBetweenShots : pauseAfterShooting;
+            yield return PlayClipAndWait(shootingSound, pause);
+        }
+
         yield return PlayClipAndWait(levelCompleteSound, pauseAfterLevelComplete);
 
         Time.timeScale = 1f;

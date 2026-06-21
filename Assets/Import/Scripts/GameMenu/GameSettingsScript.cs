@@ -226,7 +226,7 @@ public class GameSettingsScript : MonoBehaviour
 
     private void Update()
     {
-        if (FadeStart.IsAnyFadeActive || LevelCompletionManager.IsFading || GameOverManager.IsFading)
+        if (FadeStart.IsAnyFadeActive || LevelCompletionManager.IsFading || GameOverManager.IsFading || LevelEntryScreenFade.IsFading)
             return;
 
         PlayerHealth playerHealth = FindFirstObjectByType<PlayerHealth>();

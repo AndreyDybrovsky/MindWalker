@@ -34,9 +34,22 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private float proceduralLifetime = 0.65f;
     [SerializeField] private float proceduralSize = 0.08f;
 
+    [Header("Звук попадания")]
+    [Tooltip("Звук когда враг получает урон. Без файла — молчит.")]
+    [SerializeField] private AudioClip hitSound;
+    [SerializeField, Range(0f, 1f)] private float hitSoundVolume = 0.55f;
+
+    [Header("Дроп хилки")]
+    [Tooltip("Префаб хилки, спавнящийся при смерти с шансом 33%.")]
+    [SerializeField] private GameObject healthPickupPrefab;
+    [SerializeField, Range(0f, 1f)] private float healthDropChance = 0.33f;
+
     [Header("События")]
     public UnityEvent<float> OnHealthChanged;
     public UnityEvent OnEnemyDeath;
+
+    /// <summary>Вызывается при получении урона (живым врагом). Для hit-реакции в EnemyAnimatorDriver.</summary>
+    public event System.Action OnDamaged;
 
     public float CurrentHealth => currentHealth;
     public float MaxHealth => maxHealth;
@@ -46,6 +59,7 @@ public class EnemyHealth : MonoBehaviour
     private FadeRendererEntry[] _fadeRenderers;
     private MaterialPropertyBlock _fadePropertyBlock;
     private AudioSource _deathAudioSource;
+    private AudioSource _hitAudioSource;
     private Collider[] _colliders;
     private Coroutine _deathRoutine;
 
@@ -62,6 +76,7 @@ public class EnemyHealth : MonoBehaviour
         currentHealth = maxHealth;
         CacheFadeRenderers();
         EnsureDeathAudioSource();
+        EnsureHitAudioSource();
         OnHealthChanged?.Invoke(currentHealth);
     }
 
@@ -74,8 +89,57 @@ public class EnemyHealth : MonoBehaviour
 
         OnHealthChanged?.Invoke(currentHealth);
 
+        // Оповещаем ИИ о попадании — враг начинает преследование
+        AlertEnemyControllerFromDamage();
+        PlayHitSound();
+
         if (currentHealth <= 0f && !isDead)
+        {
             Die();
+        }
+        else
+        {
+            OnDamaged?.Invoke();
+        }
+    }
+
+    private void EnsureHitAudioSource()
+    {
+        Transform hitNode = transform.Find("HitAudio");
+        if (hitNode == null)
+        {
+            GameObject go = new GameObject("HitAudio");
+            go.transform.SetParent(transform, false);
+            hitNode = go.transform;
+        }
+
+        if (!hitNode.TryGetComponent(out _hitAudioSource))
+            _hitAudioSource = hitNode.gameObject.AddComponent<AudioSource>();
+
+        _hitAudioSource.playOnAwake = false;
+        _hitAudioSource.loop = false;
+        _hitAudioSource.spatialBlend = 1f;
+        _hitAudioSource.minDistance = 2f;
+        _hitAudioSource.maxDistance = 18f;
+        AudioMixerRoutingUtility.BindSourceToSfx(_hitAudioSource);
+    }
+
+    private void PlayHitSound()
+    {
+        if (hitSound == null || _hitAudioSource == null) return;
+        float sfx = SettingsManager.Instance != null
+            ? SettingsManager.Instance.GetCurrentSettings().sfxVolume : 1f;
+        _hitAudioSource.PlayOneShot(hitSound, hitSoundVolume * Mathf.Clamp01(sfx));
+    }
+
+    private void AlertEnemyControllerFromDamage()
+    {
+        // Стационарные враги не реагируют на удар движением
+        if (GetComponent<StationaryEnemyController>() != null) return;
+
+        EnemyController controller = GetComponent<EnemyController>();
+        if (controller != null && controller.enabled)
+            controller.ForceStartChase();
     }
 
     public void Heal(float amount)
@@ -95,11 +159,17 @@ public class EnemyHealth : MonoBehaviour
         isDead = true;
         GameStatsTracker.Instance?.RecordEnemyKilled();
 
+        // «Сок» убийства: микро-заморозка времени + тряска камеры.
+        HitStopUtility.Do(0.05f);
+        CameraShaker.Shake(0.4f);
+
         OnEnemyDeath?.Invoke();
 
         DisableEnemyBehaviour();
         DisableNavMeshAgents();
         DisableColliders();
+
+        TrySpawnHealthPickup();
 
         if (deathParticleSystem != null)
             deathParticleSystem.Play();
@@ -116,6 +186,15 @@ public class EnemyHealth : MonoBehaviour
             StopCoroutine(_deathRoutine);
 
         _deathRoutine = StartCoroutine(DeathFadeRoutine());
+    }
+
+    private void TrySpawnHealthPickup()
+    {
+        if (healthPickupPrefab == null) return;
+        if (Random.value > healthDropChance) return;
+
+        Vector3 spawnPos = transform.position + Vector3.up * 0.5f;
+        Instantiate(healthPickupPrefab, spawnPos, Quaternion.identity);
     }
 
     private void DisableEnemyBehaviour()

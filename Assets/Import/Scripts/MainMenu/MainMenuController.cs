@@ -92,6 +92,9 @@ public class MainMenuController : MonoBehaviour
 
     public void StartNewGame()
     {
+        // Новая игra — снова показать панель управления при входе в Main.
+        FirstPlayTutorial.ResetForNewGame();
+
         if (welcomeMenuController != null)
         {
             Debug.Log("Запускаем катсцену через назначенный WelcomeMenuController");

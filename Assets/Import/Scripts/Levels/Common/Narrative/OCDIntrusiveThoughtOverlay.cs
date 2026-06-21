@@ -74,6 +74,14 @@ public class OCDIntrusiveThoughtOverlay : MonoBehaviour
         BuildCanvas();
     }
 
+    private void Start()
+    {
+        // OCDMissionDayController.Awake() (order -500) вызывает SetDay до того, как наш Instance создан.
+        // Повторяем вызов здесь — к Start() все Awake() уже выполнены.
+        if (OCDMissionDayController.Instance != null)
+            SetDay(OCDMissionDayController.Instance.GetActiveDayIndex());
+    }
+
     private void OnDestroy()
     {
         if (Instance == this) Instance = null;

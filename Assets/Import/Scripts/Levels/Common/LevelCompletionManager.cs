@@ -67,6 +67,9 @@ public class LevelCompletionManager : MonoBehaviour
         if (bossSpawnManager != null && bossSpawnManager.WillSpawnBoss && !bossSpawnManager.IsBossSpawned)
             return;
 
+        if (bossSpawnManager != null && bossSpawnManager.IsBossEncounterActive)
+            return;
+
         isCompleting = true;
         StartCoroutine(CompleteLevel());
     }

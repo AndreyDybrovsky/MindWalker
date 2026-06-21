@@ -34,6 +34,12 @@ public class DepressionPanicMomentZone : MonoBehaviour
     [Header("Первый спавн — поиск")]
     [SerializeField] private float findTimeLimitSeconds = 60f;
     [SerializeField] private float findFailDamage = 25f;
+
+    [Header("Нарастающая сложность")]
+    [Tooltip("На сколько секунд уменьшается таймер поиска после каждого успешного успокоения.")]
+    [SerializeField] private float findTimerDecreasePerSuccess = 5f;
+    [Tooltip("Минимальный лимит таймера поиска (секунды) — не опускается ниже этого значения.")]
+    [SerializeField] private float minFindTimerSeconds = 20f;
     [Tooltip("Урон при провале таймера успокоения (E). Если 0 — используется Find Fail Damage.")]
     [SerializeField] private float calmFailDamage;
     [Tooltip("Дистанция до пациента, при которой считается, что герой его нашёл.")]
@@ -79,6 +85,8 @@ public class DepressionPanicMomentZone : MonoBehaviour
     private bool _eventActive;
     private bool _findPhaseActive;
     private bool _isFirstSpawn = true;
+    private int _successCount;
+    private float _currentFindTimeLimit;
     private GameObject _spawnedCharacter;
     private DepressionCalmInteraction _calmInteraction;
     private PanicPatientAmbientAudio _patientAudio;
@@ -96,6 +104,8 @@ public class DepressionPanicMomentZone : MonoBehaviour
 
     private void Awake()
     {
+        _currentFindTimeLimit = findTimeLimitSeconds;
+
         Collider col = GetComponent<Collider>();
         if (col != null)
             col.isTrigger = true;
@@ -194,7 +204,9 @@ public class DepressionPanicMomentZone : MonoBehaviour
             patientActive = _eventActive && _spawnedCharacter != null,
             phase = ResolvePhaseForSave(),
             waitingRespawn = _respawnWaitRemaining > 0.01f && !_eventActive,
-            respawnWaitRemaining = Mathf.Max(0f, _respawnWaitRemaining)
+            respawnWaitRemaining = Mathf.Max(0f, _respawnWaitRemaining),
+            successCount = _successCount,
+            currentFindTimeLimit = _currentFindTimeLimit
         };
 
         if (data.patientActive && _spawnedCharacter != null)
@@ -235,6 +247,10 @@ public class DepressionPanicMomentZone : MonoBehaviour
 
         _restoreApplied = true;
         _isFirstSpawn = !data.firstEncounterCompleted;
+        _successCount = data.successCount;
+        _currentFindTimeLimit = data.currentFindTimeLimit > 0.01f
+            ? data.currentFindTimeLimit
+            : findTimeLimitSeconds;
 
         if (data.patientActive)
         {
@@ -414,7 +430,7 @@ public class DepressionPanicMomentZone : MonoBehaviour
             _calmInteraction.SetInteractionEnabled(false);
 
             DepressionCountdownUI.StartCountdown(
-                findTimeLimitSeconds,
+                _currentFindTimeLimit,
                 findTimerLocalizationKey,
                 findTimerFallbackText,
                 timerStyleReference,
@@ -559,6 +575,11 @@ public class DepressionPanicMomentZone : MonoBehaviour
 
         _eventActive = false;
         GameStatsTracker.Instance?.RecordPatientCalmed();
+
+        // Нарастающая сложность: уменьшаем лимит следующего таймера поиска
+        _successCount++;
+        float decrease = findTimerDecreasePerSuccess * _successCount;
+        _currentFindTimeLimit = Mathf.Max(minFindTimerSeconds, findTimeLimitSeconds - decrease);
 
         DepressionCountdownUI.StopCountdown();
         FadeOutPatientPanicAudio();

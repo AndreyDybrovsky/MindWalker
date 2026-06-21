@@ -244,7 +244,7 @@ MonoBehaviour:
   onlyWhenFalling: 0
   fallbackGravity: -22
   audioSource: {fileID: 8021501918655013072}
-  bounceSound: {fileID: 8300000, guid: 95e174753cffdfd4b9d6c04d89993eed, type: 3}
+  bounceSound: {fileID: 8300000, guid: 3c99d9cf71bb0d44a9142d67cc1c7332, type: 3}
   soundVolume: 0.85
 --- !u!82 &8021501918655013072
 AudioSource:

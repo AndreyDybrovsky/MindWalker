@@ -20,6 +20,12 @@ public class WeaponHandler : MonoBehaviour
     [Tooltip("Если не задан — AudioSource на этом объекте, иначе PlayClipAtPoint у точки спавна.")]
     [SerializeField] private AudioSource shootAudioSource;
 
+    [Header("Отдача / вспышка вьюмодели")]
+    [Tooltip("Если не задан — ищется автоматически в детях/родителе.")]
+    [SerializeField] private WeaponViewmodelMotion viewmodelMotion;
+    [SerializeField] private WeaponMuzzleFlash muzzleFlash;
+    [SerializeField, Range(0f, 1f)] private float shootShake = 0.12f;
+
     private float nextFireTime = 0f;
     private GameObject playerOwner;
 
@@ -27,6 +33,16 @@ public class WeaponHandler : MonoBehaviour
     {
         if (shootAudioSource == null)
             shootAudioSource = GetComponent<AudioSource>();
+
+        if (viewmodelMotion == null)
+            viewmodelMotion = GetComponentInChildren<WeaponViewmodelMotion>();
+        if (viewmodelMotion == null)
+            viewmodelMotion = GetComponentInParent<WeaponViewmodelMotion>();
+
+        if (muzzleFlash == null)
+            muzzleFlash = GetComponentInChildren<WeaponMuzzleFlash>();
+        if (muzzleFlash == null)
+            muzzleFlash = GetComponentInParent<WeaponMuzzleFlash>();
     }
 
     private void Start()
@@ -106,6 +122,9 @@ public class WeaponHandler : MonoBehaviour
         }
 
         PlayRandomShootSound();
+        viewmodelMotion?.AddRecoil();
+        muzzleFlash?.Flash();
+        CameraShaker.Shake(shootShake);
     }
 
     private void PlayRandomShootSound()

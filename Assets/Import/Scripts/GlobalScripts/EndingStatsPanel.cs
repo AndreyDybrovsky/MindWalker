@@ -52,7 +52,7 @@ public class EndingStatsPanel : MonoBehaviour
         BuildCanvas();
 
         // Заголовок
-        var (hTmp, hRt, hPos) = AddRow("СТАТИСТИКА", headerHeight, isHeader: true);
+        var (hTmp, hRt, hPos) = AddRow(TL("ending.stats.header", "СТАТИСТИКА"), headerHeight, isHeader: true);
         yield return SlideIn(hRt, hTmp, hPos);
         yield return new WaitForSeconds(pauseAfterHeader);
 
@@ -220,19 +220,35 @@ public class EndingStatsPanel : MonoBehaviour
         GameStatsTracker t = GameStatsTracker.Instance;
         if (t == null)
         {
-            yield return ("Данные", "недоступны");
+            yield return (TL("ending.stats.no_data", "Данные недоступны"), "—");
             yield break;
         }
 
         GameStatsData s = t.Stats;
-        yield return ("Время прохождения",   GameStatsTracker.FormatTime(s.totalPlayTimeSeconds));
-        yield return ("Получено урона",       $"{Mathf.RoundToInt(s.damageReceived)}");
-        yield return ("Нанесено урона",       $"{Mathf.RoundToInt(s.damageDealt)}");
-        yield return ("Убито врагов",         $"{s.enemiesKilled}");
-        yield return ("Слот-машина поймала",  Inflect(s.slotMachineCaught, "раз", "раза", "раз"));
-        yield return ("Успокоений пациентки", Inflect(s.patientCalmedCount, "раз", "раза", "раз"));
-        yield return ("Быстрый уровень",      t.GetFastestLevelDisplay());
-        yield return ("Долгий уровень",       t.GetSlowestLevelDisplay());
+        yield return (TL("ending.stats.playtime",        "Время прохождения"),    GameStatsTracker.FormatTime(s.totalPlayTimeSeconds));
+        yield return (TL("ending.stats.damage_received", "Получено урона"),       $"{Mathf.RoundToInt(s.damageReceived)}");
+        yield return (TL("ending.stats.damage_dealt",    "Нанесено урона"),       $"{Mathf.RoundToInt(s.damageDealt)}");
+        yield return (TL("ending.stats.enemies_killed",  "Убито врагов"),         $"{s.enemiesKilled}");
+        yield return (TL("ending.stats.slot_caught",     "Слот-машина поймала"),  InflectL(s.slotMachineCaught));
+        yield return (TL("ending.stats.patients_calmed", "Успокоений пациентки"), InflectL(s.patientCalmedCount));
+        yield return (TL("ending.stats.fastest_level",   "Быстрый уровень"),      t.GetFastestLevelDisplay());
+        yield return (TL("ending.stats.slowest_level",   "Долгий уровень"),       t.GetSlowestLevelDisplay());
+    }
+
+    private static string TL(string key, string fallback)
+    {
+        LocalizationManager loc = LocalizationManager.Instance;
+        if (loc == null) return fallback;
+        string val = loc.T(key);
+        return (string.IsNullOrEmpty(val) || val == key) ? fallback : val;
+    }
+
+    private static string InflectL(int n)
+    {
+        string f1 = TL("ending.stats.times_1", "раз");
+        string f2 = TL("ending.stats.times_2", "раза");
+        string f5 = TL("ending.stats.times_5", "раз");
+        return Inflect(n, f1, f2, f5);
     }
 
     private static string Inflect(int n, string f1, string f2, string f5)

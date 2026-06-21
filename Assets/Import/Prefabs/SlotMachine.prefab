@@ -2070,7 +2070,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerStandPoint: {fileID: 991100031}
   machineFront: {fileID: 991100021}
-  standLocalOffset: {x: 0, y: 0, z: 1.35}
   pullSpeed: 4.5
   lookTargetForwardOffset: 0.15
   standArrivalDistance: 0.25
@@ -2083,14 +2082,14 @@ MonoBehaviour:
   timeoutExtraDamage: 12
   escapeCooldown: 4
   sfxSource: {fileID: 5553448652508491227}
-  trappedAmbientSource: {fileID: 0}
+  captureSound: {fileID: 8300000, guid: 1011180de793e404fb76dd919a012ac3, type: 3}
   correctKeySound: {fileID: 8300000, guid: 6fb573ec88edcc649a13fd3867dc21c1, type: 3}
   wrongKeySound: {fileID: 8300000, guid: 7d4f2220b28e39a4c9c1f281f164d3db, type: 3}
   levelCompletedSound: {fileID: 8300000, guid: 4802781093ae2b44b89eb4402e19295a, type: 3}
   deathByMachineSound: {fileID: 8300000, guid: e39181ad427088c42abff03e3e423864, type: 3}
-  trappedAmbientLoop: {fileID: 8300000, guid: 1011180de793e404fb76dd919a012ac3, type: 3}
   sfxVolume: 1
-  ambientVolume: 0.55
+  triggersCasinoAmbient: 0
+  casinoAmbientSource: {fileID: 0}
 --- !u!1 &8749844351065411000
 GameObject:
   m_ObjectHideFlags: 0

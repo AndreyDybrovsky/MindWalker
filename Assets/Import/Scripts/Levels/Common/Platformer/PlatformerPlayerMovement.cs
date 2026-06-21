@@ -17,6 +17,7 @@ public class PlatformerPlayerMovement : MonoBehaviour
 
     private CharacterController _controller;
     private float _verticalVelocity;
+    private bool _hasJumped;
 
     public float Gravity => gravity;
 
@@ -50,10 +51,16 @@ public class PlatformerPlayerMovement : MonoBehaviour
         _controller.Move(move * speed * Time.deltaTime);
 
         if (_controller.isGrounded && _verticalVelocity < 0f)
+        {
+            _hasJumped = false;
             _verticalVelocity = -2f;
+        }
 
-        if (Input.GetButtonDown("Jump") && _controller.isGrounded)
+        if (Input.GetButtonDown("Jump") && _controller.isGrounded && !_hasJumped)
+        {
             _verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            _hasJumped = true;
+        }
 
         _verticalVelocity += gravity * Time.deltaTime;
         _controller.Move(Vector3.up * (_verticalVelocity * Time.deltaTime));

@@ -504,6 +504,23 @@ public class WelcomeMenuController : MonoBehaviour
         }
 
         SettingsManager.Instance.ApplyAudioSettingsImmediate();
+        StartCoroutine(FadeToBlackAndLoad());
+    }
+
+    private IEnumerator FadeToBlackAndLoad()
+    {
+        // Переносим затемнение на глобальный слой (FadeCanvas), чтобы переход в Main
+        // был непрерывным: катсцена уже чёрная → глобальный слой чёрный → загрузка →
+        // LevelEntryScreenFade плавно проявляет сцену. Без вспышки лобби и стабильно.
+        CanvasGroup globalFade = ScreenFadeUtility.EnsureFadeCanvasGroup();
+        if (globalFade != null)
+        {
+            ScreenFadeUtility.PrepareForFade(globalFade);
+            globalFade.alpha = 1f;
+            globalFade.blocksRaycasts = true;
+        }
+
+        yield return null;
         SceneManager.LoadScene(nextSceneName);
     }
 

@@ -39,6 +39,8 @@ public class OCDFixAllCollectiblePoint : PlayerInteractionZone
 
         if (manager == null)
             manager = GetComponentInParent<OCDFixAllCollectibleManager>();
+        if (manager == null)
+            manager = Object.FindFirstObjectByType<OCDFixAllCollectibleManager>(FindObjectsInactive.Include);
 
         if (audioSource == null)
             TryGetComponent(out audioSource);

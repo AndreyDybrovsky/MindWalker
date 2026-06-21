@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class BossSpawnManager : MonoBehaviour
 {
@@ -27,12 +28,15 @@ public class BossSpawnManager : MonoBehaviour
 
     private AudioSource audioSource;
     private bool bossSpawned = false;
+    private bool bossDefeated = false;
     private GameObject currentBossInstance = null;
     private bool bossMessageVisible;
     private LocalizationManager localizationSubscription;
 
     public bool IsBossSpawned => bossSpawned;
-    public bool WillSpawnBoss => bossPrefab != null;
+    public bool WillSpawnBoss => bossPrefab != null || existingBoss != null;
+    /// <summary>True пока существующий босс ещё жив — LevelCompletionManager должен ждать.</summary>
+    public bool IsBossEncounterActive => existingBoss != null && bossSpawned && !bossDefeated;
 
     private void Awake()
     {
@@ -92,6 +96,26 @@ public class BossSpawnManager : MonoBehaviour
 
         TrySubscribeLocalization();
         SetMessageVisible(false);
+
+        // Если bossPrefab не задан, ищем готового босса в сцене по имени
+        if (existingBoss == null && bossPrefab == null)
+        {
+            foreach (var h in FindObjectsByType<EnemyHealth>(FindObjectsSortMode.None))
+            {
+                if (h.gameObject.name.IndexOf("Boss", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    existingBoss = h;
+                    break;
+                }
+            }
+        }
+
+        if (existingBoss != null)
+        {
+            bossSpawned = true;
+            currentBossInstance = existingBoss.gameObject;
+            existingBoss.OnEnemyDeath.AddListener(OnEncounterBossDefeated);
+        }
     }
 
     private void OnDestroy()
@@ -111,6 +135,12 @@ public class BossSpawnManager : MonoBehaviour
         SpawnBossFromEncounter(showMessage: true, playSound: true);
     }
 
+    [Header("Завершение уровня при смерти босса (Gambling)")]
+    [SerializeField] private string lobbySceneOnWin = "Main";
+    [SerializeField] private float winDelayAfterBossDeath = 1.5f;
+    [Tooltip("Босс уже стоит на сцене — подписаться на его смерть сразу, без ожидания всех врагов.")]
+    [SerializeField] private EnemyHealth existingBoss;
+
     /// <summary>Сцена казино: бой после диалога с боссом (без ожидания уничтожения всех врагов).</summary>
     public void SpawnBossFromEncounter(bool showMessage = false, bool playSound = true)
     {
@@ -122,6 +152,27 @@ public class BossSpawnManager : MonoBehaviour
             bossSpawnPoint != null ? bossSpawnPoint.rotation : transform.rotation,
             showMessage,
             playSound);
+
+        // Казино-босс — убийство = победа на уровне
+        EnemyHealth encounterBossHealth = currentBossInstance != null
+            ? currentBossInstance.GetComponent<EnemyHealth>()
+            : null;
+        if (encounterBossHealth != null)
+            encounterBossHealth.OnEnemyDeath.AddListener(OnEncounterBossDefeated);
+    }
+
+    private void OnEncounterBossDefeated()
+    {
+        bossDefeated = true;
+        StartCoroutine(EncounterBossWinSequence());
+    }
+
+    private IEnumerator EncounterBossWinSequence()
+    {
+        yield return new WaitForSecondsRealtime(winDelayAfterBossDeath);
+        LevelSuccessFlow.MarkCurrentLevelCompleted();
+        string target = LevelSuccessFlow.ResolveReturnScene(lobbySceneOnWin, string.Empty);
+        SceneManager.LoadScene(target);
     }
     
     private void SpawnBossInternal(Vector3 position, Quaternion rotation, bool showMessage = true, bool playSound = true)

@@ -20,4 +20,8 @@ public class DepressionPanicSaveData
     public string countdownFallback;
     public bool waitingRespawn;
     public float respawnWaitRemaining;
+    /// <summary>Количество успешных успокоений — влияет на нарастающую сложность.</summary>
+    public int successCount;
+    /// <summary>Текущий лимит таймера поиска после уменьшений.</summary>
+    public float currentFindTimeLimit;
 }

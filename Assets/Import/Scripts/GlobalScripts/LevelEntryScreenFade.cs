@@ -2,13 +2,13 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>
-/// После загрузки уровня снимает чёрный экран с глобального FadeCanvas (остаётся после перехода из лобби).
-/// </summary>
 [DefaultExecutionOrder(-150)]
 public class LevelEntryScreenFade : MonoBehaviour
 {
     private static LevelEntryScreenFade _instance;
+    private static bool _isFading;
+
+    public static bool IsFading => _isFading;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Bootstrap()
@@ -46,6 +46,16 @@ public class LevelEntryScreenFade : MonoBehaviour
         ClearCanvasFadeIfNotFromTransition();
         CollectableDocumentProgress.EnsureLoadedFromActiveSave();
         CollectableDocumentProgress.RefreshSceneDocuments();
+
+        if (!IsMenuScene(scene.name))
+        {
+            CanvasGroup fg = ScreenFadeUtility.EnsureFadeCanvasGroup();
+            ScreenFadeUtility.PrepareForFade(fg);
+            if (fg != null) { fg.alpha = 1f; fg.blocksRaycasts = true; }
+            GameplayInputBlocker.SetBlocked(true);
+            _isFading = true;
+        }
+
         StartCoroutine(FadeInIfNeeded());
     }
 
@@ -72,12 +82,15 @@ public class LevelEntryScreenFade : MonoBehaviour
         if (IsMenuScene(sceneName))
         {
             ClearFadeLayer(ScreenFadeUtility.EnsureFadeCanvasGroup());
+            _isFading = false;
             yield break;
         }
 
         CanvasGroup globalFade = ScreenFadeUtility.EnsureFadeCanvasGroup();
-        if (globalFade != null && globalFade.alpha > 0.02f)
-            yield return ScreenFadeRunner.FadeFromBlack(1.2f, globalFade);
+        yield return ScreenFadeRunner.FadeFromBlack(1.5f, globalFade);
+
+        GameplayInputBlocker.SetBlocked(false);
+        _isFading = false;
 
         FadeStart[] fadeStarts = Object.FindObjectsByType<FadeStart>(
             FindObjectsInactive.Include,
@@ -104,8 +117,9 @@ public class LevelEntryScreenFade : MonoBehaviour
 
     private static bool IsMenuScene(string sceneName)
     {
-        return sceneName == "MainMenu"
-               || sceneName == "Victory"
-               || sceneName == "TrueVictory";
+        // Только главное меню имеет собственную анимированную заставку и не должно
+        // проявляться из чёрного. Концовки (включая TrueVictory/Victory) проявляются
+        // как обычные сцены — чтобы переход был единообразным во всех сценах.
+        return sceneName == "MainMenu";
     }
 }

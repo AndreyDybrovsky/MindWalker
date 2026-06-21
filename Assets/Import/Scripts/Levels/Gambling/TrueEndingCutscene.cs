@@ -88,8 +88,32 @@ public class TrueEndingCutscene : MonoBehaviour
 
     private void Start()
     {
+        ApplyLocalizedText();
         BuildUI();
         StartCoroutine(Play());
+
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged += _ => ApplyLocalizedText();
+    }
+
+    private void ApplyLocalizedText()
+    {
+        LocalizationManager loc = LocalizationManager.Instance;
+        if (loc == null) return;
+
+        if (titleText != null)
+        {
+            string t = loc.T("ending.true.title");
+            if (!string.IsNullOrEmpty(t) && t != "ending.true.title")
+                titleText.text = t;
+        }
+
+        if (subtitleText != null)
+        {
+            string b = loc.T("ending.true.body");
+            if (!string.IsNullOrEmpty(b) && b != "ending.true.body")
+                subtitleText.text = b;
+        }
     }
 
     private void OnDestroy()
@@ -106,7 +130,12 @@ public class TrueEndingCutscene : MonoBehaviour
         Canvas canvas = canvasGo.AddComponent<Canvas>();
         canvas.renderMode   = RenderMode.ScreenSpaceOverlay;
         canvas.sortingOrder = 200;
-        canvasGo.AddComponent<CanvasScaler>();
+
+        CanvasScaler scaler = canvasGo.AddComponent<CanvasScaler>();
+        scaler.uiScaleMode         = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1920f, 1080f);
+        scaler.screenMatchMode     = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+        scaler.matchWidthOrHeight  = 0.5f;
 
         _fadePanel = CreateFullscreenImage(canvasGo.transform, "FadePanel", Color.black);
 
@@ -127,8 +156,30 @@ public class TrueEndingCutscene : MonoBehaviour
 
         MigrateTextToCanvas(titleText,    canvasGo.transform);
         MigrateTextToCanvas(subtitleText, canvasGo.transform);
+
+        // Стиль истинной концовки: золото + тёплый белый
+        if (titleText    != null) titleText.color    = new Color(0.94f, 0.75f, 0.35f);
+        if (subtitleText != null) subtitleText.color = new Color(0.95f, 0.93f, 0.85f);
+
         SetTextAlpha(titleText,    0f);
         SetTextAlpha(subtitleText, 0f);
+    }
+
+    private static void MigrateTextToCanvas(TextMeshProUGUI text, Transform canvasTransform)
+    {
+        if (text == null) return;
+        RectTransform rt     = text.rectTransform;
+        Vector2 anchorMin    = rt.anchorMin;
+        Vector2 anchorMax    = rt.anchorMax;
+        Vector2 pivot        = rt.pivot;
+        Vector2 anchoredPos  = rt.anchoredPosition;
+        Vector2 sizeDelta    = rt.sizeDelta;
+        rt.SetParent(canvasTransform, false);
+        rt.anchorMin        = anchorMin;
+        rt.anchorMax        = anchorMax;
+        rt.pivot            = pivot;
+        rt.anchoredPosition = anchoredPos;
+        rt.sizeDelta        = sizeDelta;
     }
 
     // ─── Главная последовательность ────────────────────────────────────────
@@ -172,10 +223,10 @@ public class TrueEndingCutscene : MonoBehaviour
 
         yield return new WaitForSeconds(pauseBeforeText);
 
-        // 9. Текст появляется
-        yield return FadeText(titleText,    0f, 1f, textFadeInDuration);
+        // 9. Текст появляется — заголовок с fade, тело через typewriter
+        yield return FadeText(titleText, 0f, 1f, textFadeInDuration);
         yield return new WaitForSeconds(delayBetweenTexts);
-        yield return FadeText(subtitleText, 0f, 1f, textFadeInDuration);
+        yield return TypewriterReveal(subtitleText, Mathf.Max(textFadeInDuration, 2.0f));
 
         // 10. Статистика выезжает пункт за пунктом
         GameStatsTracker.Instance?.Save();
@@ -287,6 +338,25 @@ public class TrueEndingCutscene : MonoBehaviour
         text.alpha = to;
     }
 
+    private static IEnumerator TypewriterReveal(TextMeshProUGUI text, float duration)
+    {
+        if (text == null) yield break;
+        text.alpha = 1f;
+        text.ForceMeshUpdate();
+        int total = text.textInfo.characterCount;
+        text.maxVisibleCharacters = 0;
+
+        float charsPerSec = total / Mathf.Max(0.01f, duration);
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            text.maxVisibleCharacters = Mathf.RoundToInt(charsPerSec * elapsed);
+            yield return null;
+        }
+        text.maxVisibleCharacters = int.MaxValue;
+    }
+
     private IEnumerator FadeTextsBothOut(float duration)
     {
         float elapsed = 0f;
@@ -307,22 +377,5 @@ public class TrueEndingCutscene : MonoBehaviour
     private static void SetTextAlpha(TextMeshProUGUI text, float alpha)
     {
         if (text != null) text.alpha = alpha;
-    }
-
-    private static void MigrateTextToCanvas(TextMeshProUGUI text, Transform canvasTransform)
-    {
-        if (text == null) return;
-        RectTransform rt     = text.rectTransform;
-        Vector2 anchorMin    = rt.anchorMin;
-        Vector2 anchorMax    = rt.anchorMax;
-        Vector2 pivot        = rt.pivot;
-        Vector2 anchoredPos  = rt.anchoredPosition;
-        Vector2 sizeDelta    = rt.sizeDelta;
-        rt.SetParent(canvasTransform, false);
-        rt.anchorMin        = anchorMin;
-        rt.anchorMax        = anchorMax;
-        rt.pivot            = pivot;
-        rt.anchoredPosition = anchoredPos;
-        rt.sizeDelta        = sizeDelta;
     }
 }

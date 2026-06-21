@@ -26,6 +26,9 @@ public class TrampolinePad : MonoBehaviour
 
     private float _lastBounceTime = -999f;
 
+    /// <summary>Вызывается после успешного подброса игрока (для визуальной «сочности»).</summary>
+    public event System.Action Bounced;
+
     private void Awake()
     {
         Collider col = GetComponent<Collider>();
@@ -59,6 +62,8 @@ public class TrampolinePad : MonoBehaviour
 
         if (bounceSound != null && audioSource != null)
             audioSource.PlayOneShot(bounceSound, soundVolume);
+
+        Bounced?.Invoke();
     }
 
     private static bool IsMovingDownward(Transform body)

@@ -274,7 +274,7 @@ public class DepressionCountdownUI : MonoBehaviour
 
         timerText = lineGo.AddComponent<TextMeshProUGUI>();
         ApplyTextAlignment();
-        timerText.enableWordWrapping = true;
+        timerText.textWrappingMode = TextWrappingModes.Normal;
         timerText.overflowMode = TextOverflowModes.Overflow;
         timerText.raycastTarget = false;
 

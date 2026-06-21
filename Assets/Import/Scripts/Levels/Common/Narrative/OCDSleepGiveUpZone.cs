@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
 /// <summary>
@@ -28,8 +30,14 @@ public class OCDSleepGiveUpZone : PlayerInteractionZone
     [Header("Сцена возврата")]
     [SerializeField] private string lobbySceneName = "Main";
 
+    [Header("Эффект близости (URP)")]
+    [SerializeField] private float vignettePeakIntensity = 0.52f;
+    [SerializeField] private float chromaticPeakIntensity = 0.55f;
+    [SerializeField] private float proximityEffectSpeed = 2.2f;
+
     private CanvasGroup _fadeCanvasGroup;
     private bool _sequenceStarted;
+    private Volume _proximityVolume;
 
     protected override void Start()
     {
@@ -41,6 +49,49 @@ public class OCDSleepGiveUpZone : PlayerInteractionZone
         _fadeCanvasGroup = ScreenFadeUtility.EnsureFadeCanvasGroup();
         if (_fadeCanvasGroup != null && _fadeCanvasGroup.alpha > 0.99f)
             _fadeCanvasGroup.alpha = 0f;
+
+        BuildProximityVolume();
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+
+        if (_proximityVolume == null)
+            return;
+
+        float target = (!_sequenceStarted && PlayerInZone) ? 1f : 0f;
+        float next = Mathf.MoveTowards(_proximityVolume.weight, target,
+            Time.unscaledDeltaTime * proximityEffectSpeed);
+        _proximityVolume.weight = next;
+        _proximityVolume.enabled = next > 0.001f;
+    }
+
+    private void BuildProximityVolume()
+    {
+        var go = new GameObject("SleepProximityVolume");
+        go.transform.SetParent(transform, false);
+
+        _proximityVolume = go.AddComponent<Volume>();
+        _proximityVolume.isGlobal = true;
+        _proximityVolume.priority = 22;
+        _proximityVolume.weight = 0f;
+        _proximityVolume.enabled = false;
+
+        var profile = ScriptableObject.CreateInstance<VolumeProfile>();
+
+        var vig = profile.Add<Vignette>(true);
+        vig.active = true;
+        vig.intensity.Override(vignettePeakIntensity);
+        vig.color.Override(Color.black);
+        vig.smoothness.Override(0.65f);
+        vig.rounded.Override(true);
+
+        var chroma = profile.Add<ChromaticAberration>(true);
+        chroma.active = true;
+        chroma.intensity.Override(chromaticPeakIntensity);
+
+        _proximityVolume.profile = profile;
     }
 
     protected override void OnInteractPressed()
@@ -94,6 +145,9 @@ public class OCDSleepGiveUpZone : PlayerInteractionZone
         Cursor.visible = true;
 
         LevelCompletionManager.SetFadingState(false);
-        SceneManager.LoadScene(string.IsNullOrWhiteSpace(lobbySceneName) ? "Main" : lobbySceneName);
+        // Проверяем не пора ли показать концовку (потерянные + спасённые >= всего пациентов)
+        string lobby = string.IsNullOrWhiteSpace(lobbySceneName) ? "Main" : lobbySceneName;
+        string targetScene = LevelSuccessFlow.ResolveReturnScene(lobby, string.Empty);
+        SceneManager.LoadScene(targetScene);
     }
 }

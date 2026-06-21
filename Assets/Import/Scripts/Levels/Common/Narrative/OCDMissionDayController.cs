@@ -76,6 +76,7 @@ public class OCDMissionDayController : MonoBehaviour
                 activeDayIndex = i + 1;
                 root.SetActive(true);
                 OCDDayDeteriorationController.Instance?.SetDayImmediate(activeDayIndex);
+                OCDAmbientDaySound.Instance?.SetDay(activeDayIndex);
                 return;
             }
         }
@@ -137,9 +138,10 @@ public class OCDMissionDayController : MonoBehaviour
                 dayRoots[i].SetActive(i == index);
         }
 
-        // Уведомляем контроллер ухудшения и оверлей мыслей — экран чёрный при смене дня.
+        // Уведомляем контроллер ухудшения, оверлей мыслей и ambient-звук — экран чёрный при смене дня.
         OCDDayDeteriorationController.Instance?.SetDayImmediate(activeDayIndex);
         OCDIntrusiveThoughtOverlay.Instance?.SetDay(activeDayIndex);
+        OCDAmbientDaySound.Instance?.SetDay(activeDayIndex);
     }
 
 #if UNITY_EDITOR

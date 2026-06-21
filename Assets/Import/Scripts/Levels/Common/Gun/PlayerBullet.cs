@@ -108,16 +108,21 @@ public class PlayerBullet : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning($"PlayerBullet: EnemyHealth не найден на объекте с тегом {enemyTag}!");
+                // Проверяем фантома босса — показываем эффект попадания без урона
+                BossPhantomMark phantom = other.GetComponentInParent<BossPhantomMark>()
+                    ?? other.transform.root.GetComponentInChildren<BossPhantomMark>(true);
+                phantom?.OnBulletHit();
             }
             
+            SpawnImpact(true);
+
             // Останавливаем физику пули перед уничтожением
             if (rb != null)
             {
                 rb.linearVelocity = Vector3.zero;
                 rb.isKinematic = true;
             }
-            
+
             Destroy(gameObject);
         }
         else if (!other.isTrigger && !other.CompareTag("Player") && !other.CompareTag("PlayerBullet"))
@@ -127,14 +132,30 @@ public class PlayerBullet : MonoBehaviour
             {
                 return; // Игнорируем коллизию с препятствием сразу после создания
             }
-            
+
             hasHit = true;
+            SpawnImpact(false);
             if (rb != null)
             {
                 rb.linearVelocity = Vector3.zero;
                 rb.isKinematic = true;
             }
             Destroy(gameObject);
+        }
+    }
+
+    private void SpawnImpact(bool enemyHit)
+    {
+        if (enemyHit)
+        {
+            // По врагу — только хитмаркер (без точечного света, иначе он «светится»
+            // шаром внутри врага, особенно на тёмных сценах вроде босса Депрессии).
+            HitmarkerUI.Show();
+        }
+        else
+        {
+            // По препятствию — короткая искра.
+            JuiceFx.SpawnFlash(transform.position, new Color(1f, 0.9f, 0.6f), 1.2f, 1.6f, 0.05f);
         }
     }
 
@@ -190,6 +211,15 @@ public class PlayerBullet : MonoBehaviour
                 enemyHealth.TakeDamage(damage);
                 Debug.Log($"PlayerBullet: Нанесен урон {damage} врагу (через OnCollisionEnter). HP: {enemyHealth.CurrentHealth}");
             }
+            else
+            {
+                BossPhantomMark phantom = other.GetComponent<BossPhantomMark>()
+                    ?? other.GetComponentInParent<BossPhantomMark>()
+                    ?? other.transform.root.GetComponentInChildren<BossPhantomMark>(true);
+                phantom?.OnBulletHit();
+            }
+
+            SpawnImpact(true);
 
             if (rb != null)
             {
@@ -204,8 +234,9 @@ public class PlayerBullet : MonoBehaviour
             {
                 return;
             }
-            
+
             hasHit = true;
+            SpawnImpact(false);
             if (rb != null)
             {
                 rb.isKinematic = true;

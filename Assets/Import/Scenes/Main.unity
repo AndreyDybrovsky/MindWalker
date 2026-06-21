@@ -3071,6 +3071,30 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 559229167}
   m_Mesh: {fileID: -6835311452704329190, guid: 8e24f6f8087037a4f91ca2506572d36e, type: 3}
+--- !u!95 &580079860 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 408275821492668072, guid: 691d201409042b143af4574240386e30, type: 3}
+  m_PrefabInstance: {fileID: 1446974517}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &580079861 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2937952180854084144, guid: 691d201409042b143af4574240386e30, type: 3}
+  m_PrefabInstance: {fileID: 1446974517}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &580079862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 580079861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c051a9bef89ecd34480da57a5ba86959, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ggAnimator: {fileID: 580079860}
+  danceController: {fileID: 9100000, guid: b116b64505c170645ac6e8be98a1db92, type: 2}
 --- !u!114 &591463511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6836,6 +6860,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 408275821492668072, guid: 691d201409042b143af4574240386e30, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 10d3c190b46c7aa4dbe07a23ec7e0c86, type: 2}
     - target: {fileID: 694847209161167879, guid: 691d201409042b143af4574240386e30, type: 3}
       propertyPath: speed
       value: 4
@@ -7172,6 +7200,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4680459910769650206, guid: 691d201409042b143af4574240386e30, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1446974541}
+    - targetCorrespondingSourceObject: {fileID: 2937952180854084144, guid: 691d201409042b143af4574240386e30, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 580079862}
   m_SourcePrefab: {fileID: 100100000, guid: 691d201409042b143af4574240386e30, type: 3}
 --- !u!1 &1446974518 stripped
 GameObject:

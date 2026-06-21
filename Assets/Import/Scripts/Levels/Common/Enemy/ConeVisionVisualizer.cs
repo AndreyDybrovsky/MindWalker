@@ -32,6 +32,7 @@ public class ConeVisionVisualizer : MonoBehaviour
 
     private Material _runtimeMaterial;
     private Mesh _mesh;
+    private readonly RaycastHit[] _hitBuffer = new RaycastHit[8];
 
     private void Reset()
     {
@@ -300,21 +301,25 @@ public class ConeVisionVisualizer : MonoBehaviour
 
         if (clipByObstacles && castDistance > 0.05f && obstacleLayer.value != 0)
         {
-            RaycastHit[] hits = Physics.RaycastAll(
+            int hitCount = Physics.RaycastNonAlloc(
                 worldOrigin,
                 worldDir,
+                _hitBuffer,
                 castDistance,
                 obstacleLayer,
                 QueryTriggerInteraction.Ignore);
-            System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
 
-            for (int i = 0; i < hits.Length; i++)
+            float minDist = float.MaxValue;
+            for (int i = 0; i < hitCount; i++)
             {
-                if (ignoreFloorHits && hits[i].normal.y > 0.65f)
+                if (ignoreFloorHits && _hitBuffer[i].normal.y > 0.65f)
                     continue;
 
-                worldEnd = hits[i].point;
-                break;
+                if (_hitBuffer[i].distance < minDist)
+                {
+                    minDist = _hitBuffer[i].distance;
+                    worldEnd = _hitBuffer[i].point;
+                }
             }
         }
 

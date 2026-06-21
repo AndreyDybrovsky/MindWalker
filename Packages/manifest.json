@@ -57,7 +57,11 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0",
-    "com.ivanmurzak.unity.mcp": "0.79.0"
+    "com.ivanmurzak.unity.mcp": "0.79.0",
+    "com.ivanmurzak.unity.mcp.animation": "1.2.19",
+    "com.ivanmurzak.unity.mcp.terrain": "1.0.5",
+    "com.ivanmurzak.unity.mcp.particlesystem": "1.2.19",
+    "com.ivanmurzak.unity.mcp.cinemachine": "1.0.5"
   },
   "scopedRegistries": [
     {
@@ -65,7 +69,11 @@
       "url": "https://package.openupm.com",
       "scopes": [
         "com.ivanmurzak",
-        "extensions.unity"
+        "extensions.unity",
+        "org.nuget.com.ivanmurzak",
+        "org.nuget.microsoft",
+        "org.nuget.system",
+        "org.nuget.r3"
       ]
     }
   ]

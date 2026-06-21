@@ -16,8 +16,18 @@ public class TopDownPlayerMovement : MonoBehaviour
     [SerializeField] private bool invertHorizontal;
     [SerializeField] private bool invertVertical;
 
+    [Header("Анимация")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private float speedSmoothing = 10f;
+
     private CharacterController _controller;
     private float _verticalVelocity;
+
+    private bool _hasSpeedParam;
+    private bool _hasGroundedParam;
+    private float _animSpeed;
+    private static readonly int SpeedHash = Animator.StringToHash("Speed");
+    private static readonly int GroundedHash = Animator.StringToHash("Grounded");
 
     public Transform CameraTransform
     {
@@ -37,6 +47,30 @@ public class TopDownPlayerMovement : MonoBehaviour
     private void Awake()
     {
         _controller = GetComponent<CharacterController>();
+        SetupAnimator();
+    }
+
+    private void SetupAnimator()
+    {
+        if (animator == null)
+            animator = GetComponentInChildren<Animator>();
+
+        // В top-down FPS-контроллер выключен, поэтому PlayerAnimatorDriver не сможет
+        // считать скорость — отключаем его и гоним аниматор сами.
+        PlayerAnimatorDriver fpsDriver = GetComponentInChildren<PlayerAnimatorDriver>();
+        if (fpsDriver != null)
+            fpsDriver.enabled = false;
+
+        if (animator == null)
+            return;
+
+        foreach (AnimatorControllerParameter p in animator.parameters)
+        {
+            if (p.type == AnimatorControllerParameterType.Float && p.name == "Speed")
+                _hasSpeedParam = true;
+            if (p.type == AnimatorControllerParameterType.Bool && p.name == "Grounded")
+                _hasGroundedParam = true;
+        }
     }
 
     private void Update()
@@ -45,7 +79,10 @@ public class TopDownPlayerMovement : MonoBehaviour
             return;
 
         if (GameplayInputBlocker.IsBlocked)
+        {
+            UpdateAnimator(0f);
             return;
+        }
 
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
@@ -74,6 +111,23 @@ public class TopDownPlayerMovement : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(move, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, bodyTurnSpeed * Time.deltaTime);
         }
+
+        // Нормализованная скорость для аниматора (0 — стоит, 1 — бег).
+        float target01 = Mathf.Clamp01(move.magnitude * speed / Mathf.Max(0.01f, runSpeed));
+        UpdateAnimator(target01);
+    }
+
+    private void UpdateAnimator(float target01)
+    {
+        if (animator == null)
+            return;
+
+        _animSpeed = Mathf.Lerp(_animSpeed, target01, Time.deltaTime * speedSmoothing);
+
+        if (_hasSpeedParam)
+            animator.SetFloat(SpeedHash, _animSpeed);
+        if (_hasGroundedParam)
+            animator.SetBool(GroundedHash, true);
     }
 
     private Vector3 BuildCameraRelativeMove(float horizontal, float vertical)

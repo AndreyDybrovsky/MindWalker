@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -6,6 +7,9 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class PeriodicProximityDamageEnemy : MonoBehaviour
 {
+    /// <summary>Вызывается в момент удара (особая атака Homeless). Используется EnemyAnimatorDriver.</summary>
+    public event Action OnAttack;
+
     [Header("Обнаружение")]
     [SerializeField] private EnemyVision vision;
 
@@ -18,6 +22,7 @@ public class PeriodicProximityDamageEnemy : MonoBehaviour
     [Tooltip("После потери зрения урон продолжается, пока игрок в радиусе удара.")]
     [SerializeField] private float meleeEngageGrace = 0.5f;
 
+    private EnemyController _enemyController;
     private bool _playerEngaged;
     private bool _playerInVision;
     private float _nextDamageTime;
@@ -27,6 +32,10 @@ public class PeriodicProximityDamageEnemy : MonoBehaviour
     {
         if (vision == null)
             vision = GetComponentInChildren<EnemyVision>(true);
+
+        _enemyController = GetComponent<EnemyController>();
+        if (_enemyController == null)
+            _enemyController = GetComponentInParent<EnemyController>();
     }
 
     private void OnEnable()
@@ -119,6 +128,8 @@ public class PeriodicProximityDamageEnemy : MonoBehaviour
         }
 
         health.TakeDamage(damageAmount);
+        _enemyController?.PlayAttackSfx();
+        OnAttack?.Invoke();
         return true;
     }
 }

@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// День 4 — «Исправь всё»: четыре точки в папке FixAll, любой порядок.
-/// После сбора всех активирует финальный <see cref="OCDMomentTrigger"/> (текст только там).
+/// «Исправь всё»: точки FixAll, любой порядок, появляются с Дня 1.
+/// После сбора всех активирует финальный <see cref="OCDMomentTrigger"/>.
 /// </summary>
 public class OCDFixAllCollectibleManager : MonoBehaviour
 {
@@ -12,13 +12,21 @@ public class OCDFixAllCollectibleManager : MonoBehaviour
     [SerializeField] private OCDMomentTrigger completionMoment;
     [SerializeField] private bool playCompletionOnce = true;
 
+    [Header("Прогресс (цель сверху)")]
+    [Tooltip("Ключ локализации для счётчика вида 'Исправь всё ({0}/{1})'. Пусто — прогресс не показывается.")]
+    [SerializeField] private string progressObjectiveKey = "scene.ocd.fixall.progress";
+
     private readonly HashSet<OCDFixAllCollectiblePoint> _collectedPoints = new();
     private bool _completionActivated;
 
     private void Awake()
     {
         if (points == null || points.Length == 0)
-            points = GetComponentsInChildren<OCDFixAllCollectiblePoint>(true);
+        {
+            // Ищем все точки в сцене — в том числе появившиеся в Day1.
+            points = Object.FindObjectsByType<OCDFixAllCollectiblePoint>(
+                FindObjectsInactive.Include, FindObjectsSortMode.None);
+        }
 
         SanitizePoints();
         TryResolveCompletionMoment();
@@ -30,10 +38,27 @@ public class OCDFixAllCollectibleManager : MonoBehaviour
             return;
 
         int required = points != null && points.Length > 0 ? points.Length : _collectedPoints.Count;
+        UpdateProgressUI(_collectedPoints.Count, required);
+
         if (_collectedPoints.Count < required)
             return;
 
         ActivateCompletionMoment();
+    }
+
+    private void UpdateProgressUI(int collected, int total)
+    {
+        if (string.IsNullOrEmpty(progressObjectiveKey))
+            return;
+
+        OCDObjectiveUI ui = OCDObjectiveUI.GetShared();
+        if (ui == null)
+            return;
+
+        ui.ShowCurrent(
+            progressObjectiveKey,
+            new[] { collected.ToString(), total.ToString() },
+            $"Исправь всё ({collected}/{total})");
     }
 
     private void SanitizePoints()

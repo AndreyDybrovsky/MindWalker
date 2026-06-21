@@ -1,5 +1,6 @@
 using ElmanGameDevTools.PlayerSystem;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
 /// <summary>
@@ -62,7 +63,9 @@ public class PTSDInDangerSceneConfigurator : MonoBehaviour
 
     private static Camera FindOrCreateTopDownCamera(Transform playerBody)
     {
-        Transform embedded = playerBody.Find("Camera");
+        // Камера может быть прямым потомком Player root, а не Player_Object
+        Transform embedded = playerBody.Find("Camera")
+            ?? playerBody.root.Find("Camera");
         Camera camera;
 
         if (embedded != null)
@@ -83,6 +86,12 @@ public class PTSDInDangerSceneConfigurator : MonoBehaviour
             camera = cameraObject.AddComponent<Camera>();
             cameraObject.AddComponent<AudioListener>();
         }
+
+        // Убеждаемся что постобработка включена на камере
+        var urpData = camera.GetComponent<UniversalAdditionalCameraData>();
+        if (urpData == null)
+            urpData = camera.gameObject.AddComponent<UniversalAdditionalCameraData>();
+        urpData.renderPostProcessing = true;
 
         camera.tag = "MainCamera";
 

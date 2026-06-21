@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class EnemyShooting : MonoBehaviour
 {
+    /// <summary>Вызывается в момент выстрела. Используется EnemyAnimatorDriver для анимации стрельбы.</summary>
+    public event System.Action OnShoot;
+
     [Header("Настройки стрельбы")]
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform firePoint;
@@ -27,6 +30,9 @@ public class EnemyShooting : MonoBehaviour
     private Transform target;
     private float nextFireTime = 0f;
     private bool canShoot = false;
+    private float _fireRateMultiplier = 1f;
+
+    public void SetFireRateMultiplier(float multiplier) => _fireRateMultiplier = Mathf.Max(0.1f, multiplier);
 
     private void Awake()
     {
@@ -77,6 +83,8 @@ public class EnemyShooting : MonoBehaviour
     {
         if (!canShoot || target == null)
             return;
+        if (GameplayInputBlocker.IsBlocked)
+            return;
 
         float distanceToTarget = Vector3.Distance(firePoint.position, GetTargetAimPoint());
         if (distanceToTarget > maxShootDistance)
@@ -88,7 +96,7 @@ public class EnemyShooting : MonoBehaviour
         if (Time.time >= nextFireTime)
         {
             Shoot();
-            nextFireTime = Time.time + (1f / fireRate);
+            nextFireTime = Time.time + (1f / (fireRate * _fireRateMultiplier));
         }
     }
 
@@ -96,6 +104,18 @@ public class EnemyShooting : MonoBehaviour
     {
         target = newTarget;
         canShoot = target != null;
+    }
+
+    /// <summary>Текущий урон выстрела.</summary>
+    public float Damage => damage;
+
+    /// <summary>Умножить урон выстрела (бафф). Используется механикой цвета на уровне Autism.</summary>
+    public void ApplyDamageMultiplier(float multiplier)
+    {
+        if (multiplier <= 0f)
+            return;
+
+        damage *= multiplier;
     }
 
     private Vector3 GetTargetAimPoint()
@@ -165,6 +185,7 @@ public class EnemyShooting : MonoBehaviour
         }
 
         PlayShootSound();
+        OnShoot?.Invoke();
     }
 
     private void EnsureAudioSource()

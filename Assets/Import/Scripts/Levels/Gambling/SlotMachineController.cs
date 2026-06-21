@@ -16,6 +16,8 @@ public class SlotMachineController : MonoBehaviour
 
     private static SlotMachineController s_activeTrap;
 
+    public static bool IsPlayerTrapped => s_activeTrap != null;
+
     [Header("Ссылки (настройте в префабе)")]
     [Tooltip("Пустой объект: куда подводится игрок (перед экраном автомата).")]
     [SerializeField] private Transform playerStandPoint;
@@ -41,11 +43,20 @@ public class SlotMachineController : MonoBehaviour
 
     [Header("Звук")]
     [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private AudioClip captureSound;
+    [SerializeField, Range(0f, 1f)] private float captureSoundVolume = 0.7f;
+    [SerializeField] private float captureFadeOutDuration = 1.5f;
     [SerializeField] private AudioClip correctKeySound;
     [SerializeField] private AudioClip wrongKeySound;
     [SerializeField] private AudioClip levelCompletedSound;
     [SerializeField] private AudioClip deathByMachineSound;
     [SerializeField, Range(0f, 1f)] private float sfxVolume = 1f;
+
+    [Header("Ambient казино")]
+    [Tooltip("Включить, если этот автомат находится в казино. При захвате запустит casinoAmbientSource.")]
+    [SerializeField] private bool triggersCasinoAmbient = false;
+    [Tooltip("AudioSource с фоновым звуком казино (CasinoBackGround). Назначьте в инспекторе.")]
+    [SerializeField] private AudioSource casinoAmbientSource;
 
     private enum TrapState
     {
@@ -55,6 +66,8 @@ public class SlotMachineController : MonoBehaviour
     }
 
     private TrapState _state = TrapState.Idle;
+    private AudioSource _captureSource;
+    private Coroutine _captureFadeRoutine;
     private Transform _playerBody;
     private Transform _moveRoot;
     private CharacterController _characterController;
@@ -111,6 +124,7 @@ public class SlotMachineController : MonoBehaviour
 
         GameStatsTracker.Instance?.RecordSlotMachineCatch();
         s_activeTrap = this;
+        StartCasinoAmbient();
         _routine = StartCoroutine(LureAndTrapRoutine());
     }
 
@@ -140,6 +154,7 @@ public class SlotMachineController : MonoBehaviour
             {
                 SnapPlayerToStand(targetPos);
                 _state = TrapState.Trapped;
+                PlayCaptureLoop();
             }
 
             yield return null;
@@ -387,7 +402,79 @@ public class SlotMachineController : MonoBehaviour
         if (s_activeTrap == this)
             s_activeTrap = null;
 
+        StopCaptureSound();
+        StopCasinoAmbient();
         UnlockPlayer();
+    }
+
+    private void StartCasinoAmbient()
+    {
+        if (!triggersCasinoAmbient || casinoAmbientSource == null)
+            return;
+
+        if (!casinoAmbientSource.isPlaying)
+            casinoAmbientSource.Play();
+    }
+
+    private void PlayCaptureLoop()
+    {
+        if (captureSound == null || _captureSource == null)
+            return;
+
+        if (_captureFadeRoutine != null)
+        {
+            StopCoroutine(_captureFadeRoutine);
+            _captureFadeRoutine = null;
+        }
+
+        float sfx = SettingsManager.Instance != null
+            ? Mathf.Clamp01(SettingsManager.Instance.GetCurrentSettings().sfxVolume) : 1f;
+
+        _captureSource.clip = captureSound;
+        _captureSource.volume = captureSoundVolume * sfx;
+        _captureSource.Play();
+    }
+
+    private void StopCaptureSound()
+    {
+        if (_captureSource == null || !_captureSource.isPlaying)
+            return;
+
+        if (_captureFadeRoutine != null)
+            StopCoroutine(_captureFadeRoutine);
+
+        if (gameObject.activeInHierarchy)
+            _captureFadeRoutine = StartCoroutine(FadeCaptureOut());
+        else
+            _captureSource.Stop();
+    }
+
+    private System.Collections.IEnumerator FadeCaptureOut()
+    {
+        float startVol = _captureSource.volume;
+        float duration = Mathf.Max(0.05f, captureFadeOutDuration);
+
+        for (float t = 0f; t < duration; t += Time.deltaTime)
+        {
+            if (_captureSource == null) yield break;
+            _captureSource.volume = Mathf.Lerp(startVol, 0f, t / duration);
+            yield return null;
+        }
+
+        if (_captureSource != null)
+        {
+            _captureSource.Stop();
+            _captureSource.volume = startVol;
+        }
+        _captureFadeRoutine = null;
+    }
+
+    private void StopCasinoAmbient()
+    {
+        if (!triggersCasinoAmbient || casinoAmbientSource == null)
+            return;
+
+        casinoAmbientSource.Stop();
     }
 
     private void LockPlayer()
@@ -400,6 +487,9 @@ public class SlotMachineController : MonoBehaviour
 
         if (_characterController != null)
             _characterController.enabled = false;
+
+        if (_playerHealth != null)
+            _playerHealth.SetSuppressDamageFeedback(true);
 
         DisableWeaponHandler(false);
         SnapExternalLook();
@@ -416,6 +506,9 @@ public class SlotMachineController : MonoBehaviour
         _inputBlocked = false;
         GameplayInputBlocker.SetBlocked(false);
         GameplayInputBlocker.LockCursorForGameplay();
+
+        if (_playerHealth != null)
+            _playerHealth.SetSuppressDamageFeedback(false);
 
         if (_characterController != null)
         {
@@ -503,6 +596,16 @@ public class SlotMachineController : MonoBehaviour
     private void EnsureAudioSources()
     {
         EnsureDedicatedSfxSource();
+        EnsureCaptureSource();
+    }
+
+    private void EnsureCaptureSource()
+    {
+        _captureSource = gameObject.AddComponent<AudioSource>();
+        _captureSource.playOnAwake = false;
+        _captureSource.loop = true;
+        _captureSource.spatialBlend = 0f;
+        AudioMixerRoutingUtility.BindSourceToSfx(_captureSource);
     }
 
     private void EnsureDedicatedSfxSource()

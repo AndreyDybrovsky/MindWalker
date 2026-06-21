@@ -47,9 +47,11 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip patrolSound;
     [SerializeField] private AudioClip chaseSound;
+    [SerializeField] private AudioClip attackSound;
     [SerializeField] private AudioClip deathSound;
     [SerializeField, Range(0f, 1f)] private float patrolSoundVolume = 0.35f;
     [SerializeField, Range(0f, 1f)] private float chaseSoundVolume = 0.5f;
+    [SerializeField, Range(0f, 1f)] private float attackSoundVolume = 0.7f;
     [SerializeField, Range(0f, 1f)] private float deathSoundVolume = 0.85f;
 
     public AudioClip DeathSound => deathSound;
@@ -810,6 +812,38 @@ public class EnemyController : MonoBehaviour
         _activeLoopClip = null;
         if (audioSource != null && audioSource.isPlaying && audioSource.loop)
             audioSource.Stop();
+    }
+
+    // Вызывается из EnemyHealth при получении урона — заставляет врага начать преследование
+    public void ForceStartChase()
+    {
+        if (_isDead || !enabled || !isAgentReady) return;
+
+        // Используем уже закэшированного игрока из vision, иначе ищем по тегу
+        Transform player = null;
+        if (vision != null && vision.PlayerAimTransform != null)
+            player = vision.PlayerAimTransform;
+
+        if (player == null)
+        {
+            GameObject playerGo = GameObject.FindWithTag("Player");
+            if (playerGo != null)
+                player = playerGo.transform;
+        }
+
+        if (player == null) return;
+
+        StartChase(player);
+    }
+
+    public void PlayAttackSfx()
+    {
+        if (_isDead || audioSource == null || attackSound == null)
+            return;
+
+        float sfx = SettingsManager.Instance != null
+            ? SettingsManager.Instance.GetCurrentSettings().sfxVolume : 1f;
+        audioSource.PlayOneShot(attackSound, attackSoundVolume * Mathf.Clamp01(sfx));
     }
 
     private void OnEnemyDied()
