@@ -34,6 +34,7 @@ public class PTSDInDangerSceneConfigurator : MonoBehaviour
             return;
         }
 
+        SetupFog();
         DisableFirstPersonControl(playerBody);
 
         Camera topDownCamera = FindOrCreateTopDownCamera(playerBody);
@@ -45,6 +46,14 @@ public class PTSDInDangerSceneConfigurator : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    private static void SetupFog()
+    {
+        RenderSettings.fog        = true;
+        RenderSettings.fogMode    = FogMode.ExponentialSquared;
+        RenderSettings.fogColor   = new Color(0.12f, 0.12f, 0.16f);
+        RenderSettings.fogDensity = 0.06f;
     }
 
     private static void DisableFirstPersonControl(Transform playerBody)

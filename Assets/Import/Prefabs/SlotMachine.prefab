@@ -2031,6 +2031,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3774746300158428982}
   - component: {fileID: 991100001}
+  - component: {fileID: 8122278954484337290}
   m_Layer: 0
   m_Name: SlotMachine
   m_TagString: Untagged
@@ -2083,6 +2084,8 @@ MonoBehaviour:
   escapeCooldown: 4
   sfxSource: {fileID: 5553448652508491227}
   captureSound: {fileID: 8300000, guid: 1011180de793e404fb76dd919a012ac3, type: 3}
+  captureSoundVolume: 0.7
+  captureFadeOutDuration: 1.5
   correctKeySound: {fileID: 8300000, guid: 6fb573ec88edcc649a13fd3867dc21c1, type: 3}
   wrongKeySound: {fileID: 8300000, guid: 7d4f2220b28e39a4c9c1f281f164d3db, type: 3}
   levelCompletedSound: {fileID: 8300000, guid: 4802781093ae2b44b89eb4402e19295a, type: 3}
@@ -2090,6 +2093,28 @@ MonoBehaviour:
   sfxVolume: 1
   triggersCasinoAmbient: 0
   casinoAmbientSource: {fileID: 0}
+--- !u!64 &8122278954484337290
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8546428664600576716}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1 &8749844351065411000
 GameObject:
   m_ObjectHideFlags: 0

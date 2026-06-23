@@ -66,6 +66,10 @@ public class OCDMomentTrigger : PlayerInteractionZone
     [SerializeField] private float blackScreenSoundGap = 0.12f;
     [SerializeField, Range(0f, 1f)] private float soundVolume = 1f;
     [SerializeField] private float soundDelayAfterFade = 0.08f;
+    [Tooltip("Фиксированная длительность каждого звука в затемнении (независимо от длины клипа).")]
+    [SerializeField] private float blackScreenSoundDuration = 2.5f;
+    [Tooltip("Плавное угасание в конце каждого звука (включено в blackScreenSoundDuration).")]
+    [SerializeField] private float blackScreenSoundFadeOut = 0.45f;
 
     [Header("Звук при появлении нижнего текста")]
     [SerializeField] private AudioClip captionRevealSound;
@@ -483,15 +487,16 @@ public class OCDMomentTrigger : PlayerInteractionZone
     private float ComputeBlackSoundsDuration()
     {
         AudioClip[] clips = GetEffectiveBlackScreenSounds();
-        float total = 0f;
+        if (clips.Length == 0) return 0f;
 
+        float total = 0f;
         for (int i = 0; i < clips.Length; i++)
         {
             if (i > 0)
                 total += GetDelayBeforeBlackSound(i);
 
             if (clips[i] != null)
-                total += clips[i].length;
+                total += blackScreenSoundDuration;
         }
 
         return total;
@@ -503,14 +508,36 @@ public class OCDMomentTrigger : PlayerInteractionZone
         if (audioSource == null || clips.Length == 0)
             yield break;
 
+        float fadeStart = Mathf.Max(0f, blackScreenSoundDuration - blackScreenSoundFadeOut);
+
         for (int i = 0; i < clips.Length; i++)
         {
             float delay = GetDelayBeforeBlackSound(i);
             if (delay > 0.001f)
                 yield return new WaitForSecondsRealtime(delay);
 
-            if (clips[i] != null)
-                audioSource.PlayOneShot(clips[i], soundVolume);
+            if (clips[i] == null) continue;
+
+            audioSource.volume = soundVolume;
+            audioSource.clip   = clips[i];
+            audioSource.Play();
+
+            float elapsed = 0f;
+            while (elapsed < blackScreenSoundDuration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+
+                if (elapsed >= fadeStart && blackScreenSoundFadeOut > 0.001f)
+                {
+                    float t = Mathf.Clamp01((elapsed - fadeStart) / blackScreenSoundFadeOut);
+                    audioSource.volume = Mathf.Lerp(soundVolume, 0f, t);
+                }
+
+                yield return null;
+            }
+
+            audioSource.Stop();
+            audioSource.volume = soundVolume;
         }
     }
 

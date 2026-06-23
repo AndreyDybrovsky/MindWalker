@@ -30,11 +30,12 @@ public class PillCollectionManager : MonoBehaviour
     [Tooltip("TMP-образец для стиля текста — QuestText с HUD игрока. Можно оставить пустым.")]
     [SerializeField] private TMP_Text styleReference;
 
-    private int         _collected;
-    private bool        _allDone;
-    private CanvasGroup _fadeCanvasGroup;
-    private TMP_Text    _questText;
-    private Canvas      _questCanvas;
+    private int                  _collected;
+    private bool                 _allDone;
+    private CanvasGroup          _fadeCanvasGroup;
+    private TMP_Text             _questText;
+    private Canvas               _questCanvas;
+    private PillReticleController _reticle;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStatic() => s_instance = null;
@@ -43,6 +44,7 @@ public class PillCollectionManager : MonoBehaviour
     {
         s_instance = this;
         BuildQuestUI();
+        _reticle = gameObject.AddComponent<PillReticleController>();
     }
 
     private void Start()
@@ -70,7 +72,10 @@ public class PillCollectionManager : MonoBehaviour
     public static void ShowQuest()
     {
         if (s_instance != null)
+        {
             s_instance.ShowQuestUI();
+            s_instance._reticle?.Show();
+        }
     }
 
     public static void RegisterPickup()
@@ -118,16 +123,24 @@ public class PillCollectionManager : MonoBehaviour
             ctrl.ApplyModeImmediate(BipolarMindscapeMode.Meadow);
 
         // Телепорт в GoodWorld
-        if (goodWorldSpawnPoint != null)
-            PlayerTeleportUtility.TeleportTo(goodWorldSpawnPoint, matchRotation: true);
+        Transform dest = goodWorldSpawnPoint;
+        if (dest == null)
+        {
+            GameObject finalTP = GameObject.Find("FinalTP");
+            if (finalTP != null) dest = finalTP.transform;
+        }
+
+        if (dest != null)
+            PlayerTeleportUtility.TeleportTo(dest, matchRotation: true);
         else
-            Debug.LogWarning("PillCollectionManager: goodWorldSpawnPoint не задан!");
+            Debug.LogWarning("PillCollectionManager: не найден goodWorldSpawnPoint и объект FinalTP!");
 
         yield return null;
         Physics.SyncTransforms();
 
-        // Скрыть UI задания перед проявлением
+        // Скрыть UI задания и прицел перед проявлением
         HideQuestUI();
+        _reticle?.Hide();
 
         // Проявление
         if (_fadeCanvasGroup != null && fadeInDuration > 0.001f)

@@ -35,9 +35,25 @@ public static class TmpTextStyleUtility
         target.lineSpacing = source.lineSpacing;
         target.paragraphSpacing = source.paragraphSpacing;
         target.color = source.color;
-        target.faceColor = source.faceColor;
-        target.outlineColor = source.outlineColor;
-        target.outlineWidth = source.outlineWidth;
+
+        // faceColor/outlineColor/outlineWidth обращаются к инстанс-материалу шрифта
+        // (m_fontMaterial). В play-режиме у только что созданного текста (авто-таймер
+        // DepressionCountdownUI) этот материал ещё не сгенерирован CanvasRenderer'ом,
+        // и TMP.SetOutlineThickness кидает NullReferenceException — это валило корутину
+        // события паники (девочка спавнилась, но таймер/кнопка E не появлялись).
+        // Проверки fontSharedMaterial недостаточно (это другой материал), поэтому
+        // оборачиваем косметические свойства в try/catch — стиль не критичен, а падать нельзя.
+        try
+        {
+            target.faceColor = source.faceColor;
+            target.outlineColor = source.outlineColor;
+            target.outlineWidth = source.outlineWidth;
+        }
+        catch (System.NullReferenceException)
+        {
+            // Материал ещё не готов — пропускаем обводку/заливку, текст всё равно отрисуется.
+        }
+
         target.enableVertexGradient = source.enableVertexGradient;
         target.colorGradient = source.colorGradient;
         target.colorGradientPreset = source.colorGradientPreset;

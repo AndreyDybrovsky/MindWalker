@@ -18,6 +18,13 @@ public class BipolarMindscapeSwitchTrigger : MonoBehaviour
     [SerializeField] private bool lockPlayerMovement = true;
     [Tooltip("Плавное осветление после телепорта (затемнение всегда мгновенное).")]
     [SerializeField] private float fadeOutDuration = 1.35f;
+    [Tooltip("Отключить триггер после первого использования — предотвращает повторный телепорт.")]
+    [SerializeField] private bool oneShot = false;
+
+    [Header("Музыка")]
+    [Tooltip("Клип для этой локации. Если не задан и targetMode=Meadow — вернёт дефолтную музыку.")]
+    [SerializeField] private AudioClip switchToClip;
+    [SerializeField] private float musicCrossfadeDuration = 1.5f;
 
     [Header("Звук (опционально)")]
     [SerializeField] private AudioSource audioSource;
@@ -81,6 +88,15 @@ public class BipolarMindscapeSwitchTrigger : MonoBehaviour
 
         controller.ApplyModeImmediate(targetMode);
 
+        // Переключаем музыку: явный клип → для Meadow fallback на дефолт
+        if (BipolarAmbientController.Instance != null)
+        {
+            if (switchToClip != null)
+                BipolarAmbientController.Instance.CrossfadeTo(switchToClip, musicCrossfadeDuration);
+            else if (targetMode == BipolarMindscapeMode.Meadow)
+                BipolarAmbientController.Instance.CrossfadeToDefault(musicCrossfadeDuration);
+        }
+
         if (playerSpawn != null)
             PlayerTeleportUtility.TeleportTo(playerSpawn, matchSpawnRotation, spawnHeightOffset);
 
@@ -97,6 +113,12 @@ public class BipolarMindscapeSwitchTrigger : MonoBehaviour
 
         GameplayInputBlocker.SetBlocked(false);
         _isSwitching = false;
+
+        if (oneShot)
+        {
+            Collider col = GetComponent<Collider>();
+            if (col != null) col.enabled = false;
+        }
     }
 
     private void SetFadeInstant(float alpha)

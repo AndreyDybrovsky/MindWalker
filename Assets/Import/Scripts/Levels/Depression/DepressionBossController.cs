@@ -245,9 +245,13 @@ public class DepressionBossController : MonoBehaviour
 
     private IEnumerator TeleportRoutine()
     {
-        // Скрываем рендереры
-        Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
-        foreach (var r in renderers) r.enabled = false;
+        // Скрываем все дочерние объекты (меш, свет, партиклы и т.д.)
+        int childCount = transform.childCount;
+        GameObject[] children = new GameObject[childCount];
+        for (int i = 0; i < childCount; i++)
+            children[i] = transform.GetChild(i).gameObject;
+        foreach (var child in children)
+            child.SetActive(false);
 
         yield return new WaitForSeconds(0.18f);
 
@@ -263,7 +267,8 @@ public class DepressionBossController : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.07f);
-        foreach (var r in renderers) r.enabled = true;
+        foreach (var child in children)
+            if (child != null) child.SetActive(true);
     }
 
     // ─── Смерть ───────────────────────────────────────────────────────────────

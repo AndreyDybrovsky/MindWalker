@@ -2,21 +2,18 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// Бутылочка с таблетками: боббинг, вращение, пульсирующий свет, ambient SFX.
-/// При подходе игрока — звук подбора, плавное исчезание, уведомление менеджера.
+/// Таблетка для сбора в Bipolar Location3.
+/// Мигает точечным светом; подбирается через PillReticleController (TryCollect).
 /// </summary>
 [RequireComponent(typeof(Collider))]
 public class PillBottlePickup : MonoBehaviour
 {
-    [Header("Анимация")]
-    [SerializeField] private float bobHeight = 0.10f;
-    [SerializeField] private float bobSpeed   = 1.6f;
-    [SerializeField] private float rotateSpeed = 50f;
-
     [Header("Пульсирующий свет")]
     [SerializeField] private Light pointLight;
-    [SerializeField] private float lightMinIntensity = 0.3f;
-    [SerializeField] private float lightMaxIntensity = 1.1f;
+    [SerializeField] private float pulseSpeed      = 1.4f;   // циклов в секунду
+    [SerializeField] private float lightMinIntensity = 0.5f;
+    [SerializeField] private float lightMaxIntensity = 2.0f;
+    [SerializeField] private float lightRange      = 2.5f;   // радиус (world units)
 
     [Header("Звук")]
     [SerializeField] private AudioClip ambientClip;
@@ -28,9 +25,10 @@ public class PillBottlePickup : MonoBehaviour
     [SerializeField] private float fadeOutDuration = 0.55f;
 
     private bool        _collected;
-    private Vector3     _startLocalPos;
-    private float       _bobPhase;
+    private float       _pulsePhase;
     private AudioSource _ambientSource;
+
+    public bool IsCollected => _collected;
 
     private void Awake()
     {
@@ -45,11 +43,15 @@ public class PillBottlePickup : MonoBehaviour
 
     private void Start()
     {
-        _startLocalPos = transform.localPosition;
-        _bobPhase      = Random.Range(0f, Mathf.PI * 2f);
-
         if (pointLight == null)
-            pointLight = GetComponentInChildren<Light>();
+            pointLight = GetComponentInChildren<Light>(true);
+
+        if (pointLight != null)
+        {
+            pointLight.range     = lightRange;
+            pointLight.intensity = lightMinIntensity;
+            pointLight.enabled   = true;
+        }
 
         if (ambientClip != null)
         {
@@ -62,37 +64,25 @@ public class PillBottlePickup : MonoBehaviour
             _ambientSource.maxDistance  = 14f;
             _ambientSource.Play();
         }
+
+        _pulsePhase = Random.Range(0f, Mathf.PI * 2f);
     }
 
     private void Update()
     {
-        if (_collected) return;
+        if (_collected || pointLight == null) return;
 
-        float t = Time.time * bobSpeed + _bobPhase;
-
-        // Боббинг по локальной Y
-        Vector3 pos = _startLocalPos;
-        pos.y += Mathf.Sin(t) * bobHeight;
-        transform.localPosition = pos;
-
-        // Вращение вокруг мировой Y
-        transform.Rotate(Vector3.up, rotateSpeed * Time.deltaTime, Space.World);
-
-        // Пульсация света
-        if (pointLight != null)
-        {
-            float pulse = (Mathf.Sin(t * 1.7f) + 1f) * 0.5f;
-            pointLight.intensity = Mathf.Lerp(lightMinIntensity, lightMaxIntensity, pulse);
-        }
+        // Плавный синусоидальный пульс: 0..1 → lightMin..lightMax
+        float t = (Mathf.Sin(Time.time * pulseSpeed * Mathf.PI * 2f + _pulsePhase) + 1f) * 0.5f;
+        pointLight.intensity = Mathf.Lerp(lightMinIntensity, lightMaxIntensity, t);
     }
 
-    private void OnTriggerEnter(Collider other)
+    public bool TryCollect()
     {
-        if (_collected) return;
-        if (!other.CompareTag("Player") && !other.transform.root.CompareTag("Player")) return;
-
+        if (_collected) return false;
         _collected = true;
         StartCoroutine(CollectRoutine());
+        return true;
     }
 
     private IEnumerator CollectRoutine()
@@ -124,8 +114,7 @@ public class PillBottlePickup : MonoBehaviour
         while (elapsed < fadeOutDuration)
         {
             elapsed += Time.deltaTime;
-            float p = elapsed / fadeOutDuration;
-            transform.localScale = Vector3.Lerp(scaleUp, Vector3.zero, p);
+            transform.localScale = Vector3.Lerp(scaleUp, Vector3.zero, elapsed / fadeOutDuration);
             yield return null;
         }
 

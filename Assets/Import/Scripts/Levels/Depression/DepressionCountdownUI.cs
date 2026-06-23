@@ -273,6 +273,10 @@ public class DepressionCountdownUI : MonoBehaviour
         rt.sizeDelta = new Vector2(panelWidth, 72f);
 
         timerText = lineGo.AddComponent<TextMeshProUGUI>();
+        // Сразу даём шрифт по умолчанию, чтобы у текста был материал ещё до копирования
+        // стиля. Иначе обращение к outline/face цвету материала кидало NRE и роняло таймер.
+        if (timerText.font == null && TMP_Settings.defaultFontAsset != null)
+            timerText.font = TMP_Settings.defaultFontAsset;
         ApplyTextAlignment();
         timerText.textWrappingMode = TextWrappingModes.Normal;
         timerText.overflowMode = TextOverflowModes.Overflow;

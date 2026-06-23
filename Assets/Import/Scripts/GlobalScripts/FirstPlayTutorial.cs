@@ -162,10 +162,6 @@ public class FirstPlayTutorial : MonoBehaviour
 
         s_gameFont = ResolveGameFont();
 
-        GameplayInputBlocker.SetBlocked(true);
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-
         var canvasGo = new GameObject("TutorialCanvas");
         canvasGo.transform.SetParent(transform);
 
@@ -251,7 +247,7 @@ public class FirstPlayTutorial : MonoBehaviour
 
         // Hint
         MakeTmp(panelGo.transform, "Hint",
-            $"Нажмите  {Accent("E")}  или кнопку ниже, чтобы начать",
+            $"Нажмите  {Accent("E")} / {Accent("Пробел")} / {Accent("Enter")},  чтобы закрыть",
             15f, FontStyles.Normal, new Color(0.70f, 0.70f, 0.72f, 1f),
             TextAlignmentOptions.Center,
             anchorMin: new Vector2(0f, 0f), anchorMax: new Vector2(1f, 0f),
@@ -318,10 +314,6 @@ public class FirstPlayTutorial : MonoBehaviour
         Destroy(_panel);
         _panel = null;
         _panelGroup = null;
-
-        GameplayInputBlocker.SetBlocked(false);
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
 
         // Инстанс НЕ уничтожаем: он остаётся жить (DDOL) и снова покажет панель
         // при следующем входе в Main после ResetForNewGame().

@@ -29,6 +29,11 @@ public class BipolarBossDefeatWarp : MonoBehaviour
     [SerializeField] private float fadeOutDuration = 1.35f;
     [SerializeField] private bool lockPlayerMovement = true;
 
+    [Header("Музыка")]
+    [Tooltip("Клип для новой локации. Если не задан и targetMode=Meadow — вернёт дефолтную музыку.")]
+    [SerializeField] private AudioClip switchToClip;
+    [SerializeField] private float musicCrossfadeDuration = 1.5f;
+
     [Header("Звук (опционально)")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip warpSound;
@@ -118,6 +123,14 @@ public class BipolarBossDefeatWarp : MonoBehaviour
             audioSource.PlayOneShot(warpSound, soundVolume);
 
         controller.ApplyModeImmediate(targetMode);
+
+        if (BipolarAmbientController.Instance != null)
+        {
+            if (switchToClip != null)
+                BipolarAmbientController.Instance.CrossfadeTo(switchToClip, musicCrossfadeDuration);
+            else if (targetMode == BipolarMindscapeMode.Meadow)
+                BipolarAmbientController.Instance.CrossfadeToDefault(musicCrossfadeDuration);
+        }
 
         if (playerSpawn != null)
             PlayerTeleportUtility.TeleportTo(playerSpawn, matchSpawnRotation, spawnHeightOffset);

@@ -368,6 +368,32 @@ public class DepressionPanicMomentZone : MonoBehaviour
         return bounds.Contains(body.position);
     }
 
+    private void Start()
+    {
+        // Зона-триггер занимает почти весь уровень, поэтому игрок, как правило, уже
+        // находится внутри неё в момент загрузки сцены — тогда OnTriggerEnter не сработает.
+        // Подстраховываемся: дожидаемся появления игрока и стартуем цикл, если он внутри зоны.
+        StartCoroutine(AutoStartWhenPlayerInside());
+    }
+
+    private IEnumerator AutoStartWhenPlayerInside()
+    {
+        // Без таймаута: при загрузке сцены через бутстрап сейвов игрок появляется/
+        // телепортируется в зону с задержкой, и фиксированный таймаут мог истечь раньше.
+        // Тогда OnTriggerEnter тоже не срабатывает (игрок «возникает» уже внутри коллайдера),
+        // и событие паники не запускалось вовсе. Поэтому ждём появления игрока сколько нужно.
+        while (!_zoneLoopRunning)
+        {
+            if (IsPlayerInsideZone())
+            {
+                _loopRoutine = StartCoroutine(ZonePanicLoop());
+                yield break;
+            }
+
+            yield return null;
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (_zoneLoopRunning || !IsPlayerCollider(other))
@@ -462,7 +488,29 @@ public class DepressionPanicMomentZone : MonoBehaviour
         if (!TrySpawnPatient(useFixedSpawn))
             yield break;
 
-        BeginCalmPhaseAfterFind();
+        // Повторные появления спавнят пациентку в случайной (часто далёкой) точке зоны,
+        // поэтому им тоже нужна фаза поиска: даём игроку время добежать по свету-указателю,
+        // и только при сближении запускаем таймер успокоения. Иначе таймер успокоения
+        // истекал бы раньше, чем игрок успеет подойти. Здесь же работает «нарастающая
+        // сложность» — таймер поиска берётся из _currentFindTimeLimit, который уменьшается
+        // после каждого успешного успокоения.
+        _findPhaseActive = true;
+        if (_calmInteraction != null)
+            _calmInteraction.SetInteractionEnabled(false);
+
+        DepressionCountdownUI.StartCountdown(
+            _currentFindTimeLimit,
+            findTimerLocalizationKey,
+            findTimerFallbackText,
+            timerStyleReference,
+            OnFindTimerExpired);
+
+        while (_findPhaseActive && _eventActive)
+        {
+            if (IsPlayerNearSpawnedPatient())
+                BeginCalmPhaseAfterFind();
+            yield return null;
+        }
 
         while (_eventActive)
             yield return null;
